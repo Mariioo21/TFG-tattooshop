@@ -4,6 +4,7 @@ import com.tattooshop.entity.Product;
 import com.tattooshop.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,11 +29,13 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('SELLER')")
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok(productService.save(product));
     }
 
+    @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         if (!productService.findById(id).isPresent()) {
@@ -42,6 +45,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.save(product));
     }
 
+    @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         if (!productService.findById(id).isPresent()) {
