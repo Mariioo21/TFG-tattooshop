@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -34,9 +34,6 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
@@ -45,13 +42,20 @@ public class AuthController {
             );
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(401).body("Credenciales incorrectas");
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Error de autenticación: " + e.getMessage());
         }
 
-        final org.springframework.security.core.userdetails.UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails);
 
-        User user = userService.findByUsername(loginRequest.getUsername()).orElse(null);
-        String role = user.getRoles().iterator().next().name();
+        User user = userService.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado después de autenticar (imposible)"));
+
+        String role = "USER";
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            role = user.getRoles().iterator().next().name();
+        }
 
         JwtResponse response = new JwtResponse(jwt, user.getId(), user.getUsername(), role);
 
@@ -67,8 +71,6 @@ public class AuthController {
         if (userService.findByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("El email ya está en uso");
         }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Set<User.Role> roles = new HashSet<>();
         roles.add(User.Role.USER);

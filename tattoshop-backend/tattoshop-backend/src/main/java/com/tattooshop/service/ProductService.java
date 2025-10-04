@@ -33,6 +33,7 @@ public class ProductService {
 
     public List<Product> searchByNameOrDescription(String name, String description){
         return productRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(name, description);
+
     }
 
     public void deleteById(Long id){
