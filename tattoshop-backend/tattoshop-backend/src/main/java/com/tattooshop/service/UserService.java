@@ -39,6 +39,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     public void deleteById(Long id){
         userRepository.deleteById(id);
     }

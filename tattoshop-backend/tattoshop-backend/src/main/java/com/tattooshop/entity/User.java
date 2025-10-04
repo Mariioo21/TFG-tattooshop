@@ -22,10 +22,19 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    @Column(nullable = false, length = 20)
+    private ERole role = ERole.USER;
+
+    public User(String username, String email, String password, ERole role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public User() {
+    }
 
     public Long getId() {
         return id;
@@ -59,15 +68,12 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public ERole getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(ERole role) {
+        this.role = role;
     }
 
-    public enum Role{
-        USER, SELLER, ADMIN
-    }
 }

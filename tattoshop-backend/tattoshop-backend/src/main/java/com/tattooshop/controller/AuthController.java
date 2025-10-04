@@ -2,6 +2,8 @@ package com.tattooshop.controller;
 
 import com.tattooshop.dto.JwtResponse;
 import com.tattooshop.dto.LoginRequest;
+import com.tattooshop.dto.RegisterRequest;
+import com.tattooshop.entity.ERole;
 import com.tattooshop.entity.User;
 import com.tattooshop.service.UserService;
 import com.tattooshop.service.UserDetailsServiceImpl;
@@ -11,11 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -37,7 +37,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
-            authenticationManager.authenticate(
+            Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
@@ -46,38 +46,48 @@ public class AuthController {
             return ResponseEntity.status(401).body("Error de autenticación: " + e.getMessage());
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        String jwt = jwtUtil.generateToken(userDetails);
 
         User user = userService.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado después de autenticar (imposible)"));
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado después de autenticar"));
 
-        String role = "USER";
-        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
-            role = user.getRoles().iterator().next().name();
-        }
-
+        String role = (user.getRole() != null) ? user.getRole().name() : "USER";
         JwtResponse response = new JwtResponse(jwt, user.getId(), user.getUsername(), role);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        if (userService.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("El nombre de usuario ya está en uso");
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest signUpRequest) {
+
+        if (userService.existsByUsername(signUpRequest.getUsername())) {
+            return ResponseEntity.badRequest().body("Error: username ya en uso");
         }
 
-        if (userService.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("El email ya está en uso");
+        if (userService.existsByEmail(signUpRequest.getEmail())) {
+            return ResponseEntity.badRequest().body("Error: email ya en uso");
         }
 
-        Set<User.Role> roles = new HashSet<>();
-        roles.add(User.Role.USER);
-        user.setRoles(roles);
+        // Determinar rol a asignar
+        ERole assignedRole = ERole.USER; // por defecto
+        if (signUpRequest.getRole() != null) {
+            String inputRole = signUpRequest.getRole().trim().toUpperCase();
+            switch (inputRole) {
+                case "ADMIN" -> assignedRole = ERole.ADMIN;
+                case "SELLER" -> assignedRole = ERole.SELLER;
+                default -> assignedRole = ERole.USER;
+            }
+        }
 
-        User savedUser = userService.save(user);
+        User newUser = new User(
+                signUpRequest.getUsername(),
+                signUpRequest.getEmail(),
+                signUpRequest.getPassword(),
+                assignedRole
+        );
 
-        return ResponseEntity.ok("Usuario registrado exitosamente");
+        userService.save(newUser);
+        return ResponseEntity.ok("Usuario registrado exitosamente como " + assignedRole.name());
     }
 }
