@@ -1,19 +1,16 @@
 package com.tattooshop.controller;
 
+import com.tattooshop.config.JwtUtil;
 import com.tattooshop.dto.JwtResponse;
 import com.tattooshop.dto.LoginRequest;
-import com.tattooshop.dto.RegisterRequest;
-import com.tattooshop.entity.ERole;
 import com.tattooshop.entity.User;
-import com.tattooshop.service.UserService;
 import com.tattooshop.service.UserDetailsServiceImpl;
-import com.tattooshop.config.JwtUtil;
+import com.tattooshop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,68 +23,43 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService userService;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(401).body("Credenciales incorrectas");
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Error de autenticación: " + e.getMessage());
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        if (userService.findByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body("El nombre de usuario ya está en uso");
+        }
+        if (userService.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("El email ya está en uso");
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        String jwt = jwtUtil.generateToken(userDetails);
-
-        User user = userService.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado después de autenticar"));
-
-        String role = (user.getRole() != null) ? user.getRole().name() : "USER";
-        JwtResponse response = new JwtResponse(jwt, user.getId(), user.getUsername(), role);
-
-        return ResponseEntity.ok(response);
+        User savedUser = userService.save(user);
+        return ResponseEntity.ok("Usuario registrado exitosamente como " + savedUser.getRole());
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest signUpRequest) {
-
-        if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body("Error: username ya en uso");
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(401).body("Credenciales incorrectas");
         }
 
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: email ya en uso");
-        }
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
 
-        // Determinar rol a asignar
-        ERole assignedRole = ERole.USER; // por defecto
-        if (signUpRequest.getRole() != null) {
-            String inputRole = signUpRequest.getRole().trim().toUpperCase();
-            switch (inputRole) {
-                case "ADMIN" -> assignedRole = ERole.ADMIN;
-                case "SELLER" -> assignedRole = ERole.SELLER;
-                default -> assignedRole = ERole.USER;
-            }
-        }
+        User user = userService.findByUsername(request.getUsername()).orElseThrow();
+        String role = user.getRole().name();
 
-        User newUser = new User(
-                signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                signUpRequest.getPassword(),
-                assignedRole
-        );
-
-        userService.save(newUser);
-        return ResponseEntity.ok("Usuario registrado exitosamente como " + assignedRole.name());
+        JwtResponse response = new JwtResponse(jwt, user.getId(), user.getUsername(), role);
+        return ResponseEntity.ok(response);
     }
 }

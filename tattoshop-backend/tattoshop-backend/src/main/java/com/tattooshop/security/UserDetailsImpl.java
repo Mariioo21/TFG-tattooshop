@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -26,50 +25,60 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    // ✅ Método build actualizado: un solo rol
     public static UserDetailsImpl build(User user) {
-        // Convertir el único rol (ERole) en GrantedAuthority
-        String roleName = "ROLE_" + user.getRole().name(); // Ejemplo: ROLE_ADMIN, ROLE_SELLER, ROLE_USER
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+        List<GrantedAuthority> authorities = List.of(
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
+        );
 
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                List.of(authority)
+                authorities
         );
     }
 
-    public Long getId() { return id; }
-    public String getEmail() { return email; }
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { return authorities; }
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
 
     @Override
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
     @Override
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserDetailsImpl)) return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
+    public boolean isEnabled() {
+        return true;
     }
 }
