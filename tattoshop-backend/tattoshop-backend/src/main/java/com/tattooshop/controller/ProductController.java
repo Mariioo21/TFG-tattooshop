@@ -2,9 +2,12 @@ package com.tattooshop.controller;
 
 import com.tattooshop.entity.Product;
 import com.tattooshop.service.ProductService;
+import com.tattooshop.service.UserService;
+import com.tattooshop.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +19,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
@@ -31,7 +37,10 @@ public class ProductController {
 
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product, Authentication authentication) {
+        String username = authentication.getName();
+        User seller = userService.findByUsername(username).orElseThrow();
+        product.setSeller(seller);
         return ResponseEntity.ok(productService.save(product));
     }
 
