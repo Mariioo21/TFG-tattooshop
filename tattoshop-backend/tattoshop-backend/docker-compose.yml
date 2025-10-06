@@ -7,8 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tattoo_shop
-      MYSQL_USER: mario
-      MYSQL_PASSWORD: mario123
+      MYSQL_USER: tattooshop
+      MYSQL_PASSWORD: tattooshop
     ports:
       - "3307:3306"
     volumes:
