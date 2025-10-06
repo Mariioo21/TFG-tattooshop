@@ -1,10 +1,15 @@
 package com.tattooshop.controller;
 
+import com.tattooshop.entity.Category;
 import com.tattooshop.entity.Product;
+import com.tattooshop.service.CategoryService;
 import com.tattooshop.service.ProductService;
 import com.tattooshop.service.UserService;
 import com.tattooshop.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,11 +26,18 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(productService.findAllPaged(pageable));
     }
 
     @GetMapping("/{id}")
@@ -41,6 +53,16 @@ public class ProductController {
         String username = authentication.getName();
         User seller = userService.findByUsername(username).orElseThrow();
         product.setSeller(seller);
+
+        if (product.getCategory() != null && product.getCategory().getName() != null) {
+            String catName = product.getCategory().getName().trim();
+            Category category = categoryService.findByName(catName)
+                    .orElseGet(() -> categoryService.save(new Category(catName)));
+            product.setCategory(category);
+        } else {
+            product.setCategory(null);
+        }
+
         return ResponseEntity.ok(productService.save(product));
     }
 

@@ -3,6 +3,8 @@ package com.tattooshop.service;
 import com.tattooshop.entity.User;
 import com.tattooshop.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -44,5 +46,9 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    public Page<User> findAllPaged(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 }

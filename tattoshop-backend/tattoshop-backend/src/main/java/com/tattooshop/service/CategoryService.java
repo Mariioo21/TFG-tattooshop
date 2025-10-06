@@ -29,4 +29,11 @@ public class CategoryService {
     public void deleteById(Long id){
         categoryRepository.deleteById(id);
     }
+
+    public Optional<Category> findByName(String name){
+        return categoryRepository.findByName(name);
+    }
+    public boolean existsByName(String name) {
+        return categoryRepository.findByName(name).isPresent();
+    }
 }
