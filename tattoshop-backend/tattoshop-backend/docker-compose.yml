@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_tattoo
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tattoo_shop
+      MYSQL_USER: mario
+      MYSQL_PASSWORD: mario123
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tattoo-net
+
+  backend:
+    build: .
+    container_name: tattoo_backend
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tattoo_shop?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: mario
+      SPRING_DATASOURCE_PASSWORD: mario123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+    ports:
+      - "8080:8080"
+    networks:
+      - tattoo-net
+
+volumes:
+  mysql_data:
+
+networks:
+  tattoo-net:

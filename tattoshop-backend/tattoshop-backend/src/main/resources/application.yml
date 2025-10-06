@@ -1,24 +1,18 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:tattoo_shop_db
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:mysql://mysql:3306/tattoo_shop?useSSL=false&serverTimezone=UTC
+    username: mario
+    password: mario123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
-  sql:
-    init:
-      mode: always
 
 jwt:
   secret: "6yJzQ9dXbZp3hR8mN2fV5sKwG0tC7rX4jL1oE9aM6qD8uP0yF3vW2nT7gH4sR1cJ"

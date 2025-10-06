@@ -48,6 +48,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- JSON Web Token (jjwt) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
