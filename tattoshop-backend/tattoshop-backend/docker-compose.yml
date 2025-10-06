@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+  # 🗄️ Servicio de base de datos MySQL
   mysql:
     image: mysql:8.0
     container_name: mysql_tattoo
@@ -14,28 +13,40 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - tattoo-net
 
+  # 🚀 Servicio backend de Spring Boot
   backend:
     build: .
     container_name: tattoo_backend
     restart: always
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tattoo_shop?useSSL=false&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: mario
-      SPRING_DATASOURCE_PASSWORD: mario123
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/tattoo_shop?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=tattooshop
+      - SPRING_DATASOURCE_PASSWORD=tattooshop
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - JWT_SECRET=6yJzQ9dXbZp3hR8mN2fV5sKwG0tC7rX4jL1oE9aM6qD8uP0yF3vW2nT7gH4sR1cJ
+      - JWT_EXPIRATION=86400000
     ports:
       - "8080:8080"
     networks:
       - tattoo-net
 
-volumes:
-  mysql_data:
-
+# 🌐 Red interna para la comunicación entre contenedores
 networks:
   tattoo-net:
+    driver: bridge
+
+# 💾 Volumen persistente para los datos de MySQL
+volumes:
+  mysql_data:
