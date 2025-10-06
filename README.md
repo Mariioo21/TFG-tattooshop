@@ -62,7 +62,7 @@ CONTAINER ID          IMAGE                          STATUS          PORTS
 e53c016f7a85       tattoshop-backend-backend         Up 10s          8080->8080/tcp
 ```
 
-## 🌐 Acceso al backend
+## Acceso al backend
 
 - **API disponible en:** http://localhost:8080
 
