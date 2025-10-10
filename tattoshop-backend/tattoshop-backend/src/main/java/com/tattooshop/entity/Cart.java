@@ -19,6 +19,10 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CartItem> items;
 
+    public Cart(){
+        
+    }
+
     public List<CartItem> getItems() {
         return items;
     }

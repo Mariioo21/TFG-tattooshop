@@ -1,6 +1,10 @@
 package com.tattooshop.security;
 
 import com.tattooshop.config.JwtUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 @Component
@@ -35,39 +36,35 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
 
-        final String requestTokenHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String requestPath = request.getRequestURI();
+        final String path = request.getRequestURI();
 
-        // Log básico
-        logger.debug("Processing request [{} {}]", request.getMethod(), requestPath);
-
-        // Ignoramos rutas públicas
-        if (requestPath.startsWith("/api/auth") || requestPath.startsWith("/h2-console")) {
+        // ✅ Solo se excluyen las rutas públicas
+        if (path.startsWith("/api/auth")) {
             chain.doFilter(request, response);
             return;
         }
 
+        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         String username = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-            jwtToken = requestTokenHeader.substring(7);
+        if (header != null && header.startsWith("Bearer ")) {
+            jwtToken = header.substring(7);
             try {
                 username = jwtUtil.getUsernameFromToken(jwtToken);
             } catch (Exception e) {
-                logger.warn("No se pudo obtener el usuario del token: {}", e.getMessage());
+                logger.warn("⚠️ Error obteniendo usuario del token: {}", e.getMessage());
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken =
+                UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            } else {
-                logger.debug("Token JWT no válido para usuario {}", username);
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
 

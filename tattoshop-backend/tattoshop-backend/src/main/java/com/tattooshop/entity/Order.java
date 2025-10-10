@@ -32,6 +32,10 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> items;
 
+    public Order(){
+        
+    }
+
     public List<OrderItem> getItems() {
         return items;
     }

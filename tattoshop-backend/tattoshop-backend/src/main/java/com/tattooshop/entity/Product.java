@@ -29,6 +29,9 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private User seller;
 
+     public Product() {
+    }
+    
     public Product(String name, String description, float price, String imageURL, Category category, User seller) {
         this.name = name;
         this.description = description;

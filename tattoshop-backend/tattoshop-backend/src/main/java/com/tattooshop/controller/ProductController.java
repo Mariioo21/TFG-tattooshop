@@ -2,10 +2,10 @@ package com.tattooshop.controller;
 
 import com.tattooshop.entity.Category;
 import com.tattooshop.entity.Product;
+import com.tattooshop.entity.User;
 import com.tattooshop.service.CategoryService;
 import com.tattooshop.service.ProductService;
 import com.tattooshop.service.UserService;
-import com.tattooshop.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +31,7 @@ public class ProductController {
     @Autowired
     private UserService userService;
 
+    // ✅ Público
     @GetMapping
     public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
@@ -40,6 +41,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllPaged(pageable));
     }
 
+    // ✅ Público
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return productService.findById(id)
@@ -47,6 +49,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // 🔒 Solo vendedores o admins
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product, Authentication authentication) {
@@ -66,6 +69,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.save(product));
     }
 
+    // 🔒 Solo vendedores o admins
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
@@ -76,6 +80,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.save(product));
     }
 
+    // 🔒 Solo vendedores o admins
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
@@ -86,11 +91,18 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    // ✅ Público
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description) {
         List<Product> products = productService.searchByNameOrDescription(name, description);
         return ResponseEntity.ok(products);
+    }
+
+    // ✅ Test
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("✅ Products endpoint funcionando correctamente");
     }
 }

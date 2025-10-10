@@ -68,7 +68,7 @@ public class DataInitializer implements CommandLineRunner {
                 Category agujas = categoryRepository.findByName("Agujas").orElse(null);
 
                 if (tinta != null && agujas != null) {
-                    Product p1 = new Product("Tinta Negra Eternal", "Tinta de alta calidad para líneas definidas", 24.99f, "https://i.imgur.com/Zq6Y9Ep.jpeg", tinta, seller);
+                    Product p1 = new Product("Tinta Negra Eternal", "Tinta de alta calidad para líneas definidas", 25f, "https://i.imgur.com/Zq6Y9Ep.jpeg", tinta, seller);
                     Product p2 = new Product("Agujas Magnum 9", "Agujas estériles para sombreado", 14.50f, "https://i.imgur.com/JKg2RjW.jpeg", agujas, seller);
 
                     productRepository.saveAll(List.of(p1, p2));

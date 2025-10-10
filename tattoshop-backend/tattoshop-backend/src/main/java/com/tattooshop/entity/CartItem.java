@@ -20,6 +20,10 @@ public class CartItem {
 
     private int quantity = 1;
 
+    public CartItem(){
+        
+    }
+
     public Long getId() {
         return id;
     }
