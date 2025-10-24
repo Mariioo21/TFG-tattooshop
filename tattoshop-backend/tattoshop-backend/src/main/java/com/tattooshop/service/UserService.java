@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 import java.util.List;
 
@@ -20,7 +21,18 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public User save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // ⚠️ Solo encriptar si llega una contraseña no nula
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else if (user.getId() != null) {
+            // Si es actualización y no hay nueva contraseña, conservar la actual
+            userRepository.findById(user.getId()).ifPresent(existing -> 
+                user.setPassword(existing.getPassword())
+            );
+        } else {
+            throw new IllegalArgumentException("Password no puede ser nulo al crear usuario");
+        }
+
         return userRepository.save(user);
     }
 

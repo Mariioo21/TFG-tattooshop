@@ -1,0 +1,48 @@
+.register-container {
+  max-width: 400px;
+  margin: 100px auto;
+  background-color: #1c1c1c;
+  padding: 30px;
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.register-container h2 {
+  margin-bottom: 20px;
+}
+
+.register-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-container input,
+.register-container select {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.register-container button {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+
+.register-container button:hover {
+  background-color: #e68900;
+}
+
+.register-message {
+  margin-top: 15px;
+  font-size: 14px;
+}

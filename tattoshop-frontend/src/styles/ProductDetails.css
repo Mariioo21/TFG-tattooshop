@@ -1,0 +1,157 @@
+.pd-container {
+  width: 95%;
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.pd-back {
+  background: none;
+  border: none;
+  color: #1565c0;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.pd-back:hover {
+  text-decoration: underline;
+}
+
+.pd-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  display: flex;
+  gap: 25px;
+}
+
+.pd-image {
+  width: 420px;
+  max-width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.pd-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-name {
+  font-size: 1.5rem;
+  color: #222;
+}
+
+.pd-desc {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.pd-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1a73e8;
+}
+
+.pd-category,
+.pd-seller {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* ▼ Unidades */
+.pd-qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pd-qty-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.pd-qty-btn:hover {
+  background: #eee;
+}
+
+.pd-qty-input {
+  width: 60px;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Botón añadir carrito */
+.pd-add-btn {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background-color: #1a73e8;
+  color: #fff;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.05s ease, opacity 0.2s ease, background-color 0.2s ease;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pd-add-btn:hover {
+  background-color: #155cc1;
+}
+
+.pd-add-btn:active {
+  transform: translateY(1px);
+}
+
+.pd-add-btn.disabled,
+.pd-add-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Toast feedback */
+.pd-toast {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #e3f2fd;
+  color: #1565c0;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* Loading y not found */
+.pd-loading,
+.pd-notfound {
+  text-align: center;
+  color: #666;
+  margin-top: 50px;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pd-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .pd-qty {
+    justify-content: center;
+  }
+}

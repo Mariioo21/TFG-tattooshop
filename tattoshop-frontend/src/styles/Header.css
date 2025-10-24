@@ -1,0 +1,102 @@
+.header {
+  background-color: #121212;
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 12px;
+  margin: 15px auto;
+  width: 95%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.header-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: color 0.2s ease;
+}
+
+.header-title:hover {
+  color: #64b5f6;
+}
+
+.header-user {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu-toggle {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.25s ease;
+}
+
+.menu-toggle:hover {
+  background-color: #1565c0;
+}
+
+.menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  min-width: 200px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #eee;
+  text-align: left;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+  background-color: #2a2a2a;
+}
+
+.menu-divider {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 5px 0;
+}
+
+.menu-item.logout {
+  color: #e53935;
+}
+
+.menu-item.logout:hover {
+  background-color: #3a0000;
+}
+
+.header-guest {
+  font-style: italic;
+  color: #aaa;
+}

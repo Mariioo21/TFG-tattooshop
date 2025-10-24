@@ -1,0 +1,48 @@
+.delete-product-container {
+  width: 90%;
+  max-width: 600px;
+  margin: 40px auto;
+  background-color: #1e1e1e;
+  padding: 30px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.delete-product-container h2 {
+  color: #e57373;
+  margin-bottom: 20px;
+}
+
+.product-select {
+  width: 100%;
+  padding: 10px;
+  background-color: #121212;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.delete-btn {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.delete-btn:hover {
+  background-color: #c62828;
+}
+
+.message {
+  text-align: center;
+  margin-top: 15px;
+  color: #ff8a80;
+}

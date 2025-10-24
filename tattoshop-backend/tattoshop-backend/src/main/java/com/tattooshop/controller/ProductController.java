@@ -41,6 +41,15 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllPaged(pageable));
     }
 
+    @PreAuthorize("hasRole('SELLER')")
+    @GetMapping("/mine")
+    public ResponseEntity<List<Product>> getMyProducts(Authentication authentication) {
+        String username = authentication.getName();
+        User seller = userService.findByUsername(username).orElseThrow();
+        List<Product> products = productService.findBySeller(seller);
+        return ResponseEntity.ok(products);
+    }
+
     // ✅ Público
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
@@ -73,12 +82,25 @@ public class ProductController {
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        if (!productService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        product.setId(id);
-        return ResponseEntity.ok(productService.save(product));
+        return productService.findById(id).map(existingProduct -> {
+
+            existingProduct.setName(product.getName());
+            existingProduct.setDescription(product.getDescription());
+            existingProduct.setPrice(product.getPrice());
+            existingProduct.setImageURL(product.getImageURL());
+
+            if (product.getCategory() != null && product.getCategory().getName() != null) {
+                String catName = product.getCategory().getName().trim();
+                Category category = categoryService.findByName(catName)
+                        .orElseGet(() -> categoryService.save(new Category(catName))); // ✅ crea si no existe
+                existingProduct.setCategory(category);
+            }
+
+            Product updated = productService.save(existingProduct);
+            return ResponseEntity.ok(updated);
+        }).orElse(ResponseEntity.notFound().build());
     }
+
 
     // 🔒 Solo vendedores o admins
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")

@@ -29,23 +29,26 @@ public class JwtUtil {
     }
 
     private Key getSigningKey() {
-        // HS256 → requiere al menos 32 bytes de clave
+        // ✅ Verificación extra: el secreto debe tener al menos 32 bytes (HS256)
+        if (secret == null || secret.length() < 32) {
+            throw new IllegalStateException("❌ JWT secret demasiado corto. Debe tener al menos 32 caracteres.");
+        }
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(UserDetails userDetails) {
-    Date now = new Date();
-    Date exp = new Date(now.getTime() + jwtExpirationMs);
-    return Jwts.builder()
-            .setSubject(userDetails.getUsername())
-            .claim("roles", userDetails.getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .toList())
-            .setIssuedAt(now)
-            .setExpiration(exp)
-            .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-            .compact();
-}
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + jwtExpirationMs);
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .claim("roles", userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList())
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()

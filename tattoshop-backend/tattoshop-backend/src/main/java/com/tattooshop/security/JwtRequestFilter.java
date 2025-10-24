@@ -38,8 +38,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         final String path = request.getRequestURI();
 
-        // ✅ Solo se excluyen las rutas públicas
-        if (path.startsWith("/api/auth")) {
+        // ✅ Excluir solo login y register (dejamos pasar todo lo demás)
+        if (path.equals("/api/auth/login") || path.equals("/api/auth/register")) {
             chain.doFilter(request, response);
             return;
         }
@@ -52,11 +52,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = header.substring(7);
             try {
                 username = jwtUtil.getUsernameFromToken(jwtToken);
+                logger.debug("🎟 Token recibido para usuario: {}", username);
             } catch (Exception e) {
                 logger.warn("⚠️ Error obteniendo usuario del token: {}", e.getMessage());
             }
+        } else {
+            if (!path.startsWith("/api/auth")) {
+                logger.debug("🚫 No se encontró cabecera Authorization en {}", path);
+            }
         }
 
+        // ✅ Si hay token válido, establecer autenticación en el contexto
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -65,9 +71,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(auth);
+
+                logger.debug("✅ Usuario autenticado: {}", username);
+            } else {
+                logger.warn("❌ Token inválido o expirado para: {}", username);
             }
         }
 
+        // 🚨 IMPORTANTE: asegurarse de que no se queda bloqueado en /error
         chain.doFilter(request, response);
     }
 }
