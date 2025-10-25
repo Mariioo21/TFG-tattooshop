@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { getUserFromToken } from "../services/authService";
 import "../styles/ProductDetails.css";
@@ -7,16 +7,14 @@ import "../styles/ProductDetails.css";
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ▼ Unidades
   const [qty, setQty] = useState(1);
-
-  // ▼ Mensaje feedback
   const [message, setMessage] = useState("");
 
-  // ▼ Usuario (para controlar permisos de “añadir al carrito”)
   const user = getUserFromToken();
   const isUser = user?.role === "USER";
 
@@ -27,36 +25,26 @@ function ProductDetails() {
         setProduct(res.data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Error al cargar producto:", err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, [id]);
 
-  const changeQty = (val) => {
-    setQty((prev) => {
-      const next = Math.max(1, Math.min(99, Number(prev) + val));
-      return next;
-    });
+  const changeQty = (v) => setQty(Math.max(1, Math.min(99, qty + v)));
+
+  const inputQty = (e) => {
+    const clean = e.target.value.replace(/\D/g, "");
+    setQty(clean === "" ? 1 : Math.min(99, Number(clean)));
   };
 
-  const onQtyInput = (e) => {
-    const v = e.target.value.replace(/\D/g, "");
-    if (v === "") {
-      setQty(1);
-    } else {
-      const n = Math.max(1, Math.min(99, Number(v)));
-      setQty(n);
-    }
+  const goBack = () => {
+    navigate(`/catalog${location.search}`);
   };
 
-  const handleAddToCart = () => {
+  const addToCart = () => {
     if (!isUser) {
-      setMessage("❌ Solo los usuarios registrados (USER) pueden añadir al carrito.");
+      setMessage("❌ Solo los usuarios USER pueden comprar.");
       setTimeout(() => setMessage(""), 3000);
       return;
     }
-    if (!product) return;
 
     const item = {
       productId: product.id,
@@ -66,97 +54,62 @@ function ProductDetails() {
       quantity: qty,
     };
 
-    const raw = localStorage.getItem("cart");
-    const current = raw ? JSON.parse(raw) : [];
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const idx = cart.findIndex(i => i.productId === item.productId);
 
-    const idx = current.findIndex((it) => it.productId === item.productId);
     if (idx >= 0) {
-      current[idx].quantity = Math.min(99, current[idx].quantity + item.quantity);
+      cart[idx].quantity = Math.min(99, cart[idx].quantity + qty);
     } else {
-      current.push(item);
+      cart.push(item);
     }
 
-    localStorage.setItem("cart", JSON.stringify(current));
-    setMessage(`✅ Añadido al carrito: ${item.quantity} ud(s).`);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    setMessage(`✅ ${qty} unidad(es) añadidas al carrito`);
     setTimeout(() => setMessage(""), 3000);
   };
 
-  if (loading)
-    return <p className="pd-loading">⏳ Cargando producto...</p>;
-
-  if (!product)
-    return <p className="pd-notfound">❌ Producto no encontrado</p>;
+  if (loading) return <p className="pd-loading">⏳ Cargando…</p>;
+  if (!product) return <p className="pd-notfound">❌ Producto no encontrado</p>;
 
   return (
     <div className="pd-container">
-      {/* 🔙 Botón volver */}
-      <button className="pd-back" onClick={() => navigate("/catalog")}>
+      {/* ✅ Botón universal igual que catálogo */}
+      <button className="pl-back" onClick={goBack}>
         ← Volver
       </button>
 
       <div className="pd-card">
-        <img
-          className="pd-image"
-          src={product.imageURL || "https://via.placeholder.com/350"}
-          alt={product.name}
-        />
+        <img className="pd-image" src={product.imageURL} alt={product.name} />
 
         <div className="pd-info">
           <h2 className="pd-name">{product.name}</h2>
-
           <p className="pd-desc">{product.description}</p>
-
-          <p className="pd-price">
-            💸 <strong>{product.price} €</strong>
-          </p>
+          <p className="pd-price">💸 <strong>{product.price} €</strong></p>
 
           {product.category && (
             <p className="pd-category">🏷️ Categoría: {product.category.name}</p>
           )}
 
           {product.seller && (
-            <p className="pd-seller">🛒 Vendido por: {product.seller.username}</p>
+            <p className="pd-seller">🛒 Vendedor: {product.seller.username}</p>
           )}
 
-          {/* ▼ Control de unidades */}
           <div className="pd-qty">
-            <button
-              type="button"
-              className="pd-qty-btn"
-              onClick={() => changeQty(-1)}
-              aria-label="Disminuir cantidad"
-            >
-              −
-            </button>
+            <button className="pd-qty-btn" onClick={() => changeQty(-1)}>−</button>
             <input
               className="pd-qty-input"
               type="text"
-              inputMode="numeric"
               value={qty}
-              onChange={onQtyInput}
-              aria-label="Cantidad"
+              onChange={inputQty}
             />
-            <button
-              type="button"
-              className="pd-qty-btn"
-              onClick={() => changeQty(1)}
-              aria-label="Aumentar cantidad"
-            >
-              +
-            </button>
+            <button className="pd-qty-btn" onClick={() => changeQty(1)}>+</button>
           </div>
 
-          {/* Botón añadir carrito */}
-          <button
-            className={`pd-add-btn ${!isUser ? "disabled" : ""}`}
-            onClick={handleAddToCart}
-            disabled={!isUser}
-            title={!isUser ? "Inicia sesión como USER para añadir al carrito" : "Añadir al carrito"}
-          >
+          <button className="pd-add-btn" disabled={!isUser} onClick={addToCart}>
             🛒 Añadir al carrito
           </button>
 
-          {message && <div className="pd-toast">{message}</div>}
+          {message && <p className="pd-toast">{message}</p>}
         </div>
       </div>
     </div>

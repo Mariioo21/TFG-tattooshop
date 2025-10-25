@@ -1,28 +1,73 @@
-.add-product-container {
+.add-container {
   width: 90%;
-  max-width: 600px;
-  margin: 40px auto;
+  max-width: 900px;
+  margin: 30px auto;
   background-color: #1e1e1e;
-  padding: 30px;
+  padding: 25px;
   border-radius: 12px;
   color: white;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-.add-product-container h2 {
-  color: #64b5f6;
+.add-container h2 {
   text-align: center;
-  margin-bottom: 20px;
+  color: #64b5f6;
+  margin-bottom: 18px;
 }
 
-.add-product-form {
+.add-content {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+}
+
+/* ✅ Vista previa */
+.preview-box {
+  width: 45%;
+  background: #fff;
+  color: #111;
+  padding: 14px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.preview-img {
+  width: 100%;
+  height: 240px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #f2f2f2;
+  margin-bottom: 10px;
+}
+
+.pv-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.pv-price {
+  color: #1565c0;
+  font-weight: bold;
+}
+.pv-cat {
+  font-size: 0.85rem;
+  color: #555;
+}
+.pv-desc {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ✅ Formulario */
+.add-form {
+  width: 55%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
-.add-product-form input,
-.add-product-form textarea {
+.add-form input,
+.add-form textarea {
   background-color: #121212;
   border: 1px solid #333;
   color: white;
@@ -31,7 +76,7 @@
   font-size: 1rem;
 }
 
-.add-product-form button {
+.save-btn {
   background-color: #1976d2;
   color: white;
   border: none;
@@ -39,15 +84,24 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s ease;
 }
-
-.add-product-form button:hover {
+.save-btn:hover {
   background-color: #1565c0;
 }
 
-.message {
-  text-align: center;
+.add-message {
   margin-top: 15px;
+  text-align: center;
   color: #64b5f6;
+}
+
+/* Responsive */
+@media (max-width: 850px) {
+  .add-content {
+    flex-direction: column;
+  }
+  .preview-box,
+  .add-form {
+    width: 100%;
+  }
 }

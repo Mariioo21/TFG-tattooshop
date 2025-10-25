@@ -11,6 +11,7 @@ function AddProduct() {
     imageURL: "",
     categoryName: "",
   });
+
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -39,7 +40,7 @@ function AddProduct() {
         }
       );
 
-      setMessage("✅ Producto añadido correctamente");
+      setMessage("✅ Producto añadido correctamente 🎉");
       setProduct({
         name: "",
         description: "",
@@ -47,59 +48,88 @@ function AddProduct() {
         imageURL: "",
         categoryName: "",
       });
-    } catch (error) {
-      console.error("Error al añadir producto:", error);
-      setMessage("❌ Error al añadir producto (ver consola)");
+      setTimeout(() => setMessage(""), 3000);
+    } catch {
+      setMessage("❌ Error al añadir producto");
     }
   };
 
   return (
-    <div className="add-product-container">
-      <h2>➕ Añadir nuevo producto</h2>
+    <div className="add-container">
+      <h2>➕ Añadir producto</h2>
 
-      <form onSubmit={handleSubmit} className="add-product-form">
-        <input
-          type="text"
-          name="name"
-          placeholder="Nombre del producto"
-          value={product.name}
-          onChange={handleChange}
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Descripción"
-          value={product.description}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="price"
-          placeholder="Precio (€)"
-          value={product.price}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="imageURL"
-          placeholder="URL de la imagen"
-          value={product.imageURL}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="categoryName"
-          placeholder="Categoría (opcional)"
-          value={product.categoryName}
-          onChange={handleChange}
-        />
+      <div className="add-content">
+        
+        {/* Vista previa del producto */}
+        <div className="preview-box">
+          <img
+            src={product.imageURL || "https://via.placeholder.com/200"}
+            alt="vista previa"
+            className="preview-img"
+          />
+          <h3 className="pv-name">{product.name || "Nombre del producto"}</h3>
+          {product.price && (
+            <p className="pv-price">{product.price} €</p>
+          )}
+          {product.categoryName && (
+            <p className="pv-cat">{product.categoryName}</p>
+          )}
+          {product.description && (
+            <p className="pv-desc">{product.description}</p>
+          )}
+        </div>
 
-        <button type="submit">Guardar producto</button>
-      </form>
+        {/* Formulario */}
+        <form onSubmit={handleSubmit} className="add-form">
+          <input
+            type="text"
+            name="name"
+            placeholder="Nombre del producto"
+            value={product.name}
+            onChange={handleChange}
+            required
+          />
 
-      {message && <p className="message">{message}</p>}
+          <textarea
+            name="description"
+            placeholder="Descripción"
+            value={product.description}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="number"
+            name="price"
+            placeholder="Precio (€)"
+            value={product.price}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="text"
+            name="imageURL"
+            placeholder="URL de la imagen"
+            value={product.imageURL}
+            onChange={handleChange}
+          />
+
+          <input
+            type="text"
+            name="categoryName"
+            placeholder="Categoría"
+            value={product.categoryName}
+            onChange={handleChange}
+          />
+
+          <button type="submit" className="save-btn">
+            Guardar producto
+          </button>
+        </form>
+      </div>
+
+      {message && <p className="add-message">{message}</p>}
     </div>
   );
 }

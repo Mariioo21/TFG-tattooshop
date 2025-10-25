@@ -5,20 +5,23 @@
   padding: 10px;
 }
 
-.pd-back {
-  background: none;
-  border: none;
-  color: #1565c0;
-  font-size: 1rem;
+/* ✅ Usamos exactamente el estilo del botón volver de ProductList */
+.pl-back {
+  background: #eeeeee;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
   margin-bottom: 10px;
-  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
 }
 
-.pd-back:hover {
-  text-decoration: underline;
+.pl-back:hover {
+  background: #e2e2e2;
 }
 
+/* Tarjeta principal */
 .pd-card {
   background: #fff;
   border-radius: 12px;
@@ -28,13 +31,16 @@
   gap: 25px;
 }
 
+/* Imagen centrada */
 .pd-image {
   width: 420px;
   max-width: 100%;
   border-radius: 12px;
-  object-fit: cover;
+  object-fit: contain;
+  background: #f7f7f7;
 }
 
+/* Información */
 .pd-info {
   display: flex;
   flex-direction: column;
@@ -63,7 +69,7 @@
   color: #444;
 }
 
-/* ▼ Unidades */
+/* Cantidad */
 .pd-qty {
   display: inline-flex;
   align-items: center;
@@ -95,7 +101,7 @@
   font-size: 1rem;
 }
 
-/* Botón añadir carrito */
+/* Botón carrito */
 .pd-add-btn {
   margin-top: 12px;
   padding: 10px 14px;
@@ -104,7 +110,6 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: transform 0.05s ease, opacity 0.2s ease, background-color 0.2s ease;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -115,17 +120,12 @@
   background-color: #155cc1;
 }
 
-.pd-add-btn:active {
-  transform: translateY(1px);
-}
-
-.pd-add-btn.disabled,
 .pd-add-btn:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-/* Toast feedback */
+/* Toast */
 .pd-toast {
   margin-top: 10px;
   padding: 10px 12px;
@@ -135,7 +135,7 @@
   font-weight: 500;
 }
 
-/* Loading y not found */
+/* Loading + notfound */
 .pd-loading,
 .pd-notfound {
   text-align: center;
@@ -150,7 +150,6 @@
     flex-direction: column;
     text-align: center;
   }
-
   .pd-qty {
     justify-content: center;
   }
