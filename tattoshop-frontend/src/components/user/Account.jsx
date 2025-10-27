@@ -1,10 +1,43 @@
 import React from "react";
+import { getUserFromToken } from "../../services/authService";
+import "../../styles/Account.css";
 
 function Account() {
+  const user = getUserFromToken();
+
+  if (!user) {
+    return <p className="acc-error">No hay usuario autenticado</p>;
+  }
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>👤 Mi Cuenta</h2>
-      <p>Información del usuario y ajustes de perfil.</p>
+    <div className="acc-wrapper">
+      <div className="acc-box">
+        <h2 className="acc-title">👤 Mi Cuenta</h2>
+
+        <div className="acc-row">
+          <span className="acc-label">Nombre:</span>
+          <span className="acc-value">{user.username}</span>
+        </div>
+
+        <div className="acc-row">
+          <span className="acc-label">Correo:</span>
+          <span className="acc-value">{user.email}</span>
+        </div>
+
+        <div className="acc-row">
+          <span className="acc-label">Rol:</span>
+          <span className="acc-value">{user.role}</span>
+        </div>
+
+        <hr className="acc-divider" />
+
+        <button
+          className="acc-btn"
+          onClick={() => alert("Aquí haremos cambiar datos más adelante 🛠")}
+        >
+          ✏️ Editar información
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,70 @@
+.acc-wrapper {
+  width: 95%;
+  max-width: 500px;
+  margin: 25px auto;
+}
+
+.acc-box {
+  background: #1e1e1e;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  color: #fff;
+}
+
+.acc-title {
+  text-align: center;
+  margin-bottom: 18px;
+  color: #64b5f6;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.acc-row {
+  display: flex;
+  justify-content: space-between;
+  background: #111;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.acc-label {
+  font-weight: 600;
+  color: #bbb;
+}
+
+.acc-value {
+  font-weight: 500;
+  color: #fff;
+  text-align: right;
+}
+
+.acc-divider {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 15px 0;
+}
+
+.acc-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1565c0;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.25s ease;
+}
+
+.acc-btn:hover {
+  background-color: #104f91;
+}
+
+.acc-error {
+  text-align: center;
+  margin-top: 40px;
+  color: #ff7675;
+  font-weight: bold;
+}

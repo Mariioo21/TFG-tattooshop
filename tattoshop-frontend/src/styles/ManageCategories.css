@@ -1,102 +1,119 @@
-.admin-container {
-  padding: 30px;
-  background-color: #f9f9f9;
+/* Contenedor general centrado */
+.admin-cat-wrapper {
+  width: 95%;
+  max-width: 900px; /* ✅ MÁS ESTRECHO */
+  margin: 20px auto;
+}
+
+/* Recuadro negro */
+.admin-cat-container {
+  background-color: #1e1e1e;
+  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  margin: 30px auto;
+  color: white;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
 }
 
-.admin-container h2 {
+/* Título */
+.admin-cat-title {
   text-align: center;
-  color: #1565c0;
   margin-bottom: 20px;
+  color: #64b5f6;
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
-.add-category-form {
+/* Mensajes */
+.admin-msg {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.admin-msg.error {
+  color: #ff7675;
+}
+.admin-msg.success {
+  color: #66bb6a;
+}
+
+/* Formulario añadir categoría */
+.add-cat-form {
   display: flex;
   justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
+}
+.add-cat-form input {
+  padding: 9px;
+  width: 200px; /* ✅ más corto */
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #121212;
+  color: #fff;
+}
+.add-cat-form button {
+  background: #1565c0;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px; /* ✅ más pequeño */
+  cursor: pointer;
+  color: white;
+  transition: background 0.25s ease;
+  font-size: 0.9rem;
+}
+.add-cat-form button:hover {
+  background: #0d47a1;
+}
+
+/* ✅ Lista de categorías */
+.cat-list {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 }
 
-.add-category-form input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  width: 250px;
-}
-
-.add-category-form button {
-  background-color: #1565c0;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-}
-
-.add-category-form button:hover {
-  background-color: #0d47a1;
-}
-
-.category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.category-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* ✅ Tarjetas más estrechas */
+.cat-card {
   background: #fff;
-  padding: 10px 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.category-name {
-  flex-grow: 1;
   color: #333;
-  font-size: 1rem;
-}
-
-/* Botón de eliminar más pequeño */
-.delete-btn {
-  background-color: #e53935;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-}
-
-.small-icon-btn {
-  width: 34px;
-  height: 34px;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  padding: 0;
+  width: 70%;
+  margin: 0 auto;
+  position: relative;
 }
 
-.small-icon-btn:hover {
+/* ✅ Nombre ocupa el espacio para empujar el botón a la derecha */
+.small-btn {
+  background-color: #e53935;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  width: auto;             
+  min-width: 80px;         
+  text-align: center;
+  justify-self: flex-end;  
+}
+
+.small-btn:hover {
   background-color: #b71c1c;
 }
 
-.admin-error {
-  color: #d32f2f;
-  text-align: center;
-  margin-bottom: 10px;
-  font-weight: 500;
+/* ✅ Esto empuja el nombre a ocupar todo y deja el botón al final */
+.cat-card span {
+  flex: 1;
 }
 
-.admin-success {
-  color: #2e7d32;
+
+/* Texto de lista vacía */
+.no-cats {
   text-align: center;
-  margin-bottom: 10px;
-  font-weight: 500;
+  color: #aaa;
+  font-size: 0.95rem;
 }

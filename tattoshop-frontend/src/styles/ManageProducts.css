@@ -1,54 +1,51 @@
-.admin-container {
-  padding: 30px;
-  background-color: #f8f9fa;
-  min-height: 100vh;
+/* Contenedor centrado con estilo oscuro */
+.admin-products-wrapper {
+  width: 95%;
+  max-width: 1300px;
+  margin: 20px auto;
 }
 
-.admin-container h2 {
+/* Recuadro negro */
+.admin-products-container {
+  background-color: #1e1e1e;
+  padding: 25px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+
+/* Título */
+.admin-title {
   text-align: center;
   margin-bottom: 20px;
+  color: #64b5f6;
+  font-size: 1.7rem;
+  font-weight: 700;
 }
 
-.admin-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+/* Grid reutilizando estilo del catálogo */
+.admin-grid-style {
+  gap: 22px;
 }
 
-.product-card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  text-align: center;
-}
-
-.product-card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.product-card .category {
-  color: gray;
-  font-size: 0.9rem;
-}
-
+/* Botón eliminar coherente */
 .delete-btn {
   background-color: #e53935;
-  color: white;
+  width: 100%;
   border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 8px;
   cursor: pointer;
+  color: white;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
 }
-
 .delete-btn:hover {
-  background-color: #b71c1c;
+  background-color: #c62828;
 }
 
-.error-msg {
-  color: #d32f2f;
+.no-items {
   text-align: center;
-  font-weight: 500;
-  margin-top: 20px;
+  color: #aaa;
 }

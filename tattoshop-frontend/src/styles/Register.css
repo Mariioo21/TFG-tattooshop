@@ -1,48 +1,64 @@
+/* ===== CONTENEDOR ===== */
+.register-wrapper {
+  width: 95%;
+  max-width: 450px;
+  margin: 40px auto;
+}
+
+/* ===== TARJETA NEGRA ===== */
 .register-container {
-  max-width: 400px;
-  margin: 100px auto;
-  background-color: #1c1c1c;
-  padding: 30px;
+  background-color: #1e1e1e;
+  padding: 25px;
   border-radius: 12px;
   color: white;
   text-align: center;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
 }
 
+/* ===== TÍTULO ===== */
 .register-container h2 {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  font-size: 1.6rem;
+  color: #64b5f6;
+  font-weight: 700;
 }
 
+/* ===== FORMULARIO ===== */
 .register-container form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
+/* Inputs + selects */
 .register-container input,
 .register-container select {
   padding: 10px;
-  border-radius: 6px;
-  border: none;
-  outline: none;
-  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #121212;
+  color: white;
+  font-size: 0.95rem;
 }
 
+/* Botón */
 .register-container button {
-  background-color: #ff9800;
+  background-color: #1976d2;
   color: white;
   border: none;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.2s ease-in-out;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
 }
-
 .register-container button:hover {
-  background-color: #e68900;
+  background-color: #1565c0;
 }
 
+/* Mensaje */
 .register-message {
-  margin-top: 15px;
-  font-size: 14px;
+  margin-top: 10px;
+  font-size: 0.9rem;
 }

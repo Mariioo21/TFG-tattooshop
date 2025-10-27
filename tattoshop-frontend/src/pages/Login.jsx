@@ -20,9 +20,18 @@ function Login() {
     try {
       const response = await login(credentials);
 
-      // Guardar token y usuario en localStorage
+      // ✅ Guardar token
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data));
+
+      // ✅ Guardar usuario completo incluyendo email
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          username: response.data.username,
+          email: response.data.email,
+          role: response.data.role,
+        })
+      );
 
       console.log("✅ Login correcto:", response.data);
       navigate("/catalog");

@@ -15,6 +15,9 @@ import ManageUsers from "./components/admin/ManageUsers";
 import ManageProducts from "./components/admin/ManageProducts";
 import ManageCategories from "./components/admin/ManageCategories";
 
+import Account from "./components/user/Account";
+import Cart from "./components/user/Cart";
+
 import Header from "./components/Header";
 import { getUserFromToken } from "./services/authService";
 
@@ -54,6 +57,11 @@ function AppContent() {
         <Route path="/manage-users" element={<ManageUsers />} />
         <Route path="/manage-products" element={<ManageProducts />} />
         <Route path="/manage-categories" element={<ManageCategories />} />
+
+        {/*User */}
+        <Route path="/account" element={<Account />} />
+        <Route path="/cart" element={<Cart />} />
+
 
         {/* 404 */}
         <Route

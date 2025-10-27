@@ -1,69 +1,74 @@
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f0f2f5;
+/* ===== CONTENEDOR GLOBAL ===== */
+.login-wrapper {
+  width: 95%;
+  max-width: 400px;
+  margin: 40px auto;
 }
 
+/* ===== TARJETA NEGRA ===== */
 .login-card {
-  background: #fff;
-  padding: 40px 50px;
+  background-color: #1e1e1e;
+  padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  width: 350px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  color: white;
   text-align: center;
 }
 
-.login-card h2 {
-  margin-bottom: 20px;
-  color: #333;
+/* ===== TÍTULO ===== */
+.login-title {
+  margin-bottom: 18px;
+  font-size: 1.6rem;
+  color: #64b5f6;
+  font-weight: 700;
 }
 
-.login-card form {
-  display: flex;
-  flex-direction: column;
-}
-
+/* ===== INPUTS ===== */
 .login-card input {
-  margin-bottom: 15px;
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-.login-card button {
-  background-color: #1565c0;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #121212;
   color: white;
-  border: none;
+  font-size: 0.95rem;
+}
+
+/* ===== BOTÓN LOGIN ===== */
+.login-btn {
+  background-color: #1976d2;
+  color: white;
   padding: 10px;
-  border-radius: 6px;
+  width: 100%;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+.login-btn:hover {
+  background-color: #1565c0;
 }
 
-.login-card button:hover {
-  background-color: #0d47a1;
-}
-
-.login-error {
-  color: #d32f2f;
-  margin-top: 10px;
-  font-weight: 500;
-}
-
+/* ===== LINK AL REGISTRO ===== */
 .login-register-link {
-  margin-top: 20px;
+  margin-top: 14px;
   font-size: 0.9rem;
 }
-
 .login-register-link a {
-  color: #1565c0;
-  text-decoration: none;
+  color: #64b5f6;
   font-weight: bold;
+  text-decoration: none;
 }
-
 .login-register-link a:hover {
   text-decoration: underline;
+}
+
+/* ===== MENSAJE ERROR ===== */
+.login-error {
+  color: #ff6b6b;
+  margin-top: 10px;
+  font-weight: 500;
 }

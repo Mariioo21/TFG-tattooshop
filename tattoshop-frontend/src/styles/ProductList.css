@@ -9,13 +9,34 @@
   gap: 20px;
 }
 
-/* ✅ NUEVO: Cuadro negro igual que en seller */
+/* ✅ Contenedor negro general */
 .pl-box {
   width: 100%;
   background: #1e1e1e;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+
+/* ✅ Mensaje de bienvenida centrado y visible */
+.pl-welcome {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  animation: fadeInDown 0.5s ease-out;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ✅ Filtros */
@@ -31,7 +52,6 @@
   margin-bottom: 18px;
 }
 
-/* ✅ Inputs filtros */
 .pl-filters input {
   padding: 7px;
   border-radius: 8px;
@@ -49,6 +69,7 @@
   border-radius: 8px;
   cursor: pointer;
   margin: 0 auto 8px;
+  font-weight: 600;
 }
 .pl-back:hover {
   background: #e2e2e2;
@@ -63,7 +84,7 @@
   margin-bottom: 15px;
 }
 
-/* ✅ Grid de 5 */
+/* ✅ Grid de 5 columnas */
 .pl-grid {
   display: grid;
   gap: 22px;
@@ -86,6 +107,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .pl-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 15px rgba(0,0,0,0.18);
@@ -103,6 +125,7 @@
   margin-bottom: 12px;
   overflow: hidden;
 }
+
 .pl-image {
   max-width: 100%;
   max-height: 100%;
@@ -115,6 +138,7 @@
   font-weight: 600;
   color: #000;
 }
+
 .pl-desc {
   font-size: 0.85rem;
   color: #444;
@@ -128,10 +152,12 @@
   justify-content: space-between;
   font-size: 0.9rem;
 }
+
 .pl-price {
   font-weight: bold;
   color: #1565c0;
 }
+
 .pl-category {
   font-style: italic;
   color: #777;

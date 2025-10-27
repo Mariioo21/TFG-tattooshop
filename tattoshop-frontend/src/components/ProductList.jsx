@@ -24,7 +24,7 @@ function ProductList() {
   useEffect(() => {
     const user = getUserFromToken();
     if (user && !sessionStorage.getItem("welcomeShown")) {
-      setWelcomeMessage(`Bienvenido de nuevo, ${user.username} 😎`);
+      setWelcomeMessage(`Bienvenido de nuevo, ${user.username}`);
       sessionStorage.setItem("welcomeShown", "true");
       setTimeout(() => setWelcomeMessage(""), 4000);
     }
@@ -70,7 +70,14 @@ function ProductList() {
   return (
     <div className="pl-wrapper">
 
-      {/* ✅ NUEVO: Contenedor negro como en SELLER */}
+      {/* ✅ Mensaje de bienvenida fuera del recuadro negro */}
+      {welcomeMessage && (
+        <div className="pl-welcome">
+          {welcomeMessage}
+        </div>
+      )}
+
+      {/* ✅ Contenedor negro */}
       <div className="pl-box">
 
         {showFilters && (
@@ -102,8 +109,6 @@ function ProductList() {
               ← Volver
             </button>
           )}
-
-          {welcomeMessage && <div className="pl-welcome">{welcomeMessage}</div>}
 
           <h1 className="pl-title">🛍️ Productos disponibles</h1>
 
@@ -140,8 +145,7 @@ function ProductList() {
           )}
 
         </main>
-      </div> {/* ✅ FIN de pl-box */}
-
+      </div>
     </div>
   );
 }

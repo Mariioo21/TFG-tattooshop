@@ -31,8 +31,18 @@ function Register() {
         password: password.trim(),
       });
 
+      // ✅ Guardar token
       localStorage.setItem("token", loginResponse.data.token);
-      localStorage.setItem("user", JSON.stringify(loginResponse.data));
+
+      // ✅ Guardar usuario completo incluyendo email
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          username: loginResponse.data.username,
+          email: loginResponse.data.email,
+          role: loginResponse.data.role,
+        })
+      );
 
       setMessage("✅ Usuario registrado correctamente. Redirigiendo...");
       setTimeout(() => navigate("/catalog"), 1500);

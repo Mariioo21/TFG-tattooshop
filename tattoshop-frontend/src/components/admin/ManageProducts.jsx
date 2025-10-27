@@ -20,15 +20,17 @@ function ManageProducts() {
       });
 
       setProducts(res.data.content || res.data);
-      setError(null);
     } catch (err) {
-      console.error("Error al obtener productos:", err);
-      setError("❌ No se pudieron cargar los productos (403 o error de servidor).");
+      setError("❌ No se pudieron cargar los productos.");
     }
   };
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar este producto?")) return;
+    if (!window.confirm("¿Eliminar este producto?")) return;
 
     try {
       const token = getToken();
@@ -37,53 +39,53 @@ function ManageProducts() {
       });
 
       setProducts(products.filter((p) => p.id !== id));
-    } catch (err) {
-      console.error("Error al eliminar producto:", err);
-      alert("❌ No tienes permisos para eliminar este producto (403).");
+    } catch {
+      alert("❌ Error al eliminar el producto.");
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  if (error) {
-    return (
-      <div className="admin-container">
-        <h2>🛒 Gestión de Productos</h2>
-        <p className="error-msg">{error}</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="admin-container">
-      <h2>🛒 Gestión de Productos</h2>
-      {products.length === 0 ? (
-        <p style={{ textAlign: "center", color: "#666" }}>No hay productos disponibles.</p>
-      ) : (
-        <div className="admin-grid">
-          {products.map((p) => (
-            <div key={p.id} className="product-card">
-              <img
-                src={p.imageURL || "https://via.placeholder.com/200"}
-                alt={p.name}
-              />
-              <h3>{p.name}</h3>
-              <p>{p.description}</p>
-              <p>
-                <strong>{p.price} €</strong>
-              </p>
-              <p className="category">
-                Categoría: {p.category?.name || "Sin categoría"}
-              </p>
-              <button onClick={() => handleDelete(p.id)} className="delete-btn">
-                🗑️ Eliminar
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="admin-products-wrapper">
+      <div className="admin-products-container">
+        <h2 className="admin-title">🛒 Gestión de Productos</h2>
+
+        {error && <p className="error-msg">{error}</p>}
+
+        {products.length === 0 ? (
+          <p className="no-items">No hay productos disponibles.</p>
+        ) : (
+          <div className="pl-grid admin-grid-style">
+            {products.map((product) => (
+              <div key={product.id} className="pl-card">
+                <div className="pl-image-wrapper">
+                  <img
+                    className="pl-image"
+                    src={product.imageURL || "https://via.placeholder.com/200"}
+                    alt={product.name}
+                  />
+                </div>
+
+                <h3 className="pl-name">{product.name}</h3>
+                <p className="pl-desc">{product.description}</p>
+
+                <div className="pl-meta">
+                  <span className="pl-price">{product.price} €</span>
+                  {product.category && (
+                    <span className="pl-category">{product.category.name}</span>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  className="delete-btn"
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
