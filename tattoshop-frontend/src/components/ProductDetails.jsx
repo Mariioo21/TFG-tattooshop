@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { getUserFromToken } from "../services/authService";
+import { getToken, getUserFromToken } from "../services/authService";
 import "../styles/ProductDetails.css";
 
 function ProductDetails() {
@@ -17,6 +17,14 @@ function ProductDetails() {
 
   const user = getUserFromToken();
   const isUser = user?.role === "USER";
+  const token = getToken();
+
+  const api = axios.create({
+    baseURL: "http://localhost:8080/api/cart",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   useEffect(() => {
     axios
@@ -35,37 +43,26 @@ function ProductDetails() {
     setQty(clean === "" ? 1 : Math.min(99, Number(clean)));
   };
 
-  const goBack = () => {
-    navigate(`/catalog${location.search}`);
-  };
+  const goBack = () => navigate(`/catalog${location.search}`);
 
   const addToCart = () => {
     if (!isUser) {
-      setMessage("❌ Solo los usuarios USER pueden comprar.");
+      setMessage("⚠️ Solo los usuarios pueden comprar.");
       setTimeout(() => setMessage(""), 3000);
       return;
     }
 
-    const item = {
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      imageURL: product.imageURL || "",
-      quantity: qty,
-    };
-
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const idx = cart.findIndex(i => i.productId === item.productId);
-
-    if (idx >= 0) {
-      cart[idx].quantity = Math.min(99, cart[idx].quantity + qty);
-    } else {
-      cart.push(item);
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    setMessage(`✅ ${qty} unidad(es) añadidas al carrito`);
-    setTimeout(() => setMessage(""), 3000);
+    api
+      .post(`/add/${product.id}?qty=${qty}`)
+      .then(() => {
+        window.dispatchEvent(new Event("cartUpdated")); // ✅ ACTUALIZA HEADER EN TIEMPO REAL
+        setMessage(`✅ ${qty} unidad(es) añadidas al carrito`);
+        setTimeout(() => setMessage(""), 3000);
+      })
+      .catch(() => {
+        setMessage("❌ Error al añadir al carrito");
+        setTimeout(() => setMessage(""), 3000);
+      });
   };
 
   if (loading) return <p className="pd-loading">⏳ Cargando…</p>;
@@ -73,10 +70,7 @@ function ProductDetails() {
 
   return (
     <div className="pd-container">
-      {/* ✅ Botón universal igual que catálogo */}
-      <button className="pl-back" onClick={goBack}>
-        ← Volver
-      </button>
+      <button className="pl-back" onClick={goBack}>← Volver</button>
 
       <div className="pd-card">
         <img className="pd-image" src={product.imageURL} alt={product.name} />
@@ -89,7 +83,6 @@ function ProductDetails() {
           {product.category && (
             <p className="pd-category">🏷️ Categoría: {product.category.name}</p>
           )}
-
           {product.seller && (
             <p className="pd-seller">🛒 Vendedor: {product.seller.username}</p>
           )}

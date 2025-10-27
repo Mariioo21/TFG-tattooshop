@@ -12,9 +12,9 @@
 
 .header-content.header-full {
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto auto; /* ✅ Ahora hay columna para carrito */
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 /* Logo */
@@ -149,4 +149,33 @@
     gap: 10px;
   }
   .header-categories { display: none; }
+}
+
+/* ✅ Icono carrito */
+.header-cart {
+  font-size: 1.6rem;
+  cursor: pointer;
+  position: relative;
+  padding: 6px;
+  transition: transform 0.15s ease;
+}
+
+/* ✅ Carrito en el Header */
+.header-cart {
+  font-size: 1.6rem;
+  cursor: pointer;
+  position: relative;
+  margin-right: 10px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+  background: #e53935;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { logout, getUserFromToken } from "../services/authService";
+import { logout, getUserFromToken, getToken } from "../services/authService";
 import "../styles/Header.css";
 
 function Header() {
@@ -10,38 +10,46 @@ function Header() {
   const [categories, setCategories] = useState([]);
   const [user, setUser] = useState(getUserFromToken());
   const [searchText, setSearchText] = useState("");
+  const [cartCount, setCartCount] = useState(0);
+
   const menuRef = useRef(null);
   const catRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const token = getToken();
 
-  // Mantener usuario actualizado si cambia en localStorage
   useEffect(() => {
     const handleStorageChange = () => setUser(getUserFromToken());
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // Cargar categorías para el desplegable
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/categories")
+    axios.get("http://localhost:8080/api/categories")
       .then((res) => setCategories(res.data || []))
       .catch(() => setCategories([]));
   }, []);
 
-  // Cerrar menús al hacer click fuera
+  const fetchCartCount = () => {
+    if (!user || user.role !== "USER") return;
+    axios.get("http://localhost:8080/api/cart", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      const totalQty = (res.data.items || []).reduce((sum, i) => sum + i.quantity, 0);
+      setCartCount(totalQty);
+    })
+    .catch(() => setCartCount(0));
+  };
+
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-      if (catRef.current && !catRef.current.contains(e.target)) {
-        setCatsOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    fetchCartCount();
+  }, [user, token, location.pathname]);
+
+  useEffect(() => {
+    window.addEventListener("cartUpdated", fetchCartCount);
+    return () => window.removeEventListener("cartUpdated", fetchCartCount);
+  }, [user, token]);
 
   const handleLogout = () => {
     logout();
@@ -55,11 +63,8 @@ function Header() {
 
   const handleSearch = () => {
     const q = searchText.trim();
-    if (q.length === 0) {
-      navigate("/catalog");
-    } else {
-      navigate(`/catalog?search=${encodeURIComponent(q)}`);
-    }
+    if (q.length === 0) navigate("/catalog");
+    else navigate(`/catalog?search=${encodeURIComponent(q)}`);
   };
 
   const handleCategorySelect = (name) => {
@@ -72,36 +77,24 @@ function Header() {
   return (
     <header className="header">
       <div className="header-content header-full">
-        {/* Logo */}
-        <h1
-          className="header-title"
-          onClick={() => navigate("/catalog")}
-          title="Ir al catálogo"
-        >
+
+        {/* -- LOGO -- */}
+        <h1 className="header-title" onClick={() => navigate("/catalog")}>
           TattooShop
         </h1>
 
-        {/* Categorías */}
+        {/* -- CATEGORIAS -- */}
         <div className="header-categories" ref={catRef}>
-          <button
-            className="cat-toggle"
-            onClick={() => setCatsOpen((v) => !v)}
-            aria-haspopup="listbox"
-            aria-expanded={catsOpen}
-          >
+          <button className="cat-toggle" onClick={() => setCatsOpen(!catsOpen)}>
             Categorías ▾
           </button>
           {catsOpen && (
-            <div className="cat-dropdown" role="listbox">
-              {categories.length === 0 && (
-                <div className="cat-empty">Sin categorías</div>
-              )}
-              {categories.map((c) => (
+            <div className="cat-dropdown">
+              {categories.map(c => (
                 <button
                   key={c.id}
                   className="cat-item"
-                  onClick={() => handleCategorySelect(c.name)}
-                >
+                  onClick={() => handleCategorySelect(c.name)}>
                   {c.name}
                 </button>
               ))}
@@ -109,7 +102,7 @@ function Header() {
           )}
         </div>
 
-        {/* Buscador centrado */}
+        {/* -- BUSCADOR -- */}
         <div className="header-search">
           <input
             type="text"
@@ -118,12 +111,18 @@ function Header() {
             onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           />
-          <button className="search-btn" onClick={handleSearch} title="Buscar">
-            🔍
-          </button>
+          <button className="search-btn" onClick={handleSearch}>🔍</button>
         </div>
 
-        {/* Usuario / menú */}
+        {/* -- CARRITO (solo USER) -- */}
+        {user.role === "USER" && (
+          <div className="header-cart" onClick={() => navigate("/cart")} title="Carrito">
+            🛒
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </div>
+        )}
+
+        {/* -- USUARIO -- */}
         <div className="header-user" ref={menuRef}>
           <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
             {user.username} ⬇️
@@ -131,73 +130,45 @@ function Header() {
 
           {menuOpen && (
             <div className="menu-dropdown">
-              {/* USER */}
               {user.role === "USER" && (
                 <>
-                  <button onClick={() => goTo("/catalog")} className="menu-item">
-                    🛍️ Ver Catálogo
-                  </button>
-                  <button onClick={() => goTo("/cart")} className="menu-item">
-                    🛒 Mi Carrito
-                  </button>
-                  <button onClick={() => goTo("/pending-orders")} className="menu-item">
-                    ⏳ Envíos Pendientes
-                  </button>
-                  <button onClick={() => goTo("/order-history")} className="menu-item">
-                    📦 Historial de Pedidos
-                  </button>
-                  <button onClick={() => goTo("/account")} className="menu-item">
-                    👤 Mi Cuenta
-                  </button>
+                  <button onClick={() => goTo("/catalog")} className="menu-item">🛍️ Ver Catálogo</button>
+                  <button onClick={() => goTo("/cart")} className="menu-item">🛒 Mi Carrito</button>
+                  <button onClick={() => goTo("/pending-orders")} className="menu-item">⏳ Envíos Pendientes</button>
+                  <button onClick={() => goTo("/order-history")} className="menu-item">📦 Historial de Pedidos</button>
+                  <button onClick={() => goTo("/account")} className="menu-item">👤 Mi Cuenta</button>
                 </>
               )}
 
-              {/* SELLER */}
               {user.role === "SELLER" && (
                 <>
-                  <button onClick={() => goTo("/catalog")} className="menu-item">
-                    🛍️ Ver catálogo
-                  </button>
-                  <button onClick={() => goTo("/my-products")} className="menu-item">
-                    📦 Mis productos
-                  </button>
-                  <button onClick={() => goTo("/add-product")} className="menu-item">
-                    ➕ Añadir producto
-                  </button>
-                  <button onClick={() => goTo("/edit-product")} className="menu-item">
-                    ✏️ Editar producto
-                  </button>
-                  <button onClick={() => goTo("/delete-product")} className="menu-item">
-                    🗑️ Eliminar producto
-                  </button>
+                  <button onClick={() => goTo("/catalog")} className="menu-item">🛍️ Ver Catálogo</button>
+                  <button onClick={() => goTo("/my-products")} className="menu-item">📦 Mis productos</button>
+                  <button onClick={() => goTo("/add-product")} className="menu-item">➕ Añadir producto</button>
+                  <button onClick={() => goTo("/edit-product")} className="menu-item">✏️ Editar producto</button>
+                  <button onClick={() => goTo("/delete-product")} className="menu-item">🗑️ Eliminar producto</button>
                 </>
               )}
 
-              {/* ADMIN */}
               {user.role === "ADMIN" && (
                 <>
-                  <button onClick={() => goTo("/catalog")} className="menu-item">
-                    🛍️ Ver catálogo
-                  </button>
-                  <button onClick={() => goTo("/manage-users")} className="menu-item">
-                    👥 Gestionar usuarios
-                  </button>
-                  <button onClick={() => goTo("/manage-products")} className="menu-item">
-                    🛒 Gestionar productos
-                  </button>
-                  <button onClick={() => goTo("/manage-categories")} className="menu-item">
-                    🗂️ Gestionar categorías
-                  </button>
+                  <button onClick={() => goTo("/catalog")} className="menu-item">🛍️ Ver catálogo</button>
+                  <button onClick={() => goTo("/manage-users")} className="menu-item">👥 Gestionar usuarios</button>
+                  <button onClick={() => goTo("/manage-products")} className="menu-item">🛒 Gestionar productos</button>
+                  <button onClick={() => goTo("/manage-categories")} className="menu-item">🗂️ Gestionar categorías</button>
                 </>
               )}
 
               <hr className="menu-divider" />
+
+              {/* ✅ BOTÓN CERRAR SESIÓN RESTAURADO */}
               <button onClick={handleLogout} className="menu-item logout">
                 🚪 Cerrar sesión
               </button>
             </div>
           )}
         </div>
+
       </div>
     </header>
   );

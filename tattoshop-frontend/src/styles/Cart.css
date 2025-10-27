@@ -1,6 +1,6 @@
 .cart-wrapper {
   width: 95%;
-  max-width: 1300px;
+  max-width: 900px;
   margin: 20px auto;
 }
 
@@ -19,10 +19,10 @@
   margin-bottom: 20px;
 }
 
-/* Items */
 .cart-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 15px;
   background: #fff;
   color: black;
@@ -32,102 +32,56 @@
 }
 
 .cart-img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  background: #f8f8f8;
-  border-radius: 10px;
+  width: 85px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .cart-info {
-  flex: 1;
+  flex-grow: 1;
 }
 
 .cart-price {
-  font-size: 1rem;
   font-weight: bold;
   color: #1565c0;
 }
 
-/* Acciones */
 .cart-actions {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-.cart-actions button {
-  width: 30px;
-  height: 30px;
-  border: none;
-  background: #1565c0;
-  color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.qty {
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-/* Eliminar */
 .remove-btn {
   background: #e53935;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
   border: none;
-  padding: 8px;
-  border-radius: 8px;
   cursor: pointer;
-  color: #fff;
-  font-size: 1rem;
 }
 
-/* Footer */
 .cart-footer {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px solid #ccc;
   text-align: right;
+  border-top: 1px solid #666;
+  padding-top: 18px;
+  margin-top: 18px;
 }
 
 .cart-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 10px;
-}
-
-.clear-btn {
-  background: #b71c1c;
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-}
-
-.checkout-btn {
-  background: #1565c0;
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  color: #fff;
-}
-
-/* Vacío */
-.cart-empty {
-  text-align: center;
-  font-size: 1rem;
-  margin-bottom: 15px;
 }
 
 .cart-back {
   display: block;
   margin: 0 auto;
-  background: #eee;
-  border: 1px solid #ccc;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
+}
+
+.cart-loading,
+.cart-empty {
+  text-align: center;
+  margin: 20px 0;
 }
