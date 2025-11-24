@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { login } from "../services/authService";
+import { login } from "./services/authService";
 import { useNavigate } from "react-router-dom";
-import "../styles/Auth.css";
+import "./styles/Auth.css";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -11,7 +11,6 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const credentials = {
       username: username.trim(),
       password: password.trim(),
@@ -20,10 +19,8 @@ function Login() {
     try {
       const response = await login(credentials);
 
-      // ✅ Guardar token
       localStorage.setItem("token", response.data.token);
 
-      // ✅ Guardar usuario completo incluyendo email
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -45,6 +42,7 @@ function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Iniciar sesión</h2>
+
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -67,7 +65,8 @@ function Login() {
 
         {errorMessage && <p className="auth-message">{errorMessage}</p>}
 
-        <p className="auth-switch">
+        {/* SOLO alineado al centro, sin romper nada */}
+        <p className="auth-switch center-text">
           ¿No tienes cuenta?{" "}
           <span onClick={() => navigate("/register")}>Regístrate</span>
         </p>

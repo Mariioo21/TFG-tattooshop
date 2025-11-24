@@ -1,0 +1,64 @@
+services:
+  # 🗄️ Servicio de base de datos MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_tattoo
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tattoo_shop
+      MYSQL_USER: tattooshop
+      MYSQL_PASSWORD: tattooshop
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tattoo-net
+
+  # 🚀 Backend Spring Boot
+  backend:
+    build: ./tattoshop-backend/tattoshop-backend
+    container_name: tattoo_backend
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/tattoo_shop?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=tattooshop
+      - SPRING_DATASOURCE_PASSWORD=tattooshop
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - JWT_SECRET=6yJzQ9dXbZp3hR8mN2fV5sKwG0tC7rX4jL1oE9aM6qD8uP0yF3vW2nT7gH4sR1cJ
+      - JWT_EXPIRATION=86400000
+    ports:
+      - "8080:8080"
+    networks:
+      - tattoo-net
+
+  # 🎨 Frontend React (CRA)
+  frontend:
+    build: ./tattoshop-frontend
+    container_name: tattoo_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"          # 3000 en tu máquina -> 80 Nginx dentro
+    networks:
+      - tattoo-net
+
+# 🌐 Red interna para los contenedores
+networks:
+  tattoo-net:
+    driver: bridge
+
+# 💾 Volumen persistente para MySQL
+volumes:
+  mysql_data:

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { register, login } from "../services/authService";
+import { register, login } from "./services/authService";
 import { useNavigate } from "react-router-dom";
-import "../styles/Auth.css";
+import "./styles/Auth.css";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -22,19 +22,15 @@ function Register() {
     };
 
     try {
-      // Registrar usuario
       await register(userData);
 
-      // Login automático
       const loginResponse = await login({
         username: username.trim(),
         password: password.trim(),
       });
 
-      // ✅ Guardar token
       localStorage.setItem("token", loginResponse.data.token);
 
-      // ✅ Guardar usuario completo incluyendo email
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -45,6 +41,7 @@ function Register() {
       );
 
       setMessage("✅ Usuario registrado correctamente. Redirigiendo...");
+
       setTimeout(() => navigate("/catalog"), 1500);
     } catch (error) {
       console.error("❌ Error en registro:", error);
@@ -56,6 +53,7 @@ function Register() {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Crear cuenta</h2>
+
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -91,7 +89,8 @@ function Register() {
 
         {message && <p className="auth-message">{message}</p>}
 
-        <p className="auth-switch">
+        {/* SOLO centrado, sin cambiar estética */}
+        <p className="auth-switch center-text">
           ¿Ya tienes cuenta?{" "}
           <span onClick={() => navigate("/login")}>Inicia sesión</span>
         </p>

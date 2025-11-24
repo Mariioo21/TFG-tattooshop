@@ -33,19 +33,22 @@
 /* ✅ Inputs y select */
 .auth-card input,
 .auth-card select {
-  width: 100%;
+  width: 100%;           
   padding: 12px;
+  margin-left: -5px;              
   border-radius: 8px;
   border: 1px solid #333;
   background: #121212;
   color: white;
   font-size: 0.95rem;
+  box-sizing: border-box;
 }
 
 /* ✅ Botones */
 .auth-card button {
-  width: 100%;
-  padding: 10px;
+  width: 100%;  /* mismo ancho que los inputs */
+  margin: 0 ;
+  padding: 12px;
   background-color: #1976d2;
   color: white;
   border: none;
@@ -55,6 +58,7 @@
   font-size: 1rem;
   transition: background-color 0.25s ease;
 }
+
 .auth-card button:hover {
   background-color: #1565c0;
 }
@@ -68,16 +72,25 @@
 
 /* ✅ Link de cambiar a login/register */
 .auth-switch {
-  margin-top: 14px;
-  font-size: 0.9rem;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #9ca3af;
+  text-align: center;
+  padding: 0 10px;
 }
+
 .auth-switch span {
   color: #64b5f6;
   font-weight: 600;
   cursor: pointer;
   transition: color 0.25s;
 }
+
 .auth-switch span:hover {
   text-decoration: underline;
   color: #90caf9;
+}
+
+.center-text {
+  text-align: center;
 }
