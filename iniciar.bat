@@ -10,7 +10,7 @@ echo =====================================================
 echo.
 
 REM Levantar todos los servicios
-docker compose up -d
+docker compose up --build -d
 
 IF ERRORLEVEL 1 (
     echo Error al ejecutar "docker compose up -d"

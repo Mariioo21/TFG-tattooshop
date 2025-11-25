@@ -29,14 +29,6 @@ function Account() {
           <span className="acc-value">{user.role}</span>
         </div>
 
-        <hr className="acc-divider" />
-
-        <button
-          className="acc-btn"
-          onClick={() => alert("Aquí haremos cambiar datos más adelante 🛠")}
-        >
-          ✏️ Editar información
-        </button>
       </div>
     </div>
   );

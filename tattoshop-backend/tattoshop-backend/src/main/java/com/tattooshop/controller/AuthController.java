@@ -58,8 +58,9 @@ public class AuthController {
 
         User user = userService.findByUsername(request.getUsername()).orElseThrow();
         String role = user.getRole().name();
+        String email = user.getEmail();
 
-        JwtResponse response = new JwtResponse(jwt, user.getId(), user.getUsername(), role);
+        JwtResponse response = new JwtResponse(jwt, user.getId(), user.getUsername(), email, role);
         return ResponseEntity.ok(response);
     }
 }
