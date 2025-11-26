@@ -134,8 +134,8 @@ function Header() {
                 <>
                   <button onClick={() => goTo("/catalog")} className="menu-item">🛍️ Ver Catálogo</button>
                   <button onClick={() => goTo("/cart")} className="menu-item">🛒 Mi Carrito</button>
-                  <button onClick={() => goTo("/pending-orders")} className="menu-item">⏳ Envíos Pendientes</button>
-                  <button onClick={() => goTo("/order-history")} className="menu-item">📦 Historial de Pedidos</button>
+                  <button onClick={() => goTo("/pendingOrders")} className="menu-item">⏳ Envíos Pendientes</button>
+                  <button onClick={() => goTo("/orders")} className="menu-item">📦 Historial de Pedidos</button>
                   <button onClick={() => goTo("/account")} className="menu-item">👤 Mi Cuenta</button>
                 </>
               )}

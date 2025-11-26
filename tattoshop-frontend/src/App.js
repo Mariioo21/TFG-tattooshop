@@ -18,6 +18,8 @@ import ManageCategories from "./components/admin/ManageCategories";
 import Account from "./components/user/Account";
 import Cart from "./components/user/Cart";
 import OrderSummary from "./components/user/OrderSummary";
+import OrderHistory from "./components/user/OrderHistory";
+import PendingOrders from "./components/user/PendingOrders";
 
 import Header from "./components/Header";
 import { getUserFromToken } from "./services/authService";
@@ -62,6 +64,8 @@ function AppContent() {
         <Route path="/account" element={<Account />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/order-summary" element={<OrderSummary />} />
+        <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/pendingOrders" element={<PendingOrders />} />
 
         {/* 404 */}
         <Route

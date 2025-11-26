@@ -115,13 +115,13 @@ function OrderSummary() {
               className="order-btn secondary"
               onClick={() => navigate("/catalog")}
             >
-              ← Seguir comprando
+              ← Seguir comprandoc
             </button>
             <button
-              className="order-btn"
-              onClick={() => navigate("/cart")}
+                className="order-btn"
+                onClick={() => navigate("/orders")}
             >
-              Ver carrito
+                Ver mis pedidos
             </button>
           </div>
         </div>

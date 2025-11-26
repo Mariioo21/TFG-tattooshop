@@ -8,6 +8,7 @@ import com.tattooshop.entity.User;
 import com.tattooshop.repository.CartItemRepository;
 import com.tattooshop.repository.CartRepository;
 import com.tattooshop.repository.UserRepository;
+import com.tattooshop.repository.OrderRepository;   // 👈 IMPORT NUEVO
 import com.tattooshop.service.OrderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class OrderController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderRepository orderRepository; // 👈 NUEVO CAMPO
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
@@ -53,6 +57,23 @@ public class OrderController {
         return orderService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 🔥 GET /api/orders/my — pedidos del usuario logueado
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/my")
+    public ResponseEntity<List<Order>> getMyOrders(Authentication auth) {
+        String username = auth.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario no encontrado")
+                );
+
+        // usa el método con fetch join del repositorio para evitar tropecientas queries
+        List<Order> orders = orderRepository.findByUserWithItems(user);
+
+        return ResponseEntity.ok(orders);
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -104,10 +125,11 @@ public class OrderController {
 
         Order order = new Order();
         order.setUser(user);
-        order.setStatus(Order.Status.PENDING); 
+        order.setStatus(Order.Status.PENDING);
         order.setCreateOrder(LocalDateTime.now());
-        int dias = new Random().nextInt(3) + 1; //simular envio de 1 a 3
-        order.setEstimatedDelivery(LocalDate.now().plusDays(dias)); 
+
+        int dias = new Random().nextInt(3) + 1; // simular envío de 1 a 3 días
+        order.setEstimatedDelivery(LocalDate.now().plusDays(dias));
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -116,7 +138,7 @@ public class OrderController {
             oi.setOrder(order);
             oi.setProduct(ci.getProduct());
             oi.setQuantity(ci.getQuantity());
-            oi.setPrice(ci.getProduct().getPrice()); 
+            oi.setPrice(ci.getProduct().getPrice());
 
             orderItems.add(oi);
         }
@@ -125,6 +147,7 @@ public class OrderController {
 
         Order savedOrder = orderService.save(order);
 
+        // limpiar carrito
         for (CartItem ci : new ArrayList<>(cart.getItems())) {
             cartItemRepository.delete(ci);
         }

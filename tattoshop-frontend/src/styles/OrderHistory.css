@@ -1,0 +1,163 @@
+.oh-wrapper {
+  width: 95%;
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+.oh-box {
+  background: #1e1e1e;
+  padding: 24px 28px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+
+.oh-title {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #64b5f6;
+}
+
+.oh-loading,
+.oh-empty {
+  text-align: center;
+  color: #e5e7eb;
+  margin: 12px 0;
+}
+
+.oh-section {
+  margin-top: 10px;
+  margin-bottom: 18px;
+}
+
+.oh-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #f9fafb;
+}
+
+.oh-order {
+  background: #111827;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.oh-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.oh-order-id {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.oh-order-date {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.oh-order-meta {
+  text-align: right;
+  font-size: 0.85rem;
+}
+
+.oh-status {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.oh-status.pending {
+  background-color: #fbbf24;
+  color: #111827;
+}
+
+.oh-status.delivered {
+  background-color: #22c55e;
+  color: #022c22;
+}
+
+.oh-delivery {
+  display: block;
+  color: #e5e7eb;
+}
+
+.oh-items {
+  border-top: 1px solid #374151;
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.oh-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.oh-item-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.oh-item-info h4 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.oh-item-info p {
+  margin: 1px 0;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.oh-item-total {
+  margin-left: auto;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.oh-order-footer {
+  border-top: 1px solid #374151;
+  margin-top: 6px;
+  padding-top: 6px;
+  text-align: right;
+}
+
+.oh-order-total {
+  font-weight: 700;
+}
+
+.oh-actions {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.oh-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background-color: #1976d2;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.oh-btn:hover {
+  background-color: #1565c0;
+}
