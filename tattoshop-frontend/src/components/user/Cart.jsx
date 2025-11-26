@@ -55,21 +55,48 @@ function Cart() {
 
   const updateQuantity = (itemId, qty) => {
     if (qty < 1) return;
-    api
-      .put(`/update/${itemId}?qty=${qty}`)
-      .then(() => fetchCart());
+    api.put(`/update/${itemId}?qty=${qty}`).then(() => fetchCart());
   };
 
   const removeItem = (itemId) => {
-    api
-      .delete(`/remove/${itemId}`)
-      .then(() => fetchCart());
+    api.delete(`/remove/${itemId}`).then(() => fetchCart());
   };
 
   const clearCart = () => {
-    api
-      .delete(`/clear`)
-      .then(() => fetchCart());
+    api.delete(`/clear`).then(() => fetchCart());
+  };
+
+  // 🔥 NUEVO: FINALIZAR COMPRA (CHECKOUT -> RESUMEN)
+  const handleCheckout = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    axios
+      .post(
+        "http://localhost:8080/api/orders/checkout",
+        {}, // body vacío
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        const order = res.data;
+        // vaciamos el carrito en memoria
+        setCart(null);
+        // navegamos a la página de resumen con los datos del pedido
+        navigate("/order-summary", { state: { order } });
+      })
+      .catch((err) => {
+        console.error("❌ Error al finalizar la compra:", err);
+        const msg =
+          err.response?.data ||
+          "❌ No se pudo completar la compra. Inténtalo de nuevo.";
+        alert(msg);
+      });
   };
 
   const total = cart.items.reduce(
@@ -117,7 +144,7 @@ function Cart() {
             <button className="clear-btn" onClick={clearCart}>
               Vaciar carrito
             </button>
-            <button className="checkout-btn" onClick={() => alert("Compra aún no implementada 😅")}>
+            <button className="checkout-btn" onClick={handleCheckout}>
               Finalizar compra
             </button>
           </div>

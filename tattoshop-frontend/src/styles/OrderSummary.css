@@ -1,0 +1,152 @@
+.order-wrapper {
+  width: 95%;
+  max-width: 700px;
+  margin: 30px auto;
+}
+
+.order-box {
+  background: #1e1e1e;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+
+.order-title {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #64b5f6;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.order-text {
+  text-align: center;
+  margin-bottom: 18px;
+  color: #e5e7eb;
+}
+
+.order-info {
+  background: #111;
+  padding: 12px 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.order-label {
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.order-value {
+  font-weight: 500;
+  color: #e5e7eb;
+}
+
+.order-value.status {
+  color: #fbbf24;
+}
+
+.order-subtitle {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  background: #111;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.order-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 12px;
+}
+
+.order-item-info {
+  flex: 1;
+}
+
+.order-item-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+}
+
+.order-item-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #d1d5db;
+}
+
+.order-item-total {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #f9fafb;
+  margin-left: 10px;
+}
+
+.order-footer {
+  border-top: 1px solid #333;
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-total {
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f3f4f6;
+}
+
+.order-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.order-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background-color: #1976d2;
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+.order-btn:hover {
+  background-color: #145aa5;
+}
+
+.order-btn.secondary {
+  background-color: #4b5563;
+}
+
+.order-btn.secondary:hover {
+  background-color: #374151;
+}

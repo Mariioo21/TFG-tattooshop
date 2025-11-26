@@ -17,6 +17,7 @@ import ManageCategories from "./components/admin/ManageCategories";
 
 import Account from "./components/user/Account";
 import Cart from "./components/user/Cart";
+import OrderSummary from "./components/user/OrderSummary";
 
 import Header from "./components/Header";
 import { getUserFromToken } from "./services/authService";
@@ -27,7 +28,6 @@ function AppContent() {
   const location = useLocation();
   const user = getUserFromToken();
 
-  // No mostrar Header en login/register
   const hideHeaderRoutes = ["/login", "/register"];
   const shouldShowHeader = user && !hideHeaderRoutes.includes(location.pathname);
 
@@ -61,7 +61,7 @@ function AppContent() {
         {/*User */}
         <Route path="/account" element={<Account />} />
         <Route path="/cart" element={<Cart />} />
-
+        <Route path="/order-summary" element={<OrderSummary />} />
 
         {/* 404 */}
         <Route

@@ -13,7 +13,7 @@ REM Levantar todos los servicios
 docker compose up --build -d
 
 IF ERRORLEVEL 1 (
-    echo Error al ejecutar "docker compose up -d"
+    echo Error al ejecutar "docker compose up --build -d"
     echo    - Asegurate de que Docker Desktop está abierto
     echo.
     pause
