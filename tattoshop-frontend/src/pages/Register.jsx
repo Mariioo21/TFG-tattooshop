@@ -13,12 +13,13 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
 
     const userData = {
       username: username.trim(),
       email: email.trim(),
       password: password.trim(),
-      role: role,
+      role,
     };
 
     try {
@@ -30,7 +31,6 @@ function Register() {
       });
 
       localStorage.setItem("token", loginResponse.data.token);
-
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -40,60 +40,146 @@ function Register() {
         })
       );
 
-      setMessage("✅ Usuario registrado correctamente. Redirigiendo...");
-
+      setMessage("Usuario registrado correctamente. Redirigiendo...");
       setTimeout(() => navigate("/catalog"), 1500);
     } catch (error) {
-      console.error("❌ Error en registro:", error);
-      setMessage("❌ No se pudo registrar el usuario. Verifica los datos o si ya existe.");
+      console.error("Error en registro:", error);
+      setMessage("No se pudo registrar el usuario. Verifica los datos o si ya existe.");
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Crear cuenta</h2>
+    <div className="auth-shell auth-shell-register">
+      <div className="auth-slider auth-mode-register">
+        <section className="auth-stage">
+          <div className="auth-form-panel auth-panel-register">
+            <div className="auth-form-wrap">
+              <p className="auth-tag">TattooShop</p>
+              <h1>Crear cuenta</h1>
+              <p className="auth-lead">
+                Regístrate para comprar o vender dentro de la tienda.
+              </p>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+              <form onSubmit={handleSubmit} className="auth-form auth-form-register">
+                <div className="auth-field">
+                  <label htmlFor="register-username">Usuario</label>
+                  <input
+                    id="register-username"
+                    type="text"
+                    placeholder="Elige tu usuario"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
 
-          <input
-            type="email"
-            placeholder="Correo electrónico"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+                <div className="auth-field">
+                  <label htmlFor="register-email">Correo electrónico</label>
+                  <input
+                    id="register-email"
+                    type="email"
+                    placeholder="Introduce tu correo"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
 
-          <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+                <div className="auth-field">
+                  <label htmlFor="register-password">Contrasena</label>
+                  <input
+                    id="register-password"
+                    type="password"
+                    placeholder="Crea una contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
 
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="USER">Usuario</option>
-            <option value="SELLER">Vendedor</option>
-          </select>
+                <div className="auth-field">
+                  <label htmlFor="register-role">Tipo de cuenta</label>
+                  <select
+                    id="register-role"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                  >
+                    <option value="USER">Usuario</option>
+                    <option value="SELLER">Vendedor</option>
+                  </select>
+                </div>
 
-          <button type="submit">Registrarse</button>
-        </form>
+                {message && <p className="auth-message">{message}</p>}
 
-        {message && <p className="auth-message">{message}</p>}
+                <button type="submit" className="auth-submit auth-submit-register">
+                  Registrarse
+                </button>
+              </form>
+            </div>
+          </div>
 
-        {/* SOLO centrado, sin cambiar estética */}
-        <p className="auth-switch center-text">
-          ¿Ya tienes cuenta?{" "}
-          <span onClick={() => navigate("/login")}>Inicia sesión</span>
-        </p>
+          <div className="auth-form-panel auth-panel-login-preview">
+            <div className="auth-form-wrap auth-form-wrap-preview">
+              <p className="auth-tag">TattooShop</p>
+              <h1>Iniciar sesión</h1>
+              <p className="auth-lead">
+                Si ya tienes cuenta, vuelve a entrar para seguir comprando.
+              </p>
+
+              <div className="auth-form auth-form-preview" aria-hidden="true">
+                <div className="auth-field">
+                  <label>Usuario</label>
+                  <input type="text" placeholder="Tu usuario" disabled />
+                </div>
+                <div className="auth-field">
+                  <label>Contraseña</label>
+                  <input type="password" placeholder="Tu contrasena" disabled />
+                </div>
+                <button
+                  type="button"
+                  className="auth-submit auth-submit-muted"
+                  onClick={() => navigate("/login")}
+                >
+                  Ir al login
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <aside className="auth-overlay">
+            <div className="auth-overlay-face auth-overlay-register">
+              <p className="auth-overlay-kicker">Cuenta nueva</p>
+              <h2>Empieza tu recorrido en la tienda</h2>
+              <p className="auth-overlay-text">
+                Crea tu acceso y entra a una experiencia mas cuidada para
+                clientes y vendedores.
+              </p>
+              <button
+                type="button"
+                className="auth-ghost"
+                onClick={() => navigate("/login")}
+              >
+                Iniciar sesion
+              </button>
+            </div>
+
+            <div className="auth-overlay-face auth-overlay-login">
+              <p className="auth-overlay-kicker">Ya tienes cuenta</p>
+              <h2>Vuelve a entrar y sigue con tus pedidos</h2>
+              <p className="auth-overlay-text">
+                Accede rapidamente a tu perfil, tu carrito y la gestion de tu
+                tienda.
+              </p>
+              <button
+                type="button"
+                className="auth-ghost"
+                onClick={() => navigate("/login")}
+              >
+                Iniciar sesion
+              </button>
+            </div>
+          </aside>
+        </section>
       </div>
     </div>
   );
