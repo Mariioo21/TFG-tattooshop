@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { login } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import { login } from "../services/authService";
 import "../styles/Auth.css";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -22,7 +24,6 @@ function Login() {
       const response = await login(credentials);
 
       localStorage.setItem("token", response.data.token);
-
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -32,7 +33,6 @@ function Login() {
         })
       );
 
-      console.log("Login correcto:", response.data);
       navigate("/catalog");
     } catch (error) {
       console.error("Error en login:", error);
@@ -47,7 +47,7 @@ function Login() {
           <div className="auth-form-panel auth-panel-login">
             <div className="auth-form-wrap">
               <p className="auth-tag">TattooShop</p>
-              <h1>Iniciar sesión</h1>
+              <h1>Iniciar sesion</h1>
               <p className="auth-lead">
                 Accede a tu cuenta para explorar el catalogo y gestionar tus
                 pedidos.
@@ -68,14 +68,24 @@ function Login() {
 
                 <div className="auth-field">
                   <label htmlFor="login-password">Contrasena</label>
-                  <input
-                    id="login-password"
-                    type="password"
-                    placeholder="Introduce tu contrasena"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                  <div className="auth-password-wrap">
+                    <input
+                      id="login-password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Introduce tu contrasena"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="auth-password-toggle"
+                      onClick={() => setShowPassword((current) => !current)}
+                      aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
 
                 {errorMessage && <p className="auth-message">{errorMessage}</p>}
@@ -137,7 +147,7 @@ function Login() {
                 className="auth-ghost"
                 onClick={() => navigate("/register")}
               >
-                Regístrate
+                Registrate
               </button>
             </div>
 

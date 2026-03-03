@@ -1,119 +1,141 @@
-/* Contenedor general centrado */
 .admin-cat-wrapper {
-  width: 95%;
-  max-width: 900px; /* ✅ MÁS ESTRECHO */
-  margin: 20px auto;
+  width: min(900px, calc(100% - 40px));
+  margin: 26px auto 0;
 }
 
-/* Recuadro negro */
 .admin-cat-container {
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 12px;
-  color: white;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  background: linear-gradient(180deg, #2f2940 0%, #2a2438 100%);
+  padding: 34px 36px 36px;
+  border-radius: 26px;
+  color: #ffffff;
+  box-shadow: 0 20px 40px rgba(42, 36, 56, 0.18);
 }
 
-/* Título */
 .admin-cat-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 28px;
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.admin-cat-title svg {
+  color: #7b7394;
+}
+
+.admin-msg {
   text-align: center;
-  margin-bottom: 20px;
-  color: #64b5f6;
-  font-size: 1.6rem;
+  margin-bottom: 12px;
   font-weight: 700;
 }
 
-/* Mensajes */
-.admin-msg {
-  text-align: center;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
 .admin-msg.error {
-  color: #ff7675;
+  color: #ffd6d8;
 }
+
 .admin-msg.success {
-  color: #66bb6a;
+  color: #d9f2d9;
 }
 
-/* Formulario añadir categoría */
 .add-cat-form {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.add-cat-form input {
-  padding: 9px;
-  width: 200px; /* ✅ más corto */
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #121212;
-  color: #fff;
-}
-.add-cat-form button {
-  background: #1565c0;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px; /* ✅ más pequeño */
-  cursor: pointer;
-  color: white;
-  transition: background 0.25s ease;
-  font-size: 0.9rem;
-}
-.add-cat-form button:hover {
-  background: #0d47a1;
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 14px;
+  margin-bottom: 28px;
 }
 
-/* ✅ Lista de categorías */
+.add-cat-form input {
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(123, 115, 148, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.add-cat-form input::placeholder {
+  color: rgba(219, 216, 227, 0.72);
+}
+
+.add-cat-form button {
+  border: none;
+  border-radius: 14px;
+  background: #6b6485;
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
 .cat-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
-/* ✅ Tarjetas más estrechas */
 .cat-card {
-  background: #fff;
-  color: #333;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  width: 70%;
-  margin: 0 auto;
-  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #ffffff;
 }
 
-/* ✅ Nombre ocupa el espacio para empujar el botón a la derecha */
+.cat-card span {
+  padding: 18px 26px;
+  color: #1f2340;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
 .small-btn {
-  background-color: #e53935;
   border: none;
-  padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 0;
+  background: #ff313b;
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 800;
   cursor: pointer;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  width: auto;             
-  min-width: 80px;         
-  text-align: center;
-  justify-self: flex-end;  
 }
 
 .small-btn:hover {
-  background-color: #b71c1c;
+  filter: brightness(1.04);
 }
 
-/* ✅ Esto empuja el nombre a ocupar todo y deja el botón al final */
-.cat-card span {
-  flex: 1;
-}
-
-
-/* Texto de lista vacía */
 .no-cats {
   text-align: center;
-  color: #aaa;
+  color: #dbd8e3;
   font-size: 0.95rem;
+}
+
+@media (max-width: 760px) {
+  .admin-cat-wrapper {
+    width: calc(100% - 24px);
+    margin-top: 18px;
+  }
+
+  .admin-cat-container {
+    padding: 24px 16px;
+    border-radius: 22px;
+  }
+
+  .admin-cat-title {
+    font-size: 1.45rem;
+  }
+
+  .add-cat-form {
+    grid-template-columns: 1fr;
+  }
+
+  .cat-card {
+    grid-template-columns: 1fr;
+  }
+
+  .small-btn {
+    min-height: 52px;
+  }
 }

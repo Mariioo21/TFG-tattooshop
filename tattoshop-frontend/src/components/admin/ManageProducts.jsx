@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Package } from "lucide-react";
 import "../../styles/ManageProducts.css";
 import { getToken } from "../../services/authService";
 
@@ -21,7 +22,7 @@ function ManageProducts() {
 
       setProducts(res.data.content || res.data);
     } catch (err) {
-      setError("❌ No se pudieron cargar los productos.");
+      setError("No se pudieron cargar los productos.");
     }
   };
 
@@ -30,7 +31,7 @@ function ManageProducts() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Eliminar este producto?")) return;
+    if (!window.confirm("Eliminar este producto?")) return;
 
     try {
       const token = getToken();
@@ -40,45 +41,46 @@ function ManageProducts() {
 
       setProducts(products.filter((p) => p.id !== id));
     } catch {
-      alert("❌ Error al eliminar el producto.");
+      alert("Error al eliminar el producto.");
     }
   };
 
   return (
     <div className="admin-products-wrapper">
       <div className="admin-products-container">
-        <h2 className="admin-title">🛒 Gestión de Productos</h2>
+        <h2 className="admin-title">
+          <Package size={28} strokeWidth={2.1} />
+          <span>Gestion de Productos</span>
+        </h2>
 
         {error && <p className="error-msg">{error}</p>}
 
         {products.length === 0 ? (
           <p className="no-items">No hay productos disponibles.</p>
         ) : (
-          <div className="pl-grid admin-grid-style">
+          <div className="admin-grid-style">
             {products.map((product) => (
               <div key={product.id} className="pl-card">
-                <div className="pl-image-wrapper">
-                  <img
-                    className="pl-image"
-                    src={product.imageURL || "https://via.placeholder.com/200"}
-                    alt={product.name}
-                  />
+                <div className="admin-product-body">
+                  <div className="pl-image-wrapper">
+                    <img
+                      className="pl-image"
+                      src={product.imageURL || "https://via.placeholder.com/200"}
+                      alt={product.name}
+                    />
+                  </div>
+
+                  <div className="pl-card-body">
+                    <h3 className="pl-name">{product.name}</h3>
+                    <p className="pl-desc">{product.description}</p>
+
+                    <div className="pl-meta">
+                      <span className="pl-price">{product.price} €</span>
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="pl-name">{product.name}</h3>
-                <p className="pl-desc">{product.description}</p>
-
-                <div className="pl-meta">
-                  <span className="pl-price">{product.price} €</span>
-                  {product.category && (
-                    <span className="pl-category">{product.category.name}</span>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  className="delete-btn"
-                >
+                <button onClick={() => handleDelete(product.id)} className="delete-btn">
                   Eliminar
                 </button>
               </div>

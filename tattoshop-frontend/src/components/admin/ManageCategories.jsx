@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FolderOpen } from "lucide-react";
 import { getToken } from "../../services/authService";
 import "../../styles/ManageCategories.css";
 
@@ -18,7 +19,7 @@ function ManageCategories() {
 
       setCategories(res.data || []);
     } catch (err) {
-      setError("❌ Error al cargar categorías.");
+      setError("Error al cargar categorias.");
     }
   };
 
@@ -29,7 +30,7 @@ function ManageCategories() {
   const handleAdd = async (e) => {
     e.preventDefault();
     if (!newCategory.trim()) {
-      setError("⚠️ El nombre no puede estar vacío.");
+      setError("El nombre no puede estar vacio.");
       return;
     }
 
@@ -42,16 +43,16 @@ function ManageCategories() {
       );
 
       setNewCategory("");
-      setSuccess("✅ Categoría añadida correctamente.");
+      setSuccess("Categoria anadida correctamente.");
       fetchCategories();
       setTimeout(() => setSuccess(""), 3000);
     } catch {
-      setError("❌ Error al añadir la categoría.");
+      setError("Error al anadir la categoria.");
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar esta categoría?")) return;
+    if (!window.confirm("Seguro que deseas eliminar esta categoria?")) return;
 
     try {
       const token = getToken();
@@ -59,14 +60,14 @@ function ManageCategories() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setSuccess("✅ Categoría eliminada correctamente.");
+      setSuccess("Categoria eliminada correctamente.");
       fetchCategories();
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       if (err.response?.status === 409) {
-        setError("⚠️ No se puede eliminar: tiene productos asociados.");
+        setError("No se puede eliminar: tiene productos asociados.");
       } else {
-        setError("❌ Error al eliminar.");
+        setError("Error al eliminar.");
       }
     }
   };
@@ -74,8 +75,10 @@ function ManageCategories() {
   return (
     <div className="admin-cat-wrapper">
       <div className="admin-cat-container">
-
-        <h2 className="admin-cat-title">🗂️ Gestión de Categorías</h2>
+        <h2 className="admin-cat-title">
+          <FolderOpen size={28} strokeWidth={2.1} />
+          <span>Gestion de Categorias</span>
+        </h2>
 
         {error && <p className="admin-msg error">{error}</p>}
         {success && <p className="admin-msg success">{success}</p>}
@@ -83,21 +86,21 @@ function ManageCategories() {
         <form onSubmit={handleAdd} className="add-cat-form">
           <input
             type="text"
-            placeholder="Nueva categoría"
+            placeholder="Nueva categoria"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
           />
-          <button type="submit">➕ Añadir</button>
+          <button type="submit">Anadir</button>
         </form>
 
         <div className="cat-list">
           {categories.length === 0 ? (
-            <p className="no-cats">No hay categorías.</p>
+            <p className="no-cats">No hay categorias.</p>
           ) : (
             categories.map((cat) => (
               <div key={cat.id} className="cat-card">
                 <span>
-                  {cat.name} — <strong>{cat.productCount}</strong> producto
+                  {cat.name} - <strong>{cat.productCount}</strong> producto
                   {cat.productCount !== 1 && "s"}
                 </span>
                 <button

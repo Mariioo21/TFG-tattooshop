@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Users } from "lucide-react";
 import "../../styles/ManageUsers.css";
 import { getToken } from "../../services/authService";
 
@@ -11,7 +12,7 @@ function ManageUsers() {
     try {
       const token = getToken();
       if (!token) {
-        setError("No tienes permiso para ver esta página.");
+        setError("No tienes permiso para ver esta pagina.");
         return;
       }
 
@@ -22,7 +23,7 @@ function ManageUsers() {
       setUsers(res.data.content || res.data);
     } catch (err) {
       console.error("Error al obtener usuarios:", err);
-      setError("❌ No se pudieron cargar los usuarios.");
+      setError("No se pudieron cargar los usuarios.");
     }
   };
 
@@ -31,7 +32,7 @@ function ManageUsers() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar este usuario?")) return;
+    if (!window.confirm("Seguro que deseas eliminar este usuario?")) return;
 
     try {
       const token = getToken();
@@ -40,21 +41,22 @@ function ManageUsers() {
       });
       setUsers(users.filter((u) => u.id !== id));
     } catch {
-      alert("❌ Error al eliminar usuario");
+      alert("Error al eliminar usuario");
     }
   };
 
   return (
     <div className="admin-users-wrapper">
       <div className="admin-users-container">
-        <h2 className="admin-title">👥 Gestión de Usuarios</h2>
+        <h2 className="admin-title">
+          <Users size={28} strokeWidth={2.1} />
+          <span>Gestion de Usuarios</span>
+        </h2>
 
         {error && <p className="error-msg">{error}</p>}
 
         {users.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#bbb" }}>
-            No hay usuarios registrados.
-          </p>
+          <p style={{ textAlign: "center", color: "#bbb" }}>No hay usuarios registrados.</p>
         ) : (
           <div className="admin-table-box">
             <table className="admin-table">
@@ -75,10 +77,7 @@ function ManageUsers() {
                     <td>{u.email}</td>
                     <td>{u.role}</td>
                     <td>
-                      <button
-                        onClick={() => handleDelete(u.id)}
-                        className="delete-btn"
-                      >
+                      <button onClick={() => handleDelete(u.id)} className="delete-btn">
                         Eliminar
                       </button>
                     </td>
