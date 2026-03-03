@@ -160,6 +160,11 @@ function Register() {
 
           <aside className="auth-overlay">
             <div className="auth-overlay-face auth-overlay-register">
+              <img
+                src="/logo.png"
+                alt="TattooShop"
+                className="auth-overlay-logo auth-overlay-logo-left"
+              />
               <p className="auth-overlay-kicker">Cuenta nueva</p>
               <h2>Empieza tu recorrido en la tienda</h2>
               <p className="auth-overlay-text">
@@ -176,6 +181,11 @@ function Register() {
             </div>
 
             <div className="auth-overlay-face auth-overlay-login">
+              <img
+                src="/logo.png"
+                alt="TattooShop"
+                className="auth-overlay-logo auth-overlay-logo-right"
+              />
               <p className="auth-overlay-kicker">Ya tienes cuenta</p>
               <h2>Vuelve a entrar y sigue con tus pedidos</h2>
               <p className="auth-overlay-text">

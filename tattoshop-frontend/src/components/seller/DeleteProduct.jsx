@@ -7,6 +7,7 @@ import "../../styles/DeleteProduct.css";
 function DeleteProduct() {
   const [products, setProducts] = useState([]);
   const [selectedId, setSelectedId] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [message, setMessage] = useState("");
 
@@ -31,6 +32,10 @@ function DeleteProduct() {
     const product = products.find((item) => item.id === parseInt(id, 10));
     setSelectedProduct(product || null);
   };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchText.trim().toLowerCase())
+  );
 
   const handleDelete = async () => {
     if (!selectedId) {
@@ -61,13 +66,21 @@ function DeleteProduct() {
           <span>Eliminar producto</span>
         </h2>
 
+        <input
+          type="text"
+          className="delete-search"
+          placeholder="Buscar producto por nombre"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+
         <select
           className="delete-select"
           value={selectedId}
           onChange={handleSelect}
         >
           <option value="">Selecciona un producto</option>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <option key={product.id} value={product.id}>
               {product.name}
             </option>

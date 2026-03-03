@@ -131,6 +131,11 @@ function Login() {
 
           <aside className="auth-overlay">
             <div className="auth-overlay-face auth-overlay-login">
+              <img
+                src="/logo.png"
+                alt="TattooShop"
+                className="auth-overlay-logo auth-overlay-logo-right"
+              />
               <p className="auth-overlay-kicker">Material profesional</p>
               <h2>Todo lo que necesitas para tu estudio en un solo lugar</h2>
               <p className="auth-overlay-text">
@@ -152,6 +157,11 @@ function Login() {
             </div>
 
             <div className="auth-overlay-face auth-overlay-register">
+              <img
+                src="/logo.png"
+                alt="TattooShop"
+                className="auth-overlay-logo auth-overlay-logo-left"
+              />
               <p className="auth-overlay-kicker">Cuenta nueva</p>
               <h2>Abre tu perfil y entra en la tienda con otro ritmo visual</h2>
               <p className="auth-overlay-text">

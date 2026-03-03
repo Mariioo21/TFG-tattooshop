@@ -254,6 +254,23 @@
   pointer-events: none;
 }
 
+.auth-overlay-logo {
+  position: absolute;
+  top: 26px;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  opacity: 0.92;
+}
+
+.auth-overlay-logo-left {
+  left: 28px;
+}
+
+.auth-overlay-logo-right {
+  right: 28px;
+}
+
 .auth-overlay-kicker {
   margin: 0 0 16px;
   color: rgba(219, 216, 227, 0.8);
@@ -400,6 +417,12 @@
     padding: 34px 28px;
   }
 
+  .auth-overlay-logo {
+    top: 20px;
+    width: 54px;
+    height: 54px;
+  }
+
   .auth-overlay-register {
     display: none;
   }
@@ -430,6 +453,14 @@
 
   .auth-overlay-face {
     padding: 24px 18px;
+  }
+
+  .auth-overlay-logo-left {
+    left: 18px;
+  }
+
+  .auth-overlay-logo-right {
+    right: 18px;
   }
 
   .auth-overlay-face h2 {

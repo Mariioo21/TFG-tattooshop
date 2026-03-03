@@ -8,6 +8,7 @@ function EditProduct() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedId, setSelectedId] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [productData, setProductData] = useState({
     name: "",
     description: "",
@@ -52,6 +53,10 @@ function EditProduct() {
       });
     }
   };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchText.trim().toLowerCase())
+  );
 
   const handleChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
@@ -107,13 +112,21 @@ function EditProduct() {
           <span>Editar producto</span>
         </h2>
 
+        <input
+          type="text"
+          className="product-search"
+          placeholder="Buscar producto por nombre"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+
         <select
           className="product-select"
           value={selectedId}
           onChange={handleSelect}
         >
           <option value="">Selecciona un producto</option>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <option key={product.id} value={product.id}>
               {product.name}
             </option>
