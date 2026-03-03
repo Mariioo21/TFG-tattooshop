@@ -5,12 +5,14 @@ import {
   FolderOpen,
   LayoutGrid,
   Package,
+  PackageCheck,
   Pencil,
   Plus,
   Search,
   ShoppingCart,
   Trash2,
   User,
+  UserRound,
   Users,
 } from "lucide-react";
 import { logout, getUserFromToken, getToken } from "../services/authService";
@@ -42,13 +44,31 @@ function Header() {
     { key: "delete", label: "Eliminar", path: "/delete-product", icon: Trash2 },
   ];
 
+  const userNavItems = [
+    { key: "catalog", label: "Catalogo", path: "/catalog", icon: LayoutGrid },
+    { key: "cart", label: "Mi carrito", path: "/cart", icon: ShoppingCart },
+    { key: "pending", label: "Envios pendientes", path: "/pendingOrders", icon: PackageCheck },
+    { key: "orders", label: "Historial", path: "/orders", icon: Package },
+    { key: "account", label: "Mi cuenta", path: "/account", icon: UserRound },
+  ];
+
   const isAdminArea =
     user?.role === "ADMIN" &&
-    ["/manage-users", "/manage-products", "/manage-categories"].includes(location.pathname);
+    ["/manage-users", "/manage-products", "/manage-categories"].includes(
+      location.pathname
+    );
 
   const isSellerArea =
     user?.role === "SELLER" &&
-    ["/my-products", "/add-product", "/edit-product", "/delete-product"].includes(location.pathname);
+    ["/my-products", "/add-product", "/edit-product", "/delete-product"].includes(
+      location.pathname
+    );
+
+  const isUserArea =
+    user?.role === "USER" &&
+    ["/cart", "/pendingOrders", "/orders", "/account"].includes(
+      location.pathname
+    );
 
   useEffect(() => {
     const handleStorageChange = () => setUser(getUserFromToken());
@@ -58,12 +78,16 @@ function Header() {
 
   const fetchCartCount = () => {
     if (!user || user.role !== "USER") return;
+
     axios
       .get("http://localhost:8080/api/cart", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        const totalQty = (res.data.items || []).reduce((sum, i) => sum + i.quantity, 0);
+        const totalQty = (res.data.items || []).reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
         setCartCount(totalQty);
       })
       .catch(() => setCartCount(0));
@@ -96,11 +120,13 @@ function Header() {
 
   if (!user) return null;
 
+  const isPanelArea = isAdminArea || isSellerArea || isUserArea;
+
   return (
     <header className="header">
       <div
         className={`header-content header-full ${
-          isAdminArea || isSellerArea ? "header-admin-layout" : ""
+          isPanelArea ? "header-admin-layout" : ""
         }`}
       >
         <button
@@ -171,6 +197,35 @@ function Header() {
               Cerrar sesion
             </button>
           </>
+        ) : isUserArea ? (
+          <>
+            <nav className="header-admin-nav" aria-label="Navegacion de usuario">
+              {userNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    className={`header-admin-link ${isActive ? "is-active" : ""}`}
+                    onClick={() => navigate(item.path)}
+                  >
+                    <Icon size={18} strokeWidth={2.1} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <button
+              type="button"
+              className="header-admin-logout"
+              onClick={handleLogout}
+            >
+              Cerrar sesion
+            </button>
+          </>
         ) : (
           <>
             <div className="header-search">
@@ -187,14 +242,22 @@ function Header() {
             </div>
 
             {user.role === "USER" && (
-              <div className="header-cart" onClick={() => navigate("/cart")} title="Carrito">
+              <div
+                className="header-cart"
+                onClick={() => navigate("/cart")}
+                title="Carrito"
+              >
                 <ShoppingCart size={18} strokeWidth={2.2} />
                 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </div>
             )}
 
             <div className="header-user" ref={menuRef}>
-              <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+              <button
+                type="button"
+                className="menu-toggle"
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
                 <User size={18} strokeWidth={2.2} />
               </button>
 
@@ -202,30 +265,64 @@ function Header() {
                 <div className="menu-dropdown">
                   {user.role === "USER" && (
                     <>
-                      <button onClick={() => goTo("/catalog")} className="menu-item">Ver catalogo</button>
-                      <button onClick={() => goTo("/cart")} className="menu-item">Mi carrito</button>
-                      <button onClick={() => goTo("/pendingOrders")} className="menu-item">Envios pendientes</button>
-                      <button onClick={() => goTo("/orders")} className="menu-item">Historial de pedidos</button>
-                      <button onClick={() => goTo("/account")} className="menu-item">Mi cuenta</button>
+                      <button onClick={() => goTo("/catalog")} className="menu-item">
+                        Ver catalogo
+                      </button>
+                      <button onClick={() => goTo("/cart")} className="menu-item">
+                        Mi carrito
+                      </button>
+                      <button
+                        onClick={() => goTo("/pendingOrders")}
+                        className="menu-item"
+                      >
+                        Envios pendientes
+                      </button>
+                      <button onClick={() => goTo("/orders")} className="menu-item">
+                        Historial de pedidos
+                      </button>
+                      <button onClick={() => goTo("/account")} className="menu-item">
+                        Mi cuenta
+                      </button>
                     </>
                   )}
 
                   {user.role === "SELLER" && (
                     <>
-                      <button onClick={() => goTo("/my-products")} className="menu-item">Mis productos</button>
-                      <button onClick={() => goTo("/add-product")} className="menu-item">Añadir producto</button>
-                      <button onClick={() => goTo("/edit-product")} className="menu-item">Editar producto</button>
-                      <button onClick={() => goTo("/delete-product")} className="menu-item">Eliminar producto</button>
-                      <button onClick={() => goTo("/catalog")} className="menu-item">Ver catalogo</button>
+                      <button onClick={() => goTo("/my-products")} className="menu-item">
+                        Mis productos
+                      </button>
+                      <button onClick={() => goTo("/add-product")} className="menu-item">
+                        Añadir producto
+                      </button>
+                      <button onClick={() => goTo("/edit-product")} className="menu-item">
+                        Editar producto
+                      </button>
+                      <button onClick={() => goTo("/delete-product")} className="menu-item">
+                        Eliminar producto
+                      </button>
+                      <button onClick={() => goTo("/catalog")} className="menu-item">
+                        Ver catalogo
+                      </button>
                     </>
                   )}
 
                   {user.role === "ADMIN" && (
                     <>
-                      <button onClick={() => goTo("/manage-users")} className="menu-item">Gestionar usuarios</button>
-                      <button onClick={() => goTo("/manage-products")} className="menu-item">Gestionar productos</button>
-                      <button onClick={() => goTo("/manage-categories")} className="menu-item">Gestionar categorias</button>
-                      <button onClick={() => goTo("/catalog")} className="menu-item">Ver catalogo</button>
+                      <button onClick={() => goTo("/manage-users")} className="menu-item">
+                        Gestionar usuarios
+                      </button>
+                      <button onClick={() => goTo("/manage-products")} className="menu-item">
+                        Gestionar productos
+                      </button>
+                      <button
+                        onClick={() => goTo("/manage-categories")}
+                        className="menu-item"
+                      >
+                        Gestionar categorias
+                      </button>
+                      <button onClick={() => goTo("/catalog")} className="menu-item">
+                        Ver catalogo
+                      </button>
                     </>
                   )}
 

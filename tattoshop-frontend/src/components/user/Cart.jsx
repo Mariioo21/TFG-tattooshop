@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../styles/Cart.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ShoppingCart, Trash2 } from "lucide-react";
 import { getToken, getUserFromToken } from "../../services/authService";
 
 function Cart() {
@@ -24,10 +25,12 @@ function Cart() {
       setLoading(false);
       return;
     }
+
     api
       .get("")
       .then((res) => {
         setCart(res.data);
+        window.dispatchEvent(new Event("cartUpdated"));
       })
       .finally(() => setLoading(false));
   };
@@ -36,18 +39,25 @@ function Cart() {
     fetchCart();
   }, []);
 
-  if (loading)
-    return <p className="cart-loading">⏳ Cargando carrito...</p>;
+  if (loading) {
+    return <p className="cart-loading">Cargando carrito...</p>;
+  }
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
-      <div className="cart-wrapper">
-        <div className="cart-box">
-          <h2 className="cart-title">🛒 Mi carrito</h2>
-          <p className="cart-empty">No hay productos en el carrito.</p>
-          <button className="cart-back" onClick={() => navigate("/catalog")}>
-            ← Volver al catálogo
-          </button>
+      <div className="cart-page">
+        <div className="cart-wrapper">
+          <div className="cart-box cart-box-empty">
+            <h2 className="cart-title">
+              <ShoppingCart size={28} />
+              <span>Mi carrito</span>
+            </h2>
+            <p className="cart-empty">No hay productos en el carrito.</p>
+            <button className="cart-back" onClick={() => navigate("/catalog")}>
+              <ArrowLeft size={18} />
+              <span>Volver al catálogo</span>
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -63,10 +73,9 @@ function Cart() {
   };
 
   const clearCart = () => {
-    api.delete(`/clear`).then(() => fetchCart());
+    api.delete("/clear").then(() => fetchCart());
   };
 
-  // 🔥 NUEVO: FINALIZAR COMPRA (CHECKOUT -> RESUMEN)
   const handleCheckout = () => {
     if (!user) {
       navigate("/login");
@@ -76,7 +85,7 @@ function Cart() {
     axios
       .post(
         "http://localhost:8080/api/orders/checkout",
-        {}, // body vacío
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -85,68 +94,95 @@ function Cart() {
       )
       .then((res) => {
         const order = res.data;
-        // vaciamos el carrito en memoria
         setCart(null);
-        // navegamos a la página de resumen con los datos del pedido
+        window.dispatchEvent(new Event("cartUpdated"));
         navigate("/order-summary", { state: { order } });
       })
       .catch((err) => {
-        console.error("❌ Error al finalizar la compra:", err);
         const msg =
           err.response?.data ||
-          "❌ No se pudo completar la compra. Inténtalo de nuevo.";
+          "No se pudo completar la compra. Inténtalo de nuevo.";
         alert(msg);
       });
   };
 
   const total = cart.items.reduce(
-    (sum, i) => sum + i.product.price * i.quantity,
+    (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
   return (
-    <div className="cart-wrapper">
-      <div className="cart-box">
-        <h2 className="cart-title">🛒 Mi carrito</h2>
+    <div className="cart-page">
+      <div className="cart-wrapper">
+        <div className="cart-box">
+          <h2 className="cart-title">
+            <ShoppingCart size={28} />
+            <span>Mi carrito</span>
+          </h2>
 
-        {cart.items.map((item) => (
-          <div key={item.id} className="cart-item">
-            <img
-              className="cart-img"
-              src={item.product.imageURL}
-              alt={item.product.name}
-            />
+          <div className="cart-list">
+            {cart.items.map((item) => (
+              <div key={item.id} className="cart-item">
+                <div className="cart-item-media">
+                  <img
+                    className="cart-img"
+                    src={item.product.imageURL}
+                    alt={item.product.name}
+                  />
+                </div>
 
-            <div className="cart-info">
-              <h3>{item.product.name}</h3>
-              <p className="cart-price">{item.product.price} €</p>
-            </div>
+                <div className="cart-info">
+                  <h3>{item.product.name}</h3>
+                  <p className="cart-price">{item.product.price} €</p>
+                  {item.product.category?.name && (
+                    <p className="cart-category">{item.product.category.name}</p>
+                  )}
+                </div>
 
-            <div className="cart-actions">
-              <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>
-                -
-              </button>
-              <span className="qty">{item.quantity}</span>
-              <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>
-                +
-              </button>
-            </div>
+                <div className="cart-actions">
+                  <div className="cart-qty">
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
+                      -
+                    </button>
+                    <span className="qty">{item.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
 
-            <button className="remove-btn" onClick={() => removeItem(item.id)}>
-              Eliminar
-            </button>
+                  <button
+                    type="button"
+                    className="remove-btn"
+                    onClick={() => removeItem(item.id)}
+                  >
+                    <Trash2 size={16} />
+                    <span>Eliminar</span>
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
 
-        <div className="cart-footer">
-          <h3>Total: {total.toFixed(2)} €</h3>
-          <div className="cart-buttons">
-            <button className="clear-btn" onClick={clearCart}>
-              Vaciar carrito
-            </button>
-            <button className="checkout-btn" onClick={handleCheckout}>
-              Finalizar compra
-            </button>
+          <div className="cart-footer">
+            <div className="cart-total-box">
+              <span className="cart-total-label">Total</span>
+              <strong>{total.toFixed(2)} €</strong>
+            </div>
+
+            <div className="cart-buttons">
+              <button className="clear-btn" onClick={clearCart}>
+                Vaciar carrito
+              </button>
+              <button className="checkout-btn" onClick={handleCheckout}>
+                Finalizar compra
+              </button>
+            </div>
           </div>
         </div>
       </div>

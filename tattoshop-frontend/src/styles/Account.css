@@ -1,70 +1,107 @@
+.acc-page {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
 .acc-wrapper {
-  width: 95%;
-  max-width: 500px;
-  margin: 25px auto;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
 }
 
 .acc-box {
-  background: #1e1e1e;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
-  color: #fff;
+  background: linear-gradient(145deg, #2a2438 0%, #352f44 100%);
+  padding: 34px 30px;
+  border-radius: 26px;
+  box-shadow: 0 24px 48px rgba(42, 36, 56, 0.16);
+  color: #ffffff;
 }
 
 .acc-title {
-  text-align: center;
-  margin-bottom: 18px;
-  color: #64b5f6;
-  font-size: 1.6rem;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 26px;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
 }
 
-.acc-row {
+.acc-title svg {
+  color: #5c5470;
+}
+
+.acc-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.acc-card {
   display: flex;
-  justify-content: space-between;
-  background: #111;
-  padding: 10px 14px;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffffff;
+  color: #2a2438;
+  padding: 20px 22px;
+  border-radius: 20px;
+}
+
+.acc-card-full {
+  grid-column: 1 / -1;
 }
 
 .acc-label {
-  font-weight: 600;
-  color: #bbb;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5c5470;
 }
 
 .acc-value {
-  font-weight: 500;
-  color: #fff;
-  text-align: right;
+  font-size: 1.15rem;
+  font-weight: 700;
+  word-break: break-word;
 }
 
-.acc-divider {
-  border: none;
-  border-top: 1px solid #333;
-  margin: 15px 0;
-}
-
-.acc-btn {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background-color: #1565c0;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.25s ease;
-}
-
-.acc-btn:hover {
-  background-color: #104f91;
+.acc-badge {
+  width: fit-content;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #dbd8e3;
+  color: #352f44;
+  font-weight: 800;
 }
 
 .acc-error {
   text-align: center;
   margin-top: 40px;
-  color: #ff7675;
-  font-weight: bold;
+  color: #5c5470;
+  font-weight: 800;
+}
+
+@media (max-width: 720px) {
+  .acc-page {
+    padding: 24px 16px 40px;
+  }
+
+  .acc-box {
+    padding: 26px 20px;
+    border-radius: 22px;
+  }
+
+  .acc-title {
+    font-size: 1.6rem;
+  }
+
+  .acc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .acc-card-full {
+    grid-column: auto;
+  }
 }
