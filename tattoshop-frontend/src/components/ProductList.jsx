@@ -92,7 +92,7 @@ function ProductList() {
         <div className="pl-hero-copy">
           <p className="pl-kicker">TattooShop</p>
           <h1 className="pl-title">Productos disponibles</h1>
-          <p className="pl-subtitle">Explora todo el catalogo disponible de la tienda.</p>
+          <p className="pl-subtitle">Explora todo el catálogo disponible de la tienda.</p>
         </div>
 
         <div className="pl-total-card">
@@ -117,7 +117,7 @@ function ProductList() {
             </div>
 
             <div className="pl-filter-block">
-              <h3>Categorias</h3>
+              <h3>Categorías</h3>
               <div className="pl-category-list">
                 <button
                   type="button"
@@ -147,7 +147,7 @@ function ProductList() {
 
               <div className="pl-price-grid">
                 <label className="pl-filter-field">
-                  <span>Minimo</span>
+                    <span>Mínimo</span>
                   <input
                     type="number"
                     value={priceMin}
@@ -157,7 +157,7 @@ function ProductList() {
                 </label>
 
                 <label className="pl-filter-field">
-                  <span>Maximo</span>
+                    <span>Máximo</span>
                   <input
                     type="number"
                     value={priceMax}
@@ -183,7 +183,7 @@ function ProductList() {
                 type="button"
                 className={`pl-view-button ${viewMode === "grid" ? "is-active" : ""}`}
                 onClick={() => setViewMode("grid")}
-                aria-label="Vista cuadricula"
+                aria-label="Vista cuadrícula"
               >
                 <LayoutGrid size={18} strokeWidth={2.2} />
               </button>
@@ -209,7 +209,7 @@ function ProductList() {
           {filtered.length === 0 ? (
             <div className="pl-empty-state">
               <h3>No se encontraron productos</h3>
-              <p>Prueba a cambiar el rango, la categoria o la busqueda.</p>
+              <p>Prueba a cambiar el rango, la categoría o la búsqueda.</p>
             </div>
           ) : (
             <div className={`pl-results ${viewMode === "list" ? "is-list" : "is-grid"}`}>

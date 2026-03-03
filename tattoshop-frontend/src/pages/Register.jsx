@@ -59,7 +59,7 @@ function Register() {
               <p className="auth-tag">TattooShop</p>
               <h1>Crear cuenta</h1>
               <p className="auth-lead">
-                Registrate para comprar o vender dentro de la tienda.
+                Regístrate para comprar o vender dentro de la tienda.
               </p>
 
               <form onSubmit={handleSubmit} className="auth-form auth-form-register">
@@ -76,7 +76,7 @@ function Register() {
                 </div>
 
                 <div className="auth-field">
-                  <label htmlFor="register-email">Correo electronico</label>
+                  <label htmlFor="register-email">Correo electrónico</label>
                   <input
                     id="register-email"
                     type="email"
@@ -88,12 +88,12 @@ function Register() {
                 </div>
 
                 <div className="auth-field">
-                  <label htmlFor="register-password">Contrasena</label>
+                  <label htmlFor="register-password">Contraseña</label>
                   <div className="auth-password-wrap">
                     <input
                       id="register-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Crea una contrasena"
+                      placeholder="Crea una contraseña"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -102,7 +102,7 @@ function Register() {
                       type="button"
                       className="auth-password-toggle"
                       onClick={() => setShowPassword((current) => !current)}
-                      aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                      aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -133,7 +133,7 @@ function Register() {
           <div className="auth-form-panel auth-panel-login-preview">
             <div className="auth-form-wrap auth-form-wrap-preview">
               <p className="auth-tag">TattooShop</p>
-              <h1>Iniciar sesion</h1>
+              <h1>Iniciar sesión</h1>
               <p className="auth-lead">
                 Si ya tienes cuenta, vuelve a entrar para seguir comprando.
               </p>
@@ -144,8 +144,8 @@ function Register() {
                   <input type="text" placeholder="Tu usuario" disabled />
                 </div>
                 <div className="auth-field">
-                  <label>Contrasena</label>
-                  <input type="password" placeholder="Tu contrasena" disabled />
+                  <label>Contraseña</label>
+                  <input type="password" placeholder="Tu contraseña" disabled />
                 </div>
                 <button
                   type="button"
@@ -176,7 +176,7 @@ function Register() {
                 className="auth-ghost"
                 onClick={() => navigate("/login")}
               >
-                Iniciar sesion
+                Iniciar sesión
               </button>
             </div>
 
@@ -197,7 +197,7 @@ function Register() {
                 className="auth-ghost"
                 onClick={() => navigate("/login")}
               >
-                Iniciar sesion
+                Iniciar sesión
               </button>
             </div>
           </aside>

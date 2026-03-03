@@ -257,8 +257,8 @@
 .auth-overlay-logo {
   position: absolute;
   top: 26px;
-  width: 64px;
-  height: 64px;
+  width: 92px;
+  height: 92px;
   object-fit: contain;
   opacity: 0.92;
 }
@@ -281,7 +281,7 @@
 }
 
 .auth-overlay-face h2 {
-  margin: 0;
+  margin: 0 0 18px;
   color: var(--auth-white);
   font-size: clamp(1.8rem, 3vw, 2.7rem);
   line-height: 1.03;
@@ -419,8 +419,8 @@
 
   .auth-overlay-logo {
     top: 20px;
-    width: 54px;
-    height: 54px;
+    width: 76px;
+    height: 76px;
   }
 
   .auth-overlay-register {

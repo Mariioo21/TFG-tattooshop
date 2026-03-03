@@ -19,7 +19,7 @@ function ManageCategories() {
 
       setCategories(res.data || []);
     } catch (err) {
-      setError("Error al cargar categorias.");
+      setError("Error al cargar categorías.");
     }
   };
 
@@ -30,7 +30,7 @@ function ManageCategories() {
   const handleAdd = async (e) => {
     e.preventDefault();
     if (!newCategory.trim()) {
-      setError("El nombre no puede estar vacio.");
+      setError("El nombre no puede estar vacío.");
       return;
     }
 
@@ -43,16 +43,16 @@ function ManageCategories() {
       );
 
       setNewCategory("");
-      setSuccess("Categoria anadida correctamente.");
+      setSuccess("Categoría añadida correctamente.");
       fetchCategories();
       setTimeout(() => setSuccess(""), 3000);
     } catch {
-      setError("Error al anadir la categoria.");
+      setError("Error al añadir la categoría.");
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Seguro que deseas eliminar esta categoria?")) return;
+    if (!window.confirm("¿Seguro que deseas eliminar esta categoría?")) return;
 
     try {
       const token = getToken();
@@ -60,7 +60,7 @@ function ManageCategories() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setSuccess("Categoria eliminada correctamente.");
+      setSuccess("Categoría eliminada correctamente.");
       fetchCategories();
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
@@ -77,7 +77,7 @@ function ManageCategories() {
       <div className="admin-cat-container">
         <h2 className="admin-cat-title">
           <FolderOpen size={28} strokeWidth={2.1} />
-          <span>Gestion de Categorias</span>
+          <span>Gestión de Categorías</span>
         </h2>
 
         {error && <p className="admin-msg error">{error}</p>}
@@ -86,16 +86,16 @@ function ManageCategories() {
         <form onSubmit={handleAdd} className="add-cat-form">
           <input
             type="text"
-            placeholder="Nueva categoria"
+            placeholder="Nueva categoría"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
           />
-          <button type="submit">Anadir</button>
+          <button type="submit">Añadir</button>
         </form>
 
         <div className="cat-list">
           {categories.length === 0 ? (
-            <p className="no-cats">No hay categorias.</p>
+            <p className="no-cats">No hay categorías.</p>
           ) : (
             categories.map((cat) => (
               <div key={cat.id} className="cat-card">

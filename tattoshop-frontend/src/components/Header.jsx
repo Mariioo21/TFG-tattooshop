@@ -30,14 +30,14 @@ function Header() {
   const token = getToken();
 
   const adminNavItems = [
-    { key: "catalog", label: "Catalogo", path: "/catalog", icon: LayoutGrid },
+    { key: "catalog", label: "Catálogo", path: "/catalog", icon: LayoutGrid },
     { key: "users", label: "Usuarios", path: "/manage-users", icon: Users },
     { key: "products", label: "Productos", path: "/manage-products", icon: Package },
-    { key: "categories", label: "Categorias", path: "/manage-categories", icon: FolderOpen },
+    { key: "categories", label: "Categorías", path: "/manage-categories", icon: FolderOpen },
   ];
 
   const sellerNavItems = [
-    { key: "catalog", label: "Catalogo", path: "/catalog", icon: LayoutGrid },
+    { key: "catalog", label: "Catálogo", path: "/catalog", icon: LayoutGrid },
     { key: "mine", label: "Mis productos", path: "/my-products", icon: Package },
     { key: "add", label: "Añadir", path: "/add-product", icon: Plus },
     { key: "edit", label: "Editar", path: "/edit-product", icon: Pencil },
@@ -45,9 +45,9 @@ function Header() {
   ];
 
   const userNavItems = [
-    { key: "catalog", label: "Catalogo", path: "/catalog", icon: LayoutGrid },
+    { key: "catalog", label: "Catálogo", path: "/catalog", icon: LayoutGrid },
     { key: "cart", label: "Mi carrito", path: "/cart", icon: ShoppingCart },
-    { key: "pending", label: "Envios pendientes", path: "/pendingOrders", icon: PackageCheck },
+    { key: "pending", label: "Envíos pendientes", path: "/pendingOrders", icon: PackageCheck },
     { key: "orders", label: "Historial", path: "/orders", icon: Package },
     { key: "account", label: "Mi cuenta", path: "/account", icon: UserRound },
   ];
@@ -133,7 +133,7 @@ function Header() {
           type="button"
           className="header-brand"
           onClick={() => navigate("/catalog")}
-          aria-label="Ir al catalogo"
+          aria-label="Ir al catálogo"
         >
           <img className="header-brand-icon" src="/logo.png" alt="TattooShop" />
           <img className="header-brand-text" src="/letras.png" alt="TattooShop" />
@@ -141,7 +141,7 @@ function Header() {
 
         {isAdminArea ? (
           <>
-            <nav className="header-admin-nav" aria-label="Navegacion de administracion">
+            <nav className="header-admin-nav" aria-label="Navegación de administración">
               {adminNavItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -160,17 +160,13 @@ function Header() {
               })}
             </nav>
 
-            <button
-              type="button"
-              className="header-admin-logout"
-              onClick={handleLogout}
-            >
-              Cerrar sesion
+            <button type="button" className="header-admin-logout" onClick={handleLogout}>
+              Cerrar sesión
             </button>
           </>
         ) : isSellerArea ? (
           <>
-            <nav className="header-admin-nav" aria-label="Navegacion de vendedor">
+            <nav className="header-admin-nav" aria-label="Navegación de vendedor">
               {sellerNavItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -189,17 +185,13 @@ function Header() {
               })}
             </nav>
 
-            <button
-              type="button"
-              className="header-admin-logout"
-              onClick={handleLogout}
-            >
-              Cerrar sesion
+            <button type="button" className="header-admin-logout" onClick={handleLogout}>
+              Cerrar sesión
             </button>
           </>
         ) : isUserArea ? (
           <>
-            <nav className="header-admin-nav" aria-label="Navegacion de usuario">
+            <nav className="header-admin-nav" aria-label="Navegación de usuario">
               {userNavItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
@@ -218,12 +210,8 @@ function Header() {
               })}
             </nav>
 
-            <button
-              type="button"
-              className="header-admin-logout"
-              onClick={handleLogout}
-            >
-              Cerrar sesion
+            <button type="button" className="header-admin-logout" onClick={handleLogout}>
+              Cerrar sesión
             </button>
           </>
         ) : (
@@ -242,22 +230,14 @@ function Header() {
             </div>
 
             {user.role === "USER" && (
-              <div
-                className="header-cart"
-                onClick={() => navigate("/cart")}
-                title="Carrito"
-              >
+              <div className="header-cart" onClick={() => navigate("/cart")} title="Carrito">
                 <ShoppingCart size={18} strokeWidth={2.2} />
                 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </div>
             )}
 
             <div className="header-user" ref={menuRef}>
-              <button
-                type="button"
-                className="menu-toggle"
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
+              <button type="button" className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
                 <User size={18} strokeWidth={2.2} />
               </button>
 
@@ -266,16 +246,13 @@ function Header() {
                   {user.role === "USER" && (
                     <>
                       <button onClick={() => goTo("/catalog")} className="menu-item">
-                        Ver catalogo
+                        Ver catálogo
                       </button>
                       <button onClick={() => goTo("/cart")} className="menu-item">
                         Mi carrito
                       </button>
-                      <button
-                        onClick={() => goTo("/pendingOrders")}
-                        className="menu-item"
-                      >
-                        Envios pendientes
+                      <button onClick={() => goTo("/pendingOrders")} className="menu-item">
+                        Envíos pendientes
                       </button>
                       <button onClick={() => goTo("/orders")} className="menu-item">
                         Historial de pedidos
@@ -301,7 +278,7 @@ function Header() {
                         Eliminar producto
                       </button>
                       <button onClick={() => goTo("/catalog")} className="menu-item">
-                        Ver catalogo
+                        Ver catálogo
                       </button>
                     </>
                   )}
@@ -314,14 +291,11 @@ function Header() {
                       <button onClick={() => goTo("/manage-products")} className="menu-item">
                         Gestionar productos
                       </button>
-                      <button
-                        onClick={() => goTo("/manage-categories")}
-                        className="menu-item"
-                      >
-                        Gestionar categorias
+                      <button onClick={() => goTo("/manage-categories")} className="menu-item">
+                        Gestionar categorías
                       </button>
                       <button onClick={() => goTo("/catalog")} className="menu-item">
-                        Ver catalogo
+                        Ver catálogo
                       </button>
                     </>
                   )}
@@ -329,7 +303,7 @@ function Header() {
                   <hr className="menu-divider" />
 
                   <button onClick={handleLogout} className="menu-item logout">
-                    Cerrar sesion
+                    Cerrar sesión
                   </button>
                 </div>
               )}

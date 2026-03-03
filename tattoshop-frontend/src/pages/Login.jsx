@@ -36,7 +36,7 @@ function Login() {
       navigate("/catalog");
     } catch (error) {
       console.error("Error en login:", error);
-      setErrorMessage("Usuario o contrasena incorrectos.");
+      setErrorMessage("Usuario o contraseña incorrectos.");
     }
   };
 
@@ -47,9 +47,9 @@ function Login() {
           <div className="auth-form-panel auth-panel-login">
             <div className="auth-form-wrap">
               <p className="auth-tag">TattooShop</p>
-              <h1>Iniciar sesion</h1>
+              <h1>Iniciar sesión</h1>
               <p className="auth-lead">
-                Accede a tu cuenta para explorar el catalogo y gestionar tus
+                Accede a tu cuenta para explorar el catálogo y gestionar tus
                 pedidos.
               </p>
 
@@ -67,12 +67,12 @@ function Login() {
                 </div>
 
                 <div className="auth-field">
-                  <label htmlFor="login-password">Contrasena</label>
+                  <label htmlFor="login-password">Contraseña</label>
                   <div className="auth-password-wrap">
                     <input
                       id="login-password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Introduce tu contrasena"
+                      placeholder="Introduce tu contraseña"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -81,7 +81,9 @@ function Login() {
                       type="button"
                       className="auth-password-toggle"
                       onClick={() => setShowPassword((current) => !current)}
-                      aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                      aria-label={
+                        showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                      }
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -111,12 +113,12 @@ function Login() {
                   <input type="text" placeholder="Tu usuario" disabled />
                 </div>
                 <div className="auth-field">
-                  <label>Correo electronico</label>
+                  <label>Correo electrónico</label>
                   <input type="email" placeholder="Tu correo" disabled />
                 </div>
                 <div className="auth-field">
-                  <label>Contrasena</label>
-                  <input type="password" placeholder="Tu contrasena" disabled />
+                  <label>Contraseña</label>
+                  <input type="password" placeholder="Tu contraseña" disabled />
                 </div>
                 <button
                   type="button"
@@ -138,10 +140,6 @@ function Login() {
               />
               <p className="auth-overlay-kicker">Material profesional</p>
               <h2>Todo lo que necesitas para tu estudio en un solo lugar</h2>
-              <p className="auth-overlay-text">
-                Maquinas, tintas, cartuchos y accesorios en una experiencia mas
-                visual, limpia y enfocada en la tienda.
-              </p>
               <div className="auth-overlay-pills">
                 <span>Cartuchos</span>
                 <span>Tintas</span>
@@ -152,7 +150,7 @@ function Login() {
                 className="auth-ghost"
                 onClick={() => navigate("/register")}
               >
-                Registrate
+                Regístrate
               </button>
             </div>
 
@@ -166,14 +164,14 @@ function Login() {
               <h2>Abre tu perfil y entra en la tienda con otro ritmo visual</h2>
               <p className="auth-overlay-text">
                 Crea tu cuenta para comprar, vender y moverte por la plataforma
-                con una experiencia mas clara.
+                con una experiencia más clara.
               </p>
               <button
                 type="button"
                 className="auth-ghost"
                 onClick={() => navigate("/register")}
               >
-                Registrate
+                Regístrate
               </button>
             </div>
           </aside>
