@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Trash2 } from "lucide-react";
 import { getToken } from "../../services/authService";
 import "../../styles/DeleteProduct.css";
 
@@ -13,24 +14,27 @@ function DeleteProduct() {
 
   useEffect(() => {
     if (!token) return;
+
     axios
       .get("http://localhost:8080/api/products/mine", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.error("Error al cargar productos:", err));
+      .then((res) => setProducts(res.data || []))
+      .catch(() => {});
   }, [token]);
 
   const handleSelect = (e) => {
     const id = e.target.value;
     setSelectedId(id);
-    const prod = products.find((p) => p.id === parseInt(id));
-    setSelectedProduct(prod || null);
+    setMessage("");
+
+    const product = products.find((item) => item.id === parseInt(id, 10));
+    setSelectedProduct(product || null);
   };
 
   const handleDelete = async () => {
     if (!selectedId) {
-      setMessage("⚠️ Selecciona un producto para eliminar");
+      setMessage("Selecciona un producto para eliminar.");
       return;
     }
 
@@ -39,52 +43,69 @@ function DeleteProduct() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setMessage("✅ Producto eliminado correctamente");
-      setProducts(products.filter((p) => p.id !== parseInt(selectedId)));
+      setMessage("Producto eliminado correctamente.");
+      setProducts((prev) => prev.filter((product) => product.id !== parseInt(selectedId, 10)));
       setSelectedId("");
       setSelectedProduct(null);
-
       setTimeout(() => setMessage(""), 2000);
-    } catch (error) {
-      console.error("Error al eliminar producto:", error);
-      setMessage("❌ Error al eliminar producto");
+    } catch {
+      setMessage("Error al eliminar el producto.");
     }
   };
 
   return (
-    <div className="delete-container">
-      <h2>🗑️ Eliminar producto</h2>
+    <div className="delete-page">
+      <div className="delete-container">
+        <h2 className="delete-title">
+          <Trash2 size={28} />
+          <span>Eliminar producto</span>
+        </h2>
 
-      <select className="product-select" value={selectedId} onChange={handleSelect}>
-        <option value="">-- Selecciona un producto --</option>
-        {products.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.name}
-          </option>
-        ))}
-      </select>
+        <select
+          className="delete-select"
+          value={selectedId}
+          onChange={handleSelect}
+        >
+          <option value="">Selecciona un producto</option>
+          {products.map((product) => (
+            <option key={product.id} value={product.id}>
+              {product.name}
+            </option>
+          ))}
+        </select>
 
-      {selectedProduct && (
-        <div className="preview-box">
-          <img
-            src={selectedProduct.imageURL || "https://via.placeholder.com/200"}
-            alt={selectedProduct.name}
-            className="preview-img"
-          />
-          <h3>{selectedProduct.name}</h3>
-          <p className="pv-price">{selectedProduct.price} €</p>
-          {selectedProduct.category && (
-            <p className="pv-cat">{selectedProduct.category.name}</p>
-          )}
-          <p className="pv-desc">{selectedProduct.description}</p>
-        </div>
-      )}
+        {selectedProduct && (
+          <div className="delete-preview-card">
+            <div className="delete-preview-media">
+              <img
+                src={
+                  selectedProduct.imageURL ||
+                  "https://via.placeholder.com/480x320?text=Vista+previa"
+                }
+                alt={selectedProduct.name}
+                className="delete-preview-img"
+              />
+            </div>
 
-      <button onClick={handleDelete} className="delete-btn">
-        Eliminar producto
-      </button>
+            <div className="delete-preview-info">
+              <p className="delete-preview-tag">
+                {selectedProduct.category?.name || "Categoría"}
+              </p>
+              <h3>{selectedProduct.name}</h3>
+              <p className="delete-preview-desc">
+                {selectedProduct.description || "Sin descripción."}
+              </p>
+              <p className="delete-preview-price">{selectedProduct.price} €</p>
+            </div>
+          </div>
+        )}
 
-      {message && <p className="message">{message}</p>}
+        <button onClick={handleDelete} className="delete-btn">
+          Eliminar producto
+        </button>
+
+        {message && <p className="delete-message">{message}</p>}
+      </div>
     </div>
   );
 }

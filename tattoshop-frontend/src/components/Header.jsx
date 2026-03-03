@@ -5,8 +5,11 @@ import {
   FolderOpen,
   LayoutGrid,
   Package,
+  Pencil,
+  Plus,
   Search,
   ShoppingCart,
+  Trash2,
   User,
   Users,
 } from "lucide-react";
@@ -31,9 +34,21 @@ function Header() {
     { key: "categories", label: "Categorias", path: "/manage-categories", icon: FolderOpen },
   ];
 
+  const sellerNavItems = [
+    { key: "catalog", label: "Catalogo", path: "/catalog", icon: LayoutGrid },
+    { key: "mine", label: "Mis productos", path: "/my-products", icon: Package },
+    { key: "add", label: "Añadir", path: "/add-product", icon: Plus },
+    { key: "edit", label: "Editar", path: "/edit-product", icon: Pencil },
+    { key: "delete", label: "Eliminar", path: "/delete-product", icon: Trash2 },
+  ];
+
   const isAdminArea =
     user?.role === "ADMIN" &&
     ["/manage-users", "/manage-products", "/manage-categories"].includes(location.pathname);
+
+  const isSellerArea =
+    user?.role === "SELLER" &&
+    ["/my-products", "/add-product", "/edit-product", "/delete-product"].includes(location.pathname);
 
   useEffect(() => {
     const handleStorageChange = () => setUser(getUserFromToken());
@@ -83,7 +98,11 @@ function Header() {
 
   return (
     <header className="header">
-      <div className={`header-content header-full ${isAdminArea ? "header-admin-layout" : ""}`}>
+      <div
+        className={`header-content header-full ${
+          isAdminArea || isSellerArea ? "header-admin-layout" : ""
+        }`}
+      >
         <button
           type="button"
           className="header-brand"
@@ -98,6 +117,35 @@ function Header() {
           <>
             <nav className="header-admin-nav" aria-label="Navegacion de administracion">
               {adminNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    className={`header-admin-link ${isActive ? "is-active" : ""}`}
+                    onClick={() => navigate(item.path)}
+                  >
+                    <Icon size={18} strokeWidth={2.1} />
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <button
+              type="button"
+              className="header-admin-logout"
+              onClick={handleLogout}
+            >
+              Cerrar sesion
+            </button>
+          </>
+        ) : isSellerArea ? (
+          <>
+            <nav className="header-admin-nav" aria-label="Navegacion de vendedor">
+              {sellerNavItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path;
 
@@ -164,11 +212,11 @@ function Header() {
 
                   {user.role === "SELLER" && (
                     <>
-                      <button onClick={() => goTo("/catalog")} className="menu-item">Ver catalogo</button>
                       <button onClick={() => goTo("/my-products")} className="menu-item">Mis productos</button>
-                      <button onClick={() => goTo("/add-product")} className="menu-item">Anadir producto</button>
+                      <button onClick={() => goTo("/add-product")} className="menu-item">Añadir producto</button>
                       <button onClick={() => goTo("/edit-product")} className="menu-item">Editar producto</button>
                       <button onClick={() => goTo("/delete-product")} className="menu-item">Eliminar producto</button>
+                      <button onClick={() => goTo("/catalog")} className="menu-item">Ver catalogo</button>
                     </>
                   )}
 

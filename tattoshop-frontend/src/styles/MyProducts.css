@@ -1,41 +1,130 @@
-/* Contenedor general centrado */
 .my-products-wrapper {
-  width: 95%;
-  max-width: 1300px;
-  margin: 0 auto 20px;
+  width: min(1160px, calc(100% - 40px));
+  margin: 26px auto 0;
 }
 
-/* Cuadro negro */
 .my-products-container {
-  width: 100%;
-  background-color: #1e1e1e;
-  padding: 25px;
-  border-radius: 12px;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  background: linear-gradient(180deg, #2f2940 0%, #2a2438 100%);
+  padding: 34px 36px 36px;
+  border-radius: 26px;
+  color: #ffffff;
+  box-shadow: 0 20px 40px rgba(42, 36, 56, 0.18);
 }
 
-/* Título */
 .my-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 0 0 28px;
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.my-title svg {
+  color: #7b7394;
+}
+
+.my-grid-style {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+}
+
+.my-grid-style .pl-card {
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  border-radius: 22px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.my-grid-style .pl-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.my-product-body {
+  background: #d7d3e0;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.my-grid-style .pl-image-wrapper {
+  height: 170px;
+  margin-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  background: #d7d3e0;
+}
+
+.my-grid-style .pl-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.my-grid-style .pl-card-body {
+  padding: 22px 22px 18px;
+  background: #d7d3e0;
+}
+
+.my-grid-style .pl-name,
+.my-grid-style .pl-desc,
+.my-grid-style .pl-price,
+.my-grid-style .pl-category {
+  color: #1f2340;
+}
+
+.my-grid-style .pl-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.my-grid-style .pl-desc {
+  margin-top: 12px;
+  min-height: 64px;
+  line-height: 1.55;
+}
+
+.my-grid-style .pl-meta {
+  margin-top: 16px;
+  padding-top: 0;
+  border-top: none;
+  justify-content: flex-start;
+}
+
+.my-grid-style .pl-price {
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.my-products-container .pl-empty,
+.my-products-container .pl-loading {
   text-align: center;
-  margin-bottom: 20px;
-  color: #64b5f6;
-  font-size: 1.7rem;
-  font-weight: 700;
+  color: #dbd8e3;
 }
 
-/* Bloquear efectos interactivos del catálogo */
-.pl-card-static {
-  cursor: default !important;
-  transition: none !important;
+@media (max-width: 1200px) {
+  .my-grid-style {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.pl-card-static:hover {
-  transform: none !important;
-  box-shadow: none !important;
-}
+@media (max-width: 900px) {
+  .my-products-wrapper {
+    width: calc(100% - 24px);
+    margin-top: 18px;
+  }
 
-/* ✅ Forzar color visibilidad del nombre en My Products */
-.my-products-container .pl-card-static .pl-name {
-  color: #000000 !important;
+  .my-products-container {
+    padding: 24px 16px;
+    border-radius: 22px;
+  }
+
+  .my-grid-style {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 }

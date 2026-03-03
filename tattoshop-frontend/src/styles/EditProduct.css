@@ -1,124 +1,241 @@
-.edit-container {
-  width: 95%;
-  max-width: 1100px;
-  margin: 25px auto;
-  background-color: #1e1e1e;
-  padding: 25px;
-  border-radius: 12px;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+.edit-page {
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding: 28px 24px 48px;
 }
 
-.edit-container h2 {
-  text-align: center;
-  color: #64b5f6;
-  margin-bottom: 20px;
+.edit-container {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, #2a2438 0%, #352f44 100%);
+  padding: 30px 26px 26px;
+  border-radius: 24px;
+  color: #dbd8e3;
+  box-shadow: 0 24px 48px rgba(42, 36, 56, 0.18);
+}
+
+.edit-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 22px;
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.edit-title svg {
+  color: #5c5470;
 }
 
 .product-select {
   width: 100%;
-  padding: 10px;
-  background-color: #111;
-  color: white;
-  border: 1px solid #333;
-  border-radius: 8px;
-  margin-bottom: 25px;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  background: #dbd8e3 !important;
+  border: 1px solid rgba(219, 216, 227, 0.12);
+  color: #2a2438 !important;
+  border-radius: 14px;
+  margin-bottom: 22px;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: light;
+}
+
+.product-select:focus {
+  outline: none;
+  border-color: #5c5470;
+  box-shadow: 0 0 0 4px rgba(92, 84, 112, 0.22);
+}
+
+.product-select option {
+  background: #dbd8e3;
+  color: #2a2438;
 }
 
 .edit-content {
-  display: flex;
-  gap: 28px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(320px, 0.92fr);
+  gap: 22px;
+  align-items: stretch;
 }
 
-/* ✅ Vista previa estilo catálogo */
 .preview-box {
-  width: 45%;
-  background: #fff; /* ✅ ahora blanco como las cards */
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  color: #222; /* ✅ texto oscuro para fondo blanco */
+  background: #ffffff;
+  color: #2a2438;
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 440px;
+}
+
+.preview-media {
+  background: #f4f1f8;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .preview-img {
   width: 100%;
   height: 220px;
   object-fit: contain;
-  background-color: #f8f8f8;
-  border-radius: 10px;
-  margin-bottom: 10px;
 }
 
-.preview-box h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 5px;
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 6px 4px;
+  height: 100%;
 }
 
-.pv-price {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #1565c0;
+.preview-tag {
+  width: fit-content;
+  margin: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #dbd8e3;
+  color: #352f44;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
-.pv-cat {
-  font-size: 0.85rem;
-  color: #555;
+.pv-name {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.1;
 }
 
 .pv-desc {
-  font-size: 0.88rem;
-  color: #444;
+  margin: 0;
+  color: #5c5470;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-/* ✅ Formulario visual mejorado */
+.pv-price {
+  margin: auto 0 0;
+  color: #2a2438;
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
 .edit-form {
-  width: 55%;
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
 .edit-form input,
-.edit-form textarea {
-  background-color: #111;
-  border: 1px solid #444;
-  color: white;
-  padding: 10px;
-  border-radius: 8px;
+.edit-form textarea,
+.edit-form select {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(42, 36, 56, 0.55);
+  border: 1px solid rgba(219, 216, 227, 0.12);
+  color: #ffffff;
+  padding: 14px 16px;
+  border-radius: 14px;
   font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.edit-form input::placeholder,
+.edit-form textarea::placeholder {
+  color: rgba(219, 216, 227, 0.62);
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus,
+.edit-form select:focus {
+  outline: none;
+  border-color: #5c5470;
+  box-shadow: 0 0 0 4px rgba(92, 84, 112, 0.22);
+  background: rgba(42, 36, 56, 0.72);
+}
+
+.edit-form textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.edit-form select {
+  background: #dbd8e3 !important;
+  color: #2a2438 !important;
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: light;
+}
+
+.edit-form select option {
+  background: #dbd8e3;
+  color: #2a2438;
 }
 
 .save-btn {
-  background-color: #1a73e8;
-  color: white;
+  width: 100%;
+  background: #5c5470;
+  color: #ffffff;
   border: none;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 18px;
+  border-radius: 14px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.2s ease;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .save-btn:hover {
-  background-color: #0d47a1;
+  background: #4d4660;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(42, 36, 56, 0.22);
 }
 
 .edit-message {
   text-align: center;
-  margin-top: 10px;
-  color: #64b5f6;
+  margin: 6px 0 0;
+  color: #dbd8e3;
+  font-weight: 700;
 }
 
-/* 📱 Responsive */
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .edit-content {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
-  .preview-box,
-  .edit-form {
-    width: 100%;
+
+  .preview-box {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .edit-page {
+    padding: 24px 16px 40px;
+  }
+
+  .edit-container {
+    padding: 24px 18px 22px;
+    border-radius: 22px;
+  }
+
+  .edit-title {
+    font-size: 1.5rem;
+  }
+
+  .preview-media {
+    min-height: 220px;
+  }
+
+  .preview-img {
+    height: 200px;
   }
 }

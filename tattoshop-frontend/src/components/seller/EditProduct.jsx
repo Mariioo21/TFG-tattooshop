@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Pencil } from "lucide-react";
 import { getToken } from "../../services/authService";
 import "../../styles/EditProduct.css";
 
 function EditProduct() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [productData, setProductData] = useState({
     name: "",
@@ -13,7 +15,6 @@ function EditProduct() {
     imageURL: "",
     categoryName: "",
   });
-
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -24,19 +25,28 @@ function EditProduct() {
       .get("http://localhost:8080/api/products/mine", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setProducts(res.data))
+      .then((res) => setProducts(res.data || []))
       .catch(() => {});
+
+    axios
+      .get("http://localhost:8080/api/categories", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => setCategories(res.data || []))
+      .catch(() => setCategories([]));
   }, []);
 
   const handleSelect = (e) => {
     const id = e.target.value;
     setSelectedId(id);
-    const selected = products.find((p) => p.id === parseInt(id));
+    setMessage("");
+
+    const selected = products.find((p) => p.id === parseInt(id, 10));
     if (selected) {
       setProductData({
-        name: selected.name,
-        description: selected.description,
-        price: selected.price,
+        name: selected.name || "",
+        description: selected.description || "",
+        price: selected.price || "",
         imageURL: selected.imageURL || "",
         categoryName: selected.category?.name || "",
       });
@@ -49,8 +59,9 @@ function EditProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!selectedId) {
-      setMessage("⚠️ Selecciona un producto para editar");
+      setMessage("Selecciona un producto para editar.");
       return;
     }
 
@@ -68,102 +79,136 @@ function EditProduct() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // ✅ Vista previa se actualiza en tiempo real
-      const updatedProductData = updated.data;
+      const updatedProduct = updated.data;
       setProducts((prev) =>
-        prev.map((p) => (p.id === updatedProductData.id ? updatedProductData : p))
+        prev.map((product) =>
+          product.id === updatedProduct.id ? updatedProduct : product
+        )
       );
-      setMessage("✅ Cambios guardados correctamente");
+      setProductData({
+        name: updatedProduct.name || "",
+        description: updatedProduct.description || "",
+        price: updatedProduct.price || "",
+        imageURL: updatedProduct.imageURL || "",
+        categoryName: updatedProduct.category?.name || "",
+      });
+      setMessage("Cambios guardados correctamente.");
       setTimeout(() => setMessage(""), 2500);
-    } catch (error) {
-      setMessage("❌ Error al actualizar");
+    } catch {
+      setMessage("Error al actualizar el producto.");
     }
   };
 
   return (
-    <div className="edit-container">
-      <h2>✏️ Editar producto</h2>
+    <div className="edit-page">
+      <div className="edit-container">
+        <h2 className="edit-title">
+          <Pencil size={28} />
+          <span>Editar producto</span>
+        </h2>
 
-      {/* SELECTOR  */}
-      <select className="product-select" value={selectedId} onChange={handleSelect}>
-        <option value="">-- Selecciona un producto --</option>
-        {products.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.name}
-          </option>
-        ))}
-      </select>
+        <select
+          className="product-select"
+          value={selectedId}
+          onChange={handleSelect}
+        >
+          <option value="">Selecciona un producto</option>
+          {products.map((product) => (
+            <option key={product.id} value={product.id}>
+              {product.name}
+            </option>
+          ))}
+        </select>
 
-      {/* Vista previa + Formulario */}
-      {selectedId && (
-        <div className="edit-content">
-          {/* 📌 Vista previa */}
-          <div className="preview-box">
-            <img
-              src={productData.imageURL || "https://via.placeholder.com/200"}
-              alt="preview"
-              className="preview-img"
-            />
-            <h3>{productData.name}</h3>
-            <p className="pv-price">{productData.price} €</p>
-            {productData.categoryName && (
-              <p className="pv-cat">{productData.categoryName}</p>
-            )}
-            <p className="pv-desc">{productData.description}</p>
+        {selectedId && (
+          <div className="edit-content">
+            <div className="preview-box">
+              <div className="preview-media">
+                <img
+                  src={
+                    productData.imageURL ||
+                    "https://via.placeholder.com/480x320?text=Vista+previa"
+                  }
+                  alt="vista previa"
+                  className="preview-img"
+                />
+              </div>
+
+              <div className="preview-info">
+                <p className="preview-tag">
+                  {productData.categoryName || "Categoría"}
+                </p>
+                <h3 className="pv-name">
+                  {productData.name || "Nombre del producto"}
+                </h3>
+                <p className="pv-desc">
+                  {productData.description ||
+                    "La vista previa del producto se actualizará mientras edites el formulario."}
+                </p>
+                <p className="pv-price">
+                  {productData.price ? `${productData.price} €` : "0 €"}
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="edit-form">
+              <input
+                type="text"
+                name="name"
+                placeholder="Nombre del producto"
+                value={productData.name}
+                onChange={handleChange}
+                required
+              />
+
+              <textarea
+                name="description"
+                placeholder="Descripción"
+                value={productData.description}
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="number"
+                name="price"
+                placeholder="Precio (€)"
+                value={productData.price}
+                onChange={handleChange}
+                required
+              />
+
+              <input
+                type="text"
+                name="imageURL"
+                placeholder="URL de la imagen"
+                value={productData.imageURL}
+                onChange={handleChange}
+              />
+
+              <select
+                name="categoryName"
+                value={productData.categoryName}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecciona una categoría</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+
+              <button type="submit" className="save-btn">
+                Guardar cambios
+              </button>
+
+              {message && <p className="edit-message">{message}</p>}
+            </form>
           </div>
-
-          {/* 📝 Formulario */}
-          <form onSubmit={handleSubmit} className="edit-form">
-            <input
-              type="text"
-              name="name"
-              placeholder="Nombre"
-              value={productData.name}
-              onChange={handleChange}
-              required
-            />
-
-            <textarea
-              name="description"
-              placeholder="Descripción"
-              value={productData.description}
-              onChange={handleChange}
-              required
-            />
-
-            <input
-              type="number"
-              name="price"
-              placeholder="Precio (€)"
-              value={productData.price}
-              onChange={handleChange}
-              required
-            />
-
-            <input
-              type="text"
-              name="imageURL"
-              placeholder="URL de imagen"
-              value={productData.imageURL}
-              onChange={handleChange}
-            />
-
-            <input
-              type="text"
-              name="categoryName"
-              placeholder="Categoría"
-              value={productData.categoryName}
-              onChange={handleChange}
-            />
-
-            <button type="submit" className="save-btn">
-              💾 Guardar cambios
-            </button>
-
-            {message && <p className="edit-message">{message}</p>}
-          </form>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
