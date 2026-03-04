@@ -33,7 +33,11 @@ function Login() {
         })
       );
 
-      navigate("/catalog");
+      if (response.data.role === "ADMIN") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/catalog");
+      }
     } catch (error) {
       console.error("Error en login:", error);
       setErrorMessage("Usuario o contraseña incorrectos.");

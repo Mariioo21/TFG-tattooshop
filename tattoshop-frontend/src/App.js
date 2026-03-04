@@ -30,6 +30,7 @@ import "./styles/App.css";
 function AppContent() {
   const location = useLocation();
   const user = getUserFromToken();
+  const defaultAuthenticatedRoute = user?.role === "ADMIN" ? "/admin-dashboard" : "/catalog";
 
   const hideHeaderRoutes = ["/login", "/register"];
   const shouldShowHeader = user && !hideHeaderRoutes.includes(location.pathname);
@@ -40,7 +41,10 @@ function AppContent() {
 
       <Routes>
         {/* Raíz → login */}
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route
+          path="/"
+          element={<Navigate to={user ? defaultAuthenticatedRoute : "/login"} />}
+        />
 
         {/* Públicas */}
         <Route path="/login" element={<Login />} />

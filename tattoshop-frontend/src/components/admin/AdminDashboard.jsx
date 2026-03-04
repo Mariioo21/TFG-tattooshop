@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  ArrowRight,
   ClipboardList,
   FolderOpen,
   LayoutDashboard,
@@ -10,6 +11,7 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { getToken } from "../../services/authService";
 import "../../styles/AdminDashboard.css";
 
@@ -17,6 +19,7 @@ function AdminDashboard() {
   const [metrics, setMetrics] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = getToken();
@@ -47,6 +50,33 @@ function AdminDashboard() {
         { label: "Entregados", value: metrics.deliveredOrders, icon: PackageCheck },
       ]
     : [];
+
+  const quickLinks = [
+    {
+      label: "Gestionar usuarios",
+      description: "Revisa cuentas registradas y elimina accesos si hace falta.",
+      path: "/manage-users",
+      icon: Users,
+    },
+    {
+      label: "Gestionar productos",
+      description: "Controla el catálogo y accede rápido a cada ficha.",
+      path: "/manage-products",
+      icon: Package,
+    },
+    {
+      label: "Gestionar categorías",
+      description: "Añade o limpia categorías para mantener ordenada la tienda.",
+      path: "/manage-categories",
+      icon: FolderOpen,
+    },
+    {
+      label: "Ver catálogo",
+      description: "Comprueba cómo se ve la tienda desde la parte pública.",
+      path: "/catalog",
+      icon: ClipboardList,
+    },
+  ];
 
   return (
     <div className="admin-dashboard-wrapper">
@@ -100,6 +130,69 @@ function AdminDashboard() {
                   <strong>{metrics.deliveredOrders}</strong> ya constan como entregados.
                 </p>
               </article>
+            </section>
+
+            <section className="admin-dashboard-actions">
+              <div className="admin-dashboard-section-head">
+                <h3>Accesos rápidos</h3>
+                <p>Atajos directos a las gestiones más importantes del panel.</p>
+              </div>
+
+              <div className="admin-dashboard-links">
+                {quickLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <button
+                      key={link.path}
+                      type="button"
+                      className="admin-dashboard-link"
+                      onClick={() => navigate(link.path)}
+                    >
+                      <div className="admin-dashboard-link-icon">
+                        <Icon size={20} strokeWidth={2.1} />
+                      </div>
+
+                      <div className="admin-dashboard-link-copy">
+                        <strong>{link.label}</strong>
+                        <span>{link.description}</span>
+                      </div>
+
+                      <ArrowRight size={18} strokeWidth={2.1} />
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="admin-dashboard-actions">
+              <div className="admin-dashboard-section-head">
+                <h3>Vista rápida</h3>
+                <p>Estado general de la plataforma en este momento.</p>
+              </div>
+
+              <div className="admin-dashboard-mini-grid">
+                <article className="admin-dashboard-mini-card">
+                  <span>Pendientes de entrega</span>
+                  <strong>{metrics.pendingOrders}</strong>
+                  <p>Pedidos que aún no han pasado al historial.</p>
+                </article>
+
+                <article className="admin-dashboard-mini-card">
+                  <span>Relación catálogo</span>
+                  <strong>
+                    {metrics.totalProducts} / {metrics.totalCategories}
+                  </strong>
+                  <p>Productos y categorías activas actualmente.</p>
+                </article>
+
+                <article className="admin-dashboard-mini-card">
+                  <span>Base de usuarios</span>
+                  <strong>
+                    {metrics.totalSellers} + {metrics.totalCustomers}
+                  </strong>
+                  <p>Vendedores y clientes que forman la plataforma.</p>
+                </article>
+              </div>
             </section>
           </>
         )}
