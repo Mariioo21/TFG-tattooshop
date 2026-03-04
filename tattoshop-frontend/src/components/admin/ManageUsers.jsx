@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
 import "../../styles/ManageUsers.css";
 import { getToken } from "../../services/authService";
@@ -9,6 +9,9 @@ function ManageUsers() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 10;
 
   const fetchUsers = async () => {
     try {
@@ -33,6 +36,16 @@ function ManageUsers() {
     fetchUsers();
   }, []);
 
+  const paginatedUsers = useMemo(() => {
+    const totalPages = Math.max(1, Math.ceil(users.length / ITEMS_PER_PAGE));
+    const safePage = Math.min(currentPage, totalPages);
+    const start = (safePage - 1) * ITEMS_PER_PAGE;
+    return users.slice(start, start + ITEMS_PER_PAGE);
+  }, [users, currentPage]);
+
+  const totalPages = Math.max(1, Math.ceil(users.length / ITEMS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+
   const handleDelete = async () => {
     if (!userToDelete) return;
 
@@ -41,8 +54,13 @@ function ManageUsers() {
       await axios.delete(`http://localhost:8080/api/users/${userToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUsers(users.filter((u) => u.id !== userToDelete.id));
+
+      const nextUsers = users.filter((u) => u.id !== userToDelete.id);
+      setUsers(nextUsers);
       setUserToDelete(null);
+
+      const nextTotalPages = Math.max(1, Math.ceil(nextUsers.length / ITEMS_PER_PAGE));
+      setCurrentPage((page) => Math.min(page, nextTotalPages));
     } catch {
       alert("Error al eliminar usuario");
     }
@@ -61,34 +79,71 @@ function ManageUsers() {
         {users.length === 0 ? (
           <p style={{ textAlign: "center", color: "#bbb" }}>No hay usuarios registrados.</p>
         ) : (
-          <div className="admin-table-box">
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Usuario</th>
-                  <th>Email</th>
-                  <th>Rol</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((u) => (
-                  <tr key={u.id}>
-                    <td>{u.id}</td>
-                    <td>{u.username}</td>
-                    <td>{u.email}</td>
-                    <td>{u.role}</td>
-                    <td>
-                      <button onClick={() => setUserToDelete(u)} className="delete-btn">
-                        Eliminar
-                      </button>
-                    </td>
+          <>
+            <div className="admin-table-box">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {paginatedUsers.map((u) => (
+                    <tr key={u.id}>
+                      <td>{u.id}</td>
+                      <td>{u.username}</td>
+                      <td>{u.email}</td>
+                      <td>{u.role}</td>
+                      <td>
+                        <button onClick={() => setUserToDelete(u)} className="delete-btn">
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {totalPages > 1 && (
+              <div className="admin-pagination">
+                <button
+                  type="button"
+                  className="admin-page-arrow"
+                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                  disabled={safePage === 1}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+
+                <div className="admin-page-list">
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                    <button
+                      key={page}
+                      type="button"
+                      className={`admin-page-button ${safePage === page ? "is-active" : ""}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-page-arrow"
+                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                  disabled={safePage === totalPages}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
 

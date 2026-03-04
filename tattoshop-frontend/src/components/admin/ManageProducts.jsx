@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import { ChevronLeft, ChevronRight, Package } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Package } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
 import "../../styles/ManageProducts.css";
 import { getToken } from "../../services/authService";
@@ -10,8 +10,11 @@ function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const ITEMS_PER_PAGE = 9;
 
   const fetchProducts = async () => {
     try {
@@ -35,6 +38,16 @@ function ManageProducts() {
     fetchProducts();
   }, []);
 
+  const paginatedProducts = useMemo(() => {
+    const totalPages = Math.max(1, Math.ceil(products.length / ITEMS_PER_PAGE));
+    const safePage = Math.min(currentPage, totalPages);
+    const start = (safePage - 1) * ITEMS_PER_PAGE;
+    return products.slice(start, start + ITEMS_PER_PAGE);
+  }, [products, currentPage]);
+
+  const totalPages = Math.max(1, Math.ceil(products.length / ITEMS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+
   const handleDelete = async () => {
     if (!productToDelete) return;
 
@@ -44,8 +57,12 @@ function ManageProducts() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setProducts(products.filter((p) => p.id !== productToDelete.id));
+      const nextProducts = products.filter((p) => p.id !== productToDelete.id);
+      setProducts(nextProducts);
       setProductToDelete(null);
+
+      const nextTotalPages = Math.max(1, Math.ceil(nextProducts.length / ITEMS_PER_PAGE));
+      setCurrentPage((page) => Math.min(page, nextTotalPages));
     } catch {
       alert("Error al eliminar el producto.");
     }
@@ -73,40 +90,77 @@ function ManageProducts() {
         {products.length === 0 ? (
           <p className="no-items">No hay productos disponibles.</p>
         ) : (
-          <div className="admin-grid-style">
-            {products.map((product) => (
-              <div key={product.id} className="pl-card">
-                <button
-                  type="button"
-                  className="admin-product-preview"
-                  onClick={() => openProductPreview(product.id)}
-                >
-                  <div className="admin-product-body">
-                    <div className="pl-image-wrapper">
-                      <img
-                        className="pl-image"
-                        src={product.imageURL || "https://via.placeholder.com/200"}
-                        alt={product.name}
-                      />
-                    </div>
+          <>
+            <div className="admin-grid-style">
+              {paginatedProducts.map((product) => (
+                <div key={product.id} className="pl-card">
+                  <button
+                    type="button"
+                    className="admin-product-preview"
+                    onClick={() => openProductPreview(product.id)}
+                  >
+                    <div className="admin-product-body">
+                      <div className="pl-image-wrapper">
+                        <img
+                          className="pl-image"
+                          src={product.imageURL || "https://via.placeholder.com/200"}
+                          alt={product.name}
+                        />
+                      </div>
 
-                    <div className="pl-card-body">
-                      <h3 className="pl-name">{product.name}</h3>
-                      <p className="pl-desc">{product.description}</p>
+                      <div className="pl-card-body">
+                        <h3 className="pl-name">{product.name}</h3>
+                        <p className="pl-desc">{product.description}</p>
 
-                      <div className="pl-meta">
-                        <span className="pl-price">{product.price} €</span>
+                        <div className="pl-meta">
+                          <span className="pl-price">{product.price} €</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </button>
+
+                  <button onClick={() => setProductToDelete(product)} className="delete-btn">
+                    Eliminar
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="admin-pagination">
+                <button
+                  type="button"
+                  className="admin-page-arrow"
+                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                  disabled={safePage === 1}
+                >
+                  <ChevronLeft size={18} />
                 </button>
 
-                <button onClick={() => setProductToDelete(product)} className="delete-btn">
-                  Eliminar
+                <div className="admin-page-list">
+                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                    <button
+                      key={page}
+                      type="button"
+                      className={`admin-page-button ${safePage === page ? "is-active" : ""}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  className="admin-page-arrow"
+                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                  disabled={safePage === totalPages}
+                >
+                  <ChevronRight size={18} />
                 </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
 

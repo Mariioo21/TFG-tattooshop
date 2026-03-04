@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { FolderOpen } from "lucide-react";
+import { ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
 import { getToken } from "../../services/authService";
 import "../../styles/ManageCategories.css";
@@ -11,6 +11,9 @@ function ManageCategories() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 10;
 
   const fetchCategories = async () => {
     try {
@@ -28,6 +31,16 @@ function ManageCategories() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  const paginatedCategories = useMemo(() => {
+    const totalPages = Math.max(1, Math.ceil(categories.length / ITEMS_PER_PAGE));
+    const safePage = Math.min(currentPage, totalPages);
+    const start = (safePage - 1) * ITEMS_PER_PAGE;
+    return categories.slice(start, start + ITEMS_PER_PAGE);
+  }, [categories, currentPage]);
+
+  const totalPages = Math.max(1, Math.ceil(categories.length / ITEMS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -48,6 +61,7 @@ function ManageCategories() {
       setError("");
       setSuccess("Categoría añadida correctamente.");
       fetchCategories();
+      setCurrentPage(1);
       setTimeout(() => setSuccess(""), 3000);
     } catch {
       setError("Error al añadir la categoría.");
@@ -63,10 +77,14 @@ function ManageCategories() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      const nextCategories = categories.filter((cat) => cat.id !== categoryToDelete.id);
+      setCategories(nextCategories);
       setSuccess("Categoría eliminada correctamente.");
       setError("");
       setCategoryToDelete(null);
-      fetchCategories();
+
+      const nextTotalPages = Math.max(1, Math.ceil(nextCategories.length / ITEMS_PER_PAGE));
+      setCurrentPage((page) => Math.min(page, nextTotalPages));
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       setCategoryToDelete(null);
@@ -103,7 +121,7 @@ function ManageCategories() {
           {categories.length === 0 ? (
             <p className="no-cats">No hay categorías.</p>
           ) : (
-            categories.map((cat) => (
+            paginatedCategories.map((cat) => (
               <div key={cat.id} className="cat-card">
                 <span>
                   {cat.name} - <strong>{cat.productCount}</strong> producto
@@ -119,6 +137,41 @@ function ManageCategories() {
             ))
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="admin-pagination">
+            <button
+              type="button"
+              className="admin-page-arrow"
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              disabled={safePage === 1}
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <div className="admin-page-list">
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  className={`admin-page-button ${safePage === page ? "is-active" : ""}`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className="admin-page-arrow"
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              disabled={safePage === totalPages}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        )}
       </div>
 
       <ConfirmModal
