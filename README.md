@@ -1,123 +1,449 @@
-# TattooShop Backend
+# TattooShop
 
-Backend **TattooShop**, una aplicación web para la **gestión y venta de material de tatuajes**, desarrollada con **Spring Boot**, **MySQL** y **Docker**.
-
----
-
-## Características principales
-
-- **Gestión de usuarios** con roles (`ADMIN`, `SELLER`, `USER`)
-- **Gestión de productos** (crear, listar, eliminar, actualizar)
-- **Pedidos y carritos de compra**
-- **Autenticación con JWT**
-- **Persistencia en base de datos MySQL**
-- **Totalmente dockerizado**, sin necesidad de instalaciones adicionales
+Aplicacion web desarrollada como **TFG** para la **gestion y venta online de material de tatuajes**.  
+El proyecto incluye una arquitectura separada en **frontend** y **backend**, con autenticacion por roles, catalogo de productos, carrito, pedidos y paneles de gestion para administradores y vendedores.
 
 ---
 
-## Tecnologías utilizadas
+## Descripcion general
 
-| Tecnología | Descripción |
-|-------------|-------------|
+TattooShop esta pensada como una plataforma de comercio electronico orientada a la venta de productos de tatuaje, como tintas, agujas, cartuchos, guantes, stencils y otros accesorios.
+
+La aplicacion permite:
+
+- navegar por un catalogo de productos
+- registrarse e iniciar sesion
+- comprar productos y gestionar pedidos
+- administrar categorias, usuarios y productos
+- permitir a vendedores gestionar sus propios productos
+
+---
+
+## Tecnologias utilizadas
+
+### Backend
+
+| Tecnologia | Uso |
+|------------|-----|
 | **Java 17** | Lenguaje principal |
 | **Spring Boot 3.3.5** | Framework backend |
-| **Spring Security + JWT** | Autenticación y autorización |
-| **Spring Data JPA / Hibernate** | Mapeo ORM y persistencia |
-| **MySQL 8.0 (Docker)** | Base de datos relacional |
-| **Docker Compose** | Orquestación de contenedores |
-| **Maven** | Gestión de dependencias |
+| **Spring Security** | Seguridad y control de acceso |
+| **JWT** | Autenticacion y autorizacion |
+| **Spring Data JPA / Hibernate** | Persistencia y ORM |
+| **MySQL 8** | Base de datos principal |
+| **Maven** | Gestion de dependencias |
+
+### Frontend
+
+| Tecnologia | Uso |
+|------------|-----|
+| **React 18** | Interfaz de usuario |
+| **React Router DOM** | Navegacion entre vistas |
+| **Axios** | Comunicacion con la API |
+| **Lucide React** | Iconografia |
+| **CSS** | Maquetacion y estilos personalizados |
+
+### Infraestructura
+
+| Tecnologia | Uso |
+|------------|-----|
+| **Docker** | Contenerizacion |
+| **Docker Compose** | Orquestacion de servicios |
+| **Nginx** | Servido del frontend en contenedor |
 
 ---
 
-## Instalación y ejecución
+## Estructura del proyecto
 
-> **Requisitos previos:**
-> - Tener **Docker Desktop** o **Docker Engine + Compose**
-> - Tener **Git**
-
-### 1️⃣ Clonar el repositorio
-
-```bash
-git clone https://github.com/Mariioo21/TFG-tattooshop
-cd tattoshop-backend
-````
-
-### 2️⃣ Construir y ejecutar con Docker
-
-```bash
-docker compose up -d
+```text
+TFG-tattooshop/
+├── docker-compose.yml
+├── iniciar.bat
+├── detener.bat
+├── README.md
+├── tattoshop-frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── styles/
+└── tattoshop-backend/
+    └── tattoshop-backend/
+        ├── src/main/java/
+        └── src/main/resources/
 ```
 
-### 3️⃣ Verificar contenedores
+---
+
+## Arquitectura
+
+El proyecto sigue una arquitectura cliente-servidor:
+
+- **Frontend React**:
+  - gestiona la interfaz
+  - controla la navegacion
+  - consume la API REST
+  - adapta la interfaz segun el rol autenticado
+
+- **Backend Spring Boot**:
+  - expone endpoints REST
+  - valida usuarios y permisos
+  - genera y valida tokens JWT
+  - gestiona entidades como usuarios, productos, categorias, carrito y pedidos
+
+- **Base de datos MySQL**:
+  - almacena usuarios, productos, categorias, carritos y pedidos
+
+---
+
+## Roles del sistema
+
+La aplicacion trabaja con tres roles principales:
+
+### ADMIN
+
+Puede acceder a:
+
+- gestion de usuarios
+- gestion de productos
+- gestion de categorias
+- catalogo general
+
+### SELLER
+
+Puede acceder a:
+
+- mis productos
+- añadir producto
+- editar producto
+- eliminar producto
+- catalogo general
+
+### USER
+
+Puede acceder a:
+
+- catalogo
+- detalle de producto
+- carrito
+- resumen de compra
+- envios pendientes
+- historial de pedidos
+- mi cuenta
+
+---
+
+## Funcionalidades principales
+
+### Autenticacion
+
+- inicio de sesion
+- registro de nuevos usuarios
+- autenticacion mediante JWT
+- interfaz adaptada segun el rol autenticado
+
+### Catalogo y compra
+
+- listado de productos
+- vista en grid y lista
+- filtro por categorias
+- filtro por precio minimo y maximo
+- busqueda de productos
+- detalle individual de producto
+- seleccion de cantidad
+- añadir al carrito
+
+### Carrito y pedidos
+
+- ver carrito actual
+- actualizar cantidad
+- eliminar productos del carrito
+- vaciar carrito
+- finalizar compra
+- ver resumen del pedido
+- consultar envios pendientes
+- consultar historial de pedidos
+
+### Gestion de administrador
+
+- gestionar usuarios
+- gestionar productos
+- gestionar categorias
+
+### Gestion de vendedor
+
+- ver sus propios productos
+- añadir productos nuevos
+- editar productos existentes
+- eliminar productos
+- buscador en editar y eliminar producto para localizar articulos rapidamente
+
+---
+
+## Rutas principales del frontend
+
+Estas son las rutas principales definidas actualmente en la aplicacion:
+
+### Publicas
+
+- `/login`
+- `/register`
+
+### Compartidas
+
+- `/catalog`
+- `/product/:id`
+
+### Seller
+
+- `/my-products`
+- `/add-product`
+- `/edit-product`
+- `/delete-product`
+
+### Admin
+
+- `/manage-users`
+- `/manage-products`
+- `/manage-categories`
+
+### User
+
+- `/account`
+- `/cart`
+- `/order-summary`
+- `/orders`
+- `/pendingOrders`
+
+---
+
+## Mejoras visuales realizadas
+
+Durante el desarrollo se ha realizado una revision completa de la interfaz con una linea visual unificada basada en la paleta:
+
+- `#2A2438`
+- `#352F44`
+- `#5C5470`
+- `#DBD8E3`
+
+Entre las mejoras aplicadas destacan:
+
+- rediseño completo de login y registro
+- animacion entre login y registro
+- iconos con `lucide-react`
+- rediseño del header segun el rol
+- rediseño del catalogo y del detalle de producto
+- rediseño de paneles de administrador
+- rediseño de paneles de vendedor
+- rediseño de carrito, cuenta y pedidos
+- mejora del branding con favicon y logotipos personalizados
+
+---
+
+## Instalacion y ejecucion
+
+### Requisitos previos
+
+- **Docker Desktop** instalado
+- **Git**
+- opcionalmente **Node.js** si se quiere ejecutar el frontend fuera de Docker
+- opcionalmente **Java 17** y **Maven** si se quiere ejecutar el backend fuera de Docker
+
+---
+
+## Ejecucion con Docker
+
+Desde la raiz del proyecto:
 
 ```bash
-docker ps
+docker compose up -d --build
 ```
 
-Deberias ver algo como:
+O usando el script incluido:
 
 ```bash
-CONTAINER ID          IMAGE                          STATUS          PORTS
-95db43a0873d        mysql:8.0                        healthy         3307->3306/tcp
-e53c016f7a85       tattoshop-backend-backend         Up 10s          8080->8080/tcp
+iniciar.bat
 ```
 
-## Acceso al backend
+Para detener los contenedores:
 
-- **API disponible en:** http://localhost:8080
+```bash
+docker compose down
+```
 
-- **Base de datos MySQL accesible en:** localhost:3307
+O usando:
 
-- **Usuario de base de datos:** tattooshop
+```bash
+detener.bat
+```
 
-- **Contraseña:** tattooshop
+### Servicios levantados
 
-## Usuarios iniciales
+- **Frontend**: `http://localhost:3000`
+- **Backend**: `http://localhost:8080`
+- **MySQL**: `localhost:3307`
 
-Al levantar el contenedor por primera vez, se crean automáticamente estos usuarios:
+---
 
-| Rol        | Usuario | Contraseña |
-|------------|---------|------------|
-| **ADMIN**  | Admin   | Admin      |
-| **SELLER** | Seller  | Seller     | 
-| **USER**   | User    | User       | 
+## Ejecucion manual en desarrollo
 
-## Servicios (docker-compose.yml)
+### Frontend
 
-El proyecto levanta dos contenedores:
+Ruta:
 
-- **MySQL (mysql_tattoo)** → mysql:8.0 con volumen persistente
+```bash
+cd tattoshop-frontend
+```
 
-- **Backend (tattoo_backend)** → construido desde el Dockerfile
+Instalar dependencias:
 
-## Persistencia de datos
+```bash
+npm install
+```
 
-Los datos se guardan en un volumen de Docker llamado mysql_data, por lo que no se pierden aunque apagues los contenedores.
+Iniciar en desarrollo:
 
-Si quieres reiniciar la base de datos desde cero:
+```bash
+npm start
+```
+
+### Backend
+
+Ruta:
+
+```bash
+cd tattoshop-backend/tattoshop-backend
+```
+
+Ejecutar con Maven Wrapper en Windows:
+
+```bash
+.\mvnw.cmd spring-boot:run
+```
+
+---
+
+## Configuracion de base de datos
+
+En Docker, la base de datos se levanta con:
+
+- **Host**: `localhost`
+- **Puerto**: `3307`
+- **Base de datos**: `tattoo_shop`
+- **Usuario**: `tattooshop`
+- **Contraseña**: `tattooshop`
+
+Los datos se almacenan en el volumen:
+
+```bash
+mysql_data
+```
+
+Para reiniciar la base de datos desde cero:
 
 ```bash
 docker compose down -v
 ```
 
-## Comandos útiles
+---
 
-| Comando                                                 | Descripción |
-|---------------------------------------------------------|--|
-| **docker logs -f tattoo_backend**                       | Muestra los logs del backend |
-| **docker exec -it mysql_tattoo mysql -u tattooshop -p** | Entra en la base de datos MySQL |
-| **docker volume ls**                               | Lista los volúmenes persistentes |
+## Usuarios iniciales
 
+Al levantar el proyecto por primera vez, se crean usuarios iniciales:
+
+| Rol | Usuario | Contraseña |
+|-----|---------|------------|
+| **ADMIN** | `Admin` | `Admin` |
+| **SELLER** | `Seller` | `Seller` |
+| **USER** | `User` | `User` |
+
+---
+
+## Dependencias relevantes
+
+### Frontend
+
+- `react`
+- `react-router-dom`
+- `axios`
+- `lucide-react`
+
+### Backend
+
+- `spring-boot-starter-web`
+- `spring-boot-starter-data-jpa`
+- `spring-boot-starter-security`
+- `spring-boot-starter-validation`
+- `jjwt`
+- `mysql-connector-j`
+
+---
+
+## Comandos utiles
+
+### Docker
+
+```bash
+docker ps
+docker logs -f tattoo_backend
+docker logs -f tattoo_frontend
+docker logs -f mysql_tattoo
+docker compose down -v
+```
+
+### Frontend
+
+```bash
+npm install
+npm start
+npm run build
+```
+
+### Backend
+
+```bash
+.\mvnw.cmd spring-boot:run
+.\mvnw.cmd test
+```
+
+---
+
+## Estado actual del proyecto
+
+Actualmente el proyecto incluye:
+
+- autenticacion con roles
+- catalogo funcional
+- carrito de compra
+- gestion de pedidos
+- panel de administrador
+- panel de vendedor
+- zona de usuario autenticado
+- rediseño visual completo de las vistas principales
+
+---
+
+## Posibles mejoras futuras
+
+Como ampliaciones futuras del proyecto se podrian plantear:
+
+- panel de pedidos para vendedores
+- sistema de favoritos
+- filtros avanzados por tipo de producto
+- subida real de imagenes desde interfaz
+- estadisticas para admin o seller
+- pasarela de pago real
+- notificaciones de estado de pedido
+- panel responsive todavia mas pulido en dispositivos moviles
+
+---
 
 ## Autor
 
-Mario Espasandín Hernández
-Grado en Ingeniería de Computadores — Universidad Rey Juan Carlos
-- **Personal:** [espasandinhernandez@gmail.com](mailto:espasandinhernandez@gmail.com)
-- **Universitario:** [m.espasandin.2021@alumnos.urjc.es](mailto:m.espasandin.2021@alumnos.urjc.es)  
-- **GitHub:** [github.com/Mariioo21](https://github.com/Mariioo21)
+**Mario Espasandín Hernández**  
+Grado en Ingeniería de Computadores - Universidad Rey Juan Carlos
 
-
-
-
-
+- Personal: [espasandinhernandez@gmail.com](mailto:espasandinhernandez@gmail.com)
+- Universitario: [m.espasandin.2021@alumnos.urjc.es](mailto:m.espasandin.2021@alumnos.urjc.es)
+- GitHub: [github.com/Mariioo21](https://github.com/Mariioo21)
