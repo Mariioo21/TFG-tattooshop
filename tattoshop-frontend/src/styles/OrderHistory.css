@@ -59,6 +59,16 @@
   border-radius: 22px;
   padding: 16px;
   margin-bottom: 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.oh-order:hover {
+  transform: translateY(-1px);
+  border-color: rgba(219, 216, 227, 0.24);
+  box-shadow: 0 18px 32px rgba(42, 36, 56, 0.16);
 }
 
 .oh-order-header {
@@ -72,6 +82,7 @@
 .oh-order-id {
   font-weight: 800;
   font-size: 1.05rem;
+  color: #ffffff;
 }
 
 .oh-order-date {
@@ -173,6 +184,7 @@
 .oh-order-total {
   font-weight: 800;
   font-size: 1.05rem;
+  color: #dbd8e3;
 }
 
 .oh-actions {

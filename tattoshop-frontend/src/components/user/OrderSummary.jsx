@@ -8,6 +8,8 @@ function OrderSummary() {
   const navigate = useNavigate();
 
   const order = location.state?.order;
+  const summaryMode = location.state?.summaryMode;
+  const from = location.state?.from;
 
   if (!order) {
     return (
@@ -45,17 +47,21 @@ function OrderSummary() {
     ? order.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
     : 0;
 
+  const isHistoryView = summaryMode === "history";
+
   return (
     <div className="order-page">
       <div className="order-wrapper">
         <div className="order-box">
           <h2 className="order-title">
             <CheckCircle2 size={30} />
-            <span>Compra realizada con éxito</span>
+            <span>{isHistoryView ? "Resumen del pedido" : "Compra realizada con éxito"}</span>
           </h2>
 
           <p className="order-text">
-            Gracias por tu compra. Aquí tienes el resumen de tu pedido.
+            {isHistoryView
+              ? "Aquí tienes toda la información de este pedido."
+              : "Gracias por tu compra. Aquí tienes el resumen de tu pedido."}
           </p>
 
           <div className="order-info-grid">
@@ -121,8 +127,11 @@ function OrderSummary() {
                 <ArrowLeft size={18} />
                 <span>Seguir comprando</span>
               </button>
-              <button className="order-btn" onClick={() => navigate("/orders")}>
-                Ver mis pedidos
+              <button
+                className="order-btn"
+                onClick={() => navigate(from || "/orders")}
+              >
+                {from === "/pendingOrders" ? "Ver envíos pendientes" : "Ver mis pedidos"}
               </button>
             </div>
           </div>

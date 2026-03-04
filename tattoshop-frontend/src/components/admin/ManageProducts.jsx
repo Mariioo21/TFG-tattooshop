@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Package } from "lucide-react";
 import "../../styles/ManageProducts.css";
 import { getToken } from "../../services/authService";
@@ -7,6 +8,8 @@ import { getToken } from "../../services/authService";
 function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchProducts = async () => {
     try {
@@ -45,6 +48,15 @@ function ManageProducts() {
     }
   };
 
+  const openProductPreview = (id) => {
+    navigate(`/product/${id}`, {
+      state: {
+        from: `${location.pathname}${location.search}`,
+        readonlyPreview: true,
+      },
+    });
+  };
+
   return (
     <div className="admin-products-wrapper">
       <div className="admin-products-container">
@@ -61,24 +73,30 @@ function ManageProducts() {
           <div className="admin-grid-style">
             {products.map((product) => (
               <div key={product.id} className="pl-card">
-                <div className="admin-product-body">
-                  <div className="pl-image-wrapper">
-                    <img
-                      className="pl-image"
-                      src={product.imageURL || "https://via.placeholder.com/200"}
-                      alt={product.name}
-                    />
-                  </div>
+                <button
+                  type="button"
+                  className="admin-product-preview"
+                  onClick={() => openProductPreview(product.id)}
+                >
+                  <div className="admin-product-body">
+                    <div className="pl-image-wrapper">
+                      <img
+                        className="pl-image"
+                        src={product.imageURL || "https://via.placeholder.com/200"}
+                        alt={product.name}
+                      />
+                    </div>
 
-                  <div className="pl-card-body">
-                    <h3 className="pl-name">{product.name}</h3>
-                    <p className="pl-desc">{product.description}</p>
+                    <div className="pl-card-body">
+                      <h3 className="pl-name">{product.name}</h3>
+                      <p className="pl-desc">{product.description}</p>
 
-                    <div className="pl-meta">
-                      <span className="pl-price">{product.price} €</span>
+                      <div className="pl-meta">
+                        <span className="pl-price">{product.price} €</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </button>
 
                 <button onClick={() => handleDelete(product.id)} className="delete-btn">
                   Eliminar

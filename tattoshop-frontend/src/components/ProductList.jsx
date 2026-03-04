@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-import { LayoutGrid, List } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { getUserFromToken } from "../services/authService";
 import "../styles/ProductList.css";
 
@@ -14,9 +14,12 @@ function ProductList() {
   const [priceMax, setPriceMax] = useState("");
   const [showFilters, setShowFilters] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const ITEMS_PER_PAGE = 6;
 
   const searchQuery = new URLSearchParams(location.search).get("search") || "";
   const categoryQuery = new URLSearchParams(location.search).get("category") || "";
@@ -65,15 +68,25 @@ function ProductList() {
     if (priceMax) result = result.filter((p) => p.price <= Number(priceMax));
 
     setFiltered(result);
+    setCurrentPage(1);
   }, [products, searchQuery, categoryQuery, priceMin, priceMax]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedProducts = filtered.slice(startIndex, endIndex);
 
   const resetFilters = () => {
     setPriceMin("");
     setPriceMax("");
+    setCurrentPage(1);
     navigate("/catalog");
   };
 
   const selectCategory = (categoryName) => {
+    setCurrentPage(1);
+
     if (!categoryName) {
       navigate("/catalog");
       return;
@@ -81,6 +94,10 @@ function ProductList() {
 
     navigate(`/catalog?category=${encodeURIComponent(categoryName)}`);
   };
+
+  const goToPreviousPage = () => setCurrentPage((page) => Math.max(1, page - 1));
+  const goToNextPage = () => setCurrentPage((page) => Math.min(totalPages, page + 1));
+  const goToPage = (page) => setCurrentPage(page);
 
   if (loading) return <p className="pl-loading">Cargando productos...</p>;
 
@@ -147,7 +164,7 @@ function ProductList() {
 
               <div className="pl-price-grid">
                 <label className="pl-filter-field">
-                    <span>Mínimo</span>
+                  <span>Mínimo</span>
                   <input
                     type="number"
                     value={priceMin}
@@ -157,7 +174,7 @@ function ProductList() {
                 </label>
 
                 <label className="pl-filter-field">
-                    <span>Máximo</span>
+                  <span>Máximo</span>
                   <input
                     type="number"
                     value={priceMax}
@@ -212,34 +229,73 @@ function ProductList() {
               <p>Prueba a cambiar el rango, la categoría o la búsqueda.</p>
             </div>
           ) : (
-            <div className={`pl-results ${viewMode === "list" ? "is-list" : "is-grid"}`}>
-              {filtered.map((product) => (
-                <article
-                  key={product.id}
-                  className="pl-card"
-                  onClick={() => navigate(`/product/${product.id}`)}
-                >
-                  <div className="pl-image-wrapper">
-                    <img
-                      className="pl-image"
-                      src={product.imageURL || "https://via.placeholder.com/240"}
-                      alt={product.name}
-                    />
+            <>
+              <div className={`pl-results ${viewMode === "list" ? "is-list" : "is-grid"}`}>
+                {paginatedProducts.map((product) => (
+                  <article
+                    key={product.id}
+                    className="pl-card"
+                    onClick={() => navigate(`/product/${product.id}`)}
+                  >
+                    <div className="pl-image-wrapper">
+                      <img
+                        className="pl-image"
+                        src={product.imageURL || "https://via.placeholder.com/240"}
+                        alt={product.name}
+                      />
+                    </div>
+
+                    <div className="pl-card-body">
+                      {product.category && (
+                        <span className="pl-category-chip">{product.category.name}</span>
+                      )}
+                      <h3 className="pl-name">{product.name}</h3>
+                      <p className="pl-desc">{product.description}</p>
+                      <div className="pl-meta">
+                        <span className="pl-price">{product.price} €</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {totalPages > 1 && (
+                <div className="pl-pagination">
+                  <button
+                    type="button"
+                    className="pl-page-arrow"
+                    onClick={goToPreviousPage}
+                    disabled={safePage === 1}
+                    aria-label="Página anterior"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+
+                  <div className="pl-page-list">
+                    {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                      <button
+                        key={page}
+                        type="button"
+                        className={`pl-page-button ${safePage === page ? "is-active" : ""}`}
+                        onClick={() => goToPage(page)}
+                      >
+                        {page}
+                      </button>
+                    ))}
                   </div>
 
-                  <div className="pl-card-body">
-                    {product.category && (
-                      <span className="pl-category-chip">{product.category.name}</span>
-                    )}
-                    <h3 className="pl-name">{product.name}</h3>
-                    <p className="pl-desc">{product.description}</p>
-                    <div className="pl-meta">
-                      <span className="pl-price">{product.price} €</span>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                  <button
+                    type="button"
+                    className="pl-page-arrow"
+                    onClick={goToNextPage}
+                    disabled={safePage === totalPages}
+                    aria-label="Página siguiente"
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>

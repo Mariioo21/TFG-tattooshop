@@ -33,6 +33,16 @@ function PendingOrders() {
       .finally(() => setLoading(false));
   }, [navigate]);
 
+  const openOrderSummary = (order) => {
+    navigate("/order-summary", {
+      state: {
+        order,
+        summaryMode: "history",
+        from: "/pendingOrders",
+      },
+    });
+  };
+
   const formatDateTime = (iso) => (iso ? new Date(iso).toLocaleString() : "-");
   const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString() : "-");
   const calcTotal = (order) =>
@@ -84,7 +94,12 @@ function PendingOrders() {
           </h2>
 
           {orders.map((order) => (
-            <div key={order.id} className="oh-order">
+            <button
+              key={order.id}
+              type="button"
+              className="oh-order"
+              onClick={() => openOrderSummary(order)}
+            >
               <div className="oh-order-header">
                 <div>
                   <div className="oh-order-id">Pedido #{order.id}</div>
@@ -130,7 +145,7 @@ function PendingOrders() {
                   Total: {calcTotal(order).toFixed(2)} €
                 </span>
               </div>
-            </div>
+            </button>
           ))}
 
           <div className="oh-actions">

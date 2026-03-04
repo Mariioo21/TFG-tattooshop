@@ -104,7 +104,7 @@ function ManageCategories() {
                   {cat.productCount !== 1 && "s"}
                 </span>
                 <button
-                  className="delete-btn small-btn"
+                  className="delete-btn small-btn category-delete-btn"
                   onClick={() => handleDelete(cat.id)}
                 >
                   Eliminar

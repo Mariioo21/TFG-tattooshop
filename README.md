@@ -5,7 +5,7 @@ El proyecto incluye una arquitectura separada en **frontend** y **backend**, con
 
 ---
 
-## Descripcion general
+## Descripción general
 
 TattooShop esta pensada como una plataforma de comercio electronico orientada a la venta de productos de tatuaje, como tintas, agujas, cartuchos, guantes, stencils y otros accesorios.
 

@@ -47,6 +47,16 @@
   box-shadow: none;
 }
 
+.admin-product-preview {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
 .admin-product-body {
   background: #d7d3e0;
   border-radius: 18px 18px 0 0;
@@ -109,7 +119,11 @@
 .delete-btn {
   width: 100%;
   border: none;
-  border-radius: 0 0 18px 18px;
+  border-radius: 0 0 18px 18px !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-left-radius: 18px !important;
+  border-bottom-right-radius: 18px !important;
   padding: 16px 18px;
   background: #ff313b;
   color: #ffffff;

@@ -84,20 +84,27 @@
   font-weight: 800;
 }
 
-.delete-btn {
+.admin-table .delete-btn {
   min-width: 122px;
   border: none;
-  border-radius: 14px;
+  border-radius: 14px !important;
+  border-top-left-radius: 14px !important;
+  border-top-right-radius: 14px !important;
+  border-bottom-left-radius: 14px !important;
+  border-bottom-right-radius: 14px !important;
   padding: 12px 18px;
   background: #ff313b;
   color: #ffffff;
   font-size: 0.98rem;
   font-weight: 800;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.delete-btn:hover {
+.admin-table .delete-btn:hover {
   transform: translateY(-1px);
   filter: brightness(1.05);
 }
@@ -129,7 +136,7 @@
     padding: 14px 16px;
   }
 
-  .delete-btn {
+  .admin-table .delete-btn {
     min-width: 104px;
     padding: 10px 14px;
   }

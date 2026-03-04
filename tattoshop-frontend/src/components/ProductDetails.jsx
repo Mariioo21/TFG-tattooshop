@@ -17,6 +17,7 @@ function ProductDetails() {
 
   const user = getUserFromToken();
   const isUser = user?.role === "USER";
+  const isReadonlyPreview = Boolean(location.state?.readonlyPreview);
   const token = getToken();
 
   const api = axios.create({
@@ -43,7 +44,14 @@ function ProductDetails() {
     setQty(clean === "" ? 1 : Math.min(99, Number(clean)));
   };
 
-  const goBack = () => navigate(`/catalog${location.search}`);
+  const goBack = () => {
+    if (location.state?.from) {
+      navigate(location.state.from);
+      return;
+    }
+
+    navigate(`/catalog${location.search}`);
+  };
 
   const addToCart = () => {
     if (!isUser) {
@@ -84,6 +92,7 @@ function ProductDetails() {
           </div>
 
           <div className="pd-info-panel">
+            <img src="/logo.png" alt="TattooShop" className="pd-panel-logo" />
             <p className="pd-eyebrow">TATTOOSHOP</p>
             <h2 className="pd-name">{product.name}</h2>
             <p className="pd-desc">{product.description}</p>
@@ -109,39 +118,41 @@ function ProductDetails() {
               )}
             </div>
 
-            <div className="pd-purchase-box">
-              <div className="pd-qty">
+            {isUser && !isReadonlyPreview && (
+              <div className="pd-purchase-box">
+                <div className="pd-qty">
+                  <button
+                    className="pd-qty-btn"
+                    type="button"
+                    onClick={() => changeQty(-1)}
+                  >
+                    -
+                  </button>
+                  <input
+                    className="pd-qty-input"
+                    type="text"
+                    value={qty}
+                    onChange={inputQty}
+                  />
+                  <button
+                    className="pd-qty-btn"
+                    type="button"
+                    onClick={() => changeQty(1)}
+                  >
+                    +
+                  </button>
+                </div>
+
                 <button
-                  className="pd-qty-btn"
-                  type="button"
-                  onClick={() => changeQty(-1)}
+                  className="pd-add-btn"
+                  disabled={!isUser}
+                  onClick={addToCart}
                 >
-                  -
-                </button>
-                <input
-                  className="pd-qty-input"
-                  type="text"
-                  value={qty}
-                  onChange={inputQty}
-                />
-                <button
-                  className="pd-qty-btn"
-                  type="button"
-                  onClick={() => changeQty(1)}
-                >
-                  +
+                  <ShoppingCart size={18} />
+                  <span>Añadir al carrito</span>
                 </button>
               </div>
-
-              <button
-                className="pd-add-btn"
-                disabled={!isUser}
-                onClick={addToCart}
-              >
-                <ShoppingCart size={18} />
-                <span>Añadir al carrito</span>
-              </button>
-            </div>
+            )}
 
             {message && <p className="pd-toast">{message}</p>}
           </div>

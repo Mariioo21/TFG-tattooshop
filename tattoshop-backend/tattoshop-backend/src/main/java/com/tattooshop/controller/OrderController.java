@@ -73,6 +73,18 @@ public class OrderController {
         // usa el método con fetch join del repositorio para evitar tropecientas queries
         List<Order> orders = orderRepository.findByUserWithItems(user);
 
+        LocalDate today = LocalDate.now();
+        for (Order order : orders) {
+            if (
+                order.getStatus() == Order.Status.PENDING
+                    && order.getEstimatedDelivery() != null
+                    && !order.getEstimatedDelivery().isAfter(today)
+            ) {
+                order.setStatus(Order.Status.DELIVERED);
+                orderRepository.save(order);
+            }
+        }
+
         return ResponseEntity.ok(orders);
     }
 

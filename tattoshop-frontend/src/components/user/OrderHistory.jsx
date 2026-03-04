@@ -30,6 +30,16 @@ function OrderHistory() {
       .finally(() => setLoading(false));
   }, [navigate]);
 
+  const openOrderSummary = (order) => {
+    navigate("/order-summary", {
+      state: {
+        order,
+        summaryMode: "history",
+        from: "/orders",
+      },
+    });
+  };
+
   if (loading) {
     return (
       <div className="oh-page">
@@ -70,7 +80,12 @@ function OrderHistory() {
   const deliveredOrders = orders.filter((order) => order.status === "DELIVERED");
 
   const renderOrderCard = (order) => (
-    <div key={order.id} className="oh-order">
+    <button
+      key={order.id}
+      type="button"
+      className="oh-order"
+      onClick={() => openOrderSummary(order)}
+    >
       <div className="oh-order-header">
         <div>
           <div className="oh-order-id">Pedido #{order.id}</div>
@@ -122,7 +137,7 @@ function OrderHistory() {
           Total: {calcTotal(order).toFixed(2)} €
         </span>
       </div>
-    </div>
+    </button>
   );
 
   return (

@@ -102,6 +102,11 @@
   cursor: pointer;
 }
 
+.category-delete-btn {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
 .small-btn:hover {
   filter: brightness(1.04);
 }

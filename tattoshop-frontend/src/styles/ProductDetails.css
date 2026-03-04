@@ -76,6 +76,17 @@
   padding: 28px 26px;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.pd-panel-logo {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+  opacity: 0.92;
 }
 
 .pd-eyebrow {
@@ -84,6 +95,7 @@
   font-size: 0.88rem;
   font-weight: 800;
   letter-spacing: 0.18em;
+  padding-right: 78px;
 }
 
 .pd-name {
@@ -91,6 +103,7 @@
   color: #ffffff;
   font-size: 2.25rem;
   line-height: 1.02;
+  padding-right: 78px;
 }
 
 .pd-desc {
@@ -98,6 +111,7 @@
   color: rgba(219, 216, 227, 0.92);
   font-size: 1.02rem;
   line-height: 1.65;
+  padding-right: 78px;
 }
 
 .pd-meta-list {
@@ -267,6 +281,13 @@
 
   .pd-name {
     font-size: 1.8rem;
+  }
+
+  .pd-panel-logo {
+    top: 18px;
+    right: 18px;
+    width: 56px;
+    height: 56px;
   }
 
   .pd-meta-price strong {
