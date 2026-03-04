@@ -165,13 +165,13 @@ Puede acceder a:
 - consultar envíos pendientes
 - consultar historial de pedidos
 
-### Gestion de administrador
+### Gestión de administrador
 
 - gestionar usuarios
 - gestionar productos
 - gestionar categorias
 
-### Gestion de vendedor
+### Gestión de vendedor
 
 - ver sus propios productos
 - añadir productos nuevos
@@ -185,7 +185,7 @@ Puede acceder a:
 
 Estas son las rutas principales definidas actualmente en la aplicacion:
 
-### Publicas
+### Públicas
 
 - `/login`
 - `/register`
@@ -241,7 +241,7 @@ Entre las mejoras aplicadas destacan:
 
 ---
 
-## Instalacion y ejecucion
+## Instalación y ejecución
 
 ### Requisitos previos
 
@@ -252,9 +252,9 @@ Entre las mejoras aplicadas destacan:
 
 ---
 
-## Ejecucion con Docker
+## Ejecución con Docker
 
-Desde la raiz del proyecto:
+Desde la raíz del proyecto:
 
 ```bash
 docker compose up -d --build
@@ -286,7 +286,7 @@ O usando el script incluido:
 
 ---
 
-## Ejecucion manual en desarrollo
+## Ejecución manual en desarrollo
 
 ### Frontend
 
@@ -324,7 +324,7 @@ Ejecutar con Maven Wrapper en Windows:
 
 ---
 
-## Configuracion de base de datos
+## Configuración de base de datos
 
 En Docker, la base de datos se levanta con:
 
@@ -408,22 +408,6 @@ npm run build
 ```
 
 ---
-
-## Estado actual del proyecto
-
-Actualmente el proyecto incluye:
-
-- autenticacion con roles
-- catalogo funcional
-- carrito de compra
-- gestion de pedidos
-- panel de administrador
-- panel de vendedor
-- zona de usuario autenticado
-- rediseño visual completo de las vistas principales
-
----
-
 
 ## Autor
 
