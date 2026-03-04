@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Trash2 } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
+import { useToast } from "../common/ToastProvider";
 import { getToken } from "../../services/authService";
 import "../../styles/DeleteProduct.css";
 
@@ -12,6 +13,7 @@ function DeleteProduct() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [message, setMessage] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const toast = useToast();
 
   const token = getToken();
 
@@ -42,6 +44,7 @@ function DeleteProduct() {
   const openConfirm = () => {
     if (!selectedId) {
       setMessage("Selecciona un producto para eliminar.");
+      toast.info("Selecciona un producto antes de continuar.");
       return;
     }
 
@@ -55,6 +58,7 @@ function DeleteProduct() {
       });
 
       setMessage("Producto eliminado correctamente.");
+      toast.success("El producto se ha eliminado correctamente.", "Producto eliminado");
       setProducts((prev) => prev.filter((product) => product.id !== parseInt(selectedId, 10)));
       setSelectedId("");
       setSelectedProduct(null);
@@ -63,6 +67,7 @@ function DeleteProduct() {
     } catch {
       setShowConfirm(false);
       setMessage("Error al eliminar el producto.");
+      toast.error("No se pudo eliminar el producto.");
     }
   };
 

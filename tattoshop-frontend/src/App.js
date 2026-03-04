@@ -23,6 +23,7 @@ import OrderHistory from "./components/user/OrderHistory";
 import PendingOrders from "./components/user/PendingOrders";
 
 import Header from "./components/Header";
+import { ToastProvider } from "./components/common/ToastProvider";
 import { getUserFromToken } from "./services/authService";
 
 import "./styles/App.css";
@@ -90,7 +91,9 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </Router>
   );
 }

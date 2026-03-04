@@ -3,6 +3,7 @@ import axios from "axios";
 import { ChevronLeft, ChevronRight, Package } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "../common/ConfirmModal";
+import { useToast } from "../common/ToastProvider";
 import "../../styles/ManageProducts.css";
 import { getToken } from "../../services/authService";
 
@@ -13,6 +14,7 @@ function ManageProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
 
   const ITEMS_PER_PAGE = 9;
 
@@ -59,12 +61,13 @@ function ManageProducts() {
 
       const nextProducts = products.filter((p) => p.id !== productToDelete.id);
       setProducts(nextProducts);
+      toast.success("El producto se ha eliminado correctamente.", "Producto eliminado");
       setProductToDelete(null);
 
       const nextTotalPages = Math.max(1, Math.ceil(nextProducts.length / ITEMS_PER_PAGE));
       setCurrentPage((page) => Math.min(page, nextTotalPages));
     } catch {
-      alert("Error al eliminar el producto.");
+      toast.error("No se pudo eliminar el producto.");
     }
   };
 

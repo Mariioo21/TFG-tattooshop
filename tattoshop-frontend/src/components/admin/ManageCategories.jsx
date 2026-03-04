@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
+import { useToast } from "../common/ToastProvider";
 import { getToken } from "../../services/authService";
 import "../../styles/ManageCategories.css";
 
@@ -12,6 +13,7 @@ function ManageCategories() {
   const [success, setSuccess] = useState("");
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const toast = useToast();
 
   const ITEMS_PER_PAGE = 10;
 
@@ -60,11 +62,13 @@ function ManageCategories() {
       setNewCategory("");
       setError("");
       setSuccess("Categoría añadida correctamente.");
+      toast.success("La categoría se ha añadido correctamente.", "Categoría añadida");
       fetchCategories();
       setCurrentPage(1);
       setTimeout(() => setSuccess(""), 3000);
     } catch {
       setError("Error al añadir la categoría.");
+      toast.error("No se pudo añadir la categoría.");
     }
   };
 
@@ -80,6 +84,7 @@ function ManageCategories() {
       const nextCategories = categories.filter((cat) => cat.id !== categoryToDelete.id);
       setCategories(nextCategories);
       setSuccess("Categoría eliminada correctamente.");
+      toast.success("La categoría se ha eliminado correctamente.", "Categoría eliminada");
       setError("");
       setCategoryToDelete(null);
 
@@ -90,8 +95,10 @@ function ManageCategories() {
       setCategoryToDelete(null);
       if (err.response?.status === 409) {
         setError("No se puede eliminar: tiene productos asociados.");
+        toast.error("No se puede eliminar una categoría con productos asociados.");
       } else {
         setError("Error al eliminar.");
+        toast.error("No se pudo eliminar la categoría.");
       }
     }
   };

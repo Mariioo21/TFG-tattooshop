@@ -3,12 +3,14 @@ import "../../styles/Cart.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ShoppingCart, Trash2 } from "lucide-react";
+import { useToast } from "../common/ToastProvider";
 import { getToken, getUserFromToken } from "../../services/authService";
 
 function Cart() {
   const navigate = useNavigate();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
+  const toast = useToast();
 
   const token = getToken();
   const user = getUserFromToken();
@@ -69,11 +71,17 @@ function Cart() {
   };
 
   const removeItem = (itemId) => {
-    api.delete(`/remove/${itemId}`).then(() => fetchCart());
+    api.delete(`/remove/${itemId}`).then(() => {
+      fetchCart();
+      toast.success("El producto se ha eliminado del carrito.", "Producto eliminado");
+    });
   };
 
   const clearCart = () => {
-    api.delete("/clear").then(() => fetchCart());
+    api.delete("/clear").then(() => {
+      fetchCart();
+      toast.info("Se han eliminado todos los productos del carrito.", "Carrito vaciado");
+    });
   };
 
   const handleCheckout = () => {
@@ -102,7 +110,7 @@ function Cart() {
         const msg =
           err.response?.data ||
           "No se pudo completar la compra. Inténtalo de nuevo.";
-        alert(msg);
+        toast.error(msg);
       });
   };
 

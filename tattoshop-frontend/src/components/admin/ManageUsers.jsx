@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import ConfirmModal from "../common/ConfirmModal";
+import { useToast } from "../common/ToastProvider";
 import "../../styles/ManageUsers.css";
 import { getToken } from "../../services/authService";
 
@@ -10,6 +11,7 @@ function ManageUsers() {
   const [error, setError] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const toast = useToast();
 
   const ITEMS_PER_PAGE = 10;
 
@@ -57,12 +59,13 @@ function ManageUsers() {
 
       const nextUsers = users.filter((u) => u.id !== userToDelete.id);
       setUsers(nextUsers);
+      toast.success("El usuario se ha eliminado correctamente.", "Usuario eliminado");
       setUserToDelete(null);
 
       const nextTotalPages = Math.max(1, Math.ceil(nextUsers.length / ITEMS_PER_PAGE));
       setCurrentPage((page) => Math.min(page, nextTotalPages));
     } catch {
-      alert("Error al eliminar usuario");
+      toast.error("No se pudo eliminar el usuario.");
     }
   };
 
