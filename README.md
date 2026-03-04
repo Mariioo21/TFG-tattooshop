@@ -409,6 +409,55 @@ npm run build
 
 ---
 
+## Dashboard de administrador
+
+Se ha incorporado una nueva vista de administracion accesible desde:
+
+```bash
+/admin-dashboard
+```
+
+Este panel funciona como pantalla principal para el rol **ADMIN** y muestra un resumen general del estado de la plataforma.
+
+### Informacion mostrada
+
+- usuarios totales
+- vendedores registrados
+- clientes registrados
+- productos totales
+- categorias totales
+- pedidos totales
+- pedidos pendientes
+- pedidos entregados
+
+### Funcionalidades incluidas
+
+- tarjetas con metricas generales de la tienda
+- panel de resumen del catalogo, usuarios y pedidos
+- accesos rapidos a:
+  - gestion de usuarios
+  - gestion de productos
+  - gestion de categorias
+  - catalogo general
+- integracion visual con la misma paleta y estilo del resto del proyecto
+
+### Comportamiento
+
+- cuando un usuario con rol **ADMIN** inicia sesion, la aplicacion redirige automaticamente al dashboard en lugar de al catalogo
+- si el administrador entra por la ruta raiz `/`, tambien se redirige al dashboard
+
+### Backend asociado
+
+Para alimentar esta vista se ha añadido un endpoint especifico:
+
+```bash
+GET /api/admin/dashboard
+```
+
+Este endpoint devuelve las metricas agregadas necesarias para construir el panel de administracion.
+
+---
+
 ## Autor
 
 **Mario Espasandín Hernández**  

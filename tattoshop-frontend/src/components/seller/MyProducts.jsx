@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Package } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getToken } from "../../services/authService";
 import "../../styles/ProductList.css";
 import "../../styles/MyProducts.css";
@@ -8,6 +9,8 @@ import "../../styles/MyProducts.css";
 function MyProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = getToken();
@@ -27,6 +30,14 @@ function MyProducts() {
       });
   }, []);
 
+  const openProductPreview = (id) => {
+    navigate(`/product/${id}`, {
+      state: {
+        from: `${location.pathname}${location.search}`,
+      },
+    });
+  };
+
   if (loading) return <p className="pl-loading">Cargando productos...</p>;
 
   return (
@@ -38,29 +49,35 @@ function MyProducts() {
         </h2>
 
         {products.length === 0 ? (
-          <p className="pl-empty">No tienes productos publicados aun.</p>
+          <p className="pl-empty">No tienes productos publicados aún.</p>
         ) : (
           <div className="my-grid-style">
             {products.map((product) => (
               <div key={product.id} className="pl-card pl-card-static">
-                <div className="my-product-body">
-                  <div className="pl-image-wrapper">
-                    <img
-                      className="pl-image"
-                      src={product.imageURL || "https://via.placeholder.com/200"}
-                      alt={product.name}
-                    />
-                  </div>
+                <button
+                  type="button"
+                  className="my-product-preview"
+                  onClick={() => openProductPreview(product.id)}
+                >
+                  <div className="my-product-body">
+                    <div className="pl-image-wrapper">
+                      <img
+                        className="pl-image"
+                        src={product.imageURL || "https://via.placeholder.com/200"}
+                        alt={product.name}
+                      />
+                    </div>
 
-                  <div className="pl-card-body">
-                    <h3 className="pl-name">{product.name}</h3>
-                    <p className="pl-desc">{product.description}</p>
+                    <div className="pl-card-body">
+                      <h3 className="pl-name">{product.name}</h3>
+                      <p className="pl-desc">{product.description}</p>
 
-                    <div className="pl-meta">
-                      <span className="pl-price">{product.price} €</span>
+                      <div className="pl-meta">
+                        <span className="pl-price">{product.price} €</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </button>
               </div>
             ))}
           </div>
