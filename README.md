@@ -7,15 +7,15 @@ El proyecto incluye una arquitectura separada en **frontend** y **backend**, con
 
 ## Descripcion general
 
-TattooShop esta pensada como una plataforma de comercio electronico orientada a la venta de productos de tatuaje, como tintas, agujas, cartuchos, guantes, stencils y otros accesorios.
+TattooShop esta pensada como una plataforma de comercio electrónico orientada a la venta de productos de tatuaje, como tintas, agujas, cartuchos, guantes, stencils y otros accesorios.
 
 La aplicacion permite:
 
 - navegar por un catalogo de productos
 - registrarse e iniciar sesion
 - comprar productos y gestionar pedidos
-- administrar categorias, usuarios y productos
-- permitir a vendedores gestionar sus propios productos
+- administrar categorias, usuarios y productos como Administrador
+- permitir a vendedores gestionar sus propios productos (Añadir, Editar, Eliminar, etc)
 
 ---
 
@@ -38,17 +38,17 @@ La aplicacion permite:
 | Tecnologia | Uso |
 |------------|-----|
 | **React 18** | Interfaz de usuario |
-| **React Router DOM** | Navegacion entre vistas |
-| **Axios** | Comunicacion con la API |
-| **Lucide React** | Iconografia |
-| **CSS** | Maquetacion y estilos personalizados |
+| **React Router DOM** | Navegación entre vistas |
+| **Axios** | Comunicación con la API |
+| **Lucide React** | Iconografía |
+| **CSS** | Maquetación y estilos personalizados |
 
 ### Infraestructura
 
 | Tecnologia | Uso |
 |------------|-----|
-| **Docker** | Contenerizacion |
-| **Docker Compose** | Orquestacion de servicios |
+| **Docker** | Contenerización |
+| **Docker Compose** | Orquestación de servicios |
 | **Nginx** | Servido del frontend en contenedor |
 
 ---
@@ -82,7 +82,7 @@ El proyecto sigue una arquitectura cliente-servidor:
 
 - **Frontend React**:
   - gestiona la interfaz
-  - controla la navegacion
+  - controla la navegación
   - consume la API REST
   - adapta la interfaz segun el rol autenticado
 
@@ -105,10 +105,10 @@ La aplicacion trabaja con tres roles principales:
 
 Puede acceder a:
 
-- gestion de usuarios
-- gestion de productos
-- gestion de categorias
-- catalogo general
+- gestión de usuarios
+- gestión de productos
+- gestión de categorias
+- catálogo general
 
 ### SELLER
 
@@ -118,17 +118,17 @@ Puede acceder a:
 - añadir producto
 - editar producto
 - eliminar producto
-- catalogo general
+- catálogo general
 
 ### USER
 
 Puede acceder a:
 
-- catalogo
+- catálogo
 - detalle de producto
 - carrito
 - resumen de compra
-- envios pendientes
+- envíos pendientes
 - historial de pedidos
 - mi cuenta
 
@@ -136,22 +136,22 @@ Puede acceder a:
 
 ## Funcionalidades principales
 
-### Autenticacion
+### Autenticación
 
-- inicio de sesion
+- inicio de sesión
 - registro de nuevos usuarios
 - autenticacion mediante JWT
 - interfaz adaptada segun el rol autenticado
 
-### Catalogo y compra
+### Catálogo y compra
 
 - listado de productos
 - vista en grid y lista
 - filtro por categorias
-- filtro por precio minimo y maximo
-- busqueda de productos
+- filtro por precio mínimo y máximo
+- búsqueda de productos
 - detalle individual de producto
-- seleccion de cantidad
+- selección de cantidad
 - añadir al carrito
 
 ### Carrito y pedidos
@@ -162,7 +162,7 @@ Puede acceder a:
 - vaciar carrito
 - finalizar compra
 - ver resumen del pedido
-- consultar envios pendientes
+- consultar envíos pendientes
 - consultar historial de pedidos
 
 ### Gestion de administrador
@@ -220,7 +220,7 @@ Estas son las rutas principales definidas actualmente en la aplicacion:
 
 ## Mejoras visuales realizadas
 
-Durante el desarrollo se ha realizado una revision completa de la interfaz con una linea visual unificada basada en la paleta:
+Durante el desarrollo se ha realizado una revisión completa de la interfaz con una linea visual unificada basada en la paleta, de más ocuro a más claro:
 
 - `#2A2438`
 - `#352F44`
@@ -230,10 +230,10 @@ Durante el desarrollo se ha realizado una revision completa de la interfaz con u
 Entre las mejoras aplicadas destacan:
 
 - rediseño completo de login y registro
-- animacion entre login y registro
-- iconos con `lucide-react`
+- animación entre login y registro
+- iconos con la librería de iconos de `lucide-react`
 - rediseño del header segun el rol
-- rediseño del catalogo y del detalle de producto
+- rediseño del catálogo y del detalle de producto
 - rediseño de paneles de administrador
 - rediseño de paneles de vendedor
 - rediseño de carrito, cuenta y pedidos
@@ -263,7 +263,7 @@ docker compose up -d --build
 O usando el script incluido:
 
 ```bash
-iniciar.bat
+.\iniciar
 ```
 
 Para detener los contenedores:
@@ -272,10 +272,10 @@ Para detener los contenedores:
 docker compose down
 ```
 
-O usando:
+O usando el script incluido:
 
 ```bash
-detener.bat
+.\detener
 ```
 
 ### Servicios levantados
@@ -424,20 +424,6 @@ Actualmente el proyecto incluye:
 
 ---
 
-## Posibles mejoras futuras
-
-Como ampliaciones futuras del proyecto se podrian plantear:
-
-- panel de pedidos para vendedores
-- sistema de favoritos
-- filtros avanzados por tipo de producto
-- subida real de imagenes desde interfaz
-- estadisticas para admin o seller
-- pasarela de pago real
-- notificaciones de estado de pedido
-- panel responsive todavia mas pulido en dispositivos moviles
-
----
 
 ## Autor
 
