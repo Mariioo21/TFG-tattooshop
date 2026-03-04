@@ -13,6 +13,7 @@ function ManageCategories() {
   const [success, setSuccess] = useState("");
   const [categoryToDelete, setCategoryToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
   const toast = useToast();
 
   const ITEMS_PER_PAGE = 10;
@@ -34,14 +35,21 @@ function ManageCategories() {
     fetchCategories();
   }, []);
 
+  const filteredCategories = useMemo(() => {
+    const query = searchText.trim().toLowerCase();
+    if (!query) return categories;
+
+    return categories.filter((category) => category.name?.toLowerCase().includes(query));
+  }, [categories, searchText]);
+
   const paginatedCategories = useMemo(() => {
-    const totalPages = Math.max(1, Math.ceil(categories.length / ITEMS_PER_PAGE));
+    const totalPages = Math.max(1, Math.ceil(filteredCategories.length / ITEMS_PER_PAGE));
     const safePage = Math.min(currentPage, totalPages);
     const start = (safePage - 1) * ITEMS_PER_PAGE;
-    return categories.slice(start, start + ITEMS_PER_PAGE);
-  }, [categories, currentPage]);
+    return filteredCategories.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredCategories, currentPage]);
 
-  const totalPages = Math.max(1, Math.ceil(categories.length / ITEMS_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(filteredCategories.length / ITEMS_PER_PAGE));
   const safePage = Math.min(currentPage, totalPages);
 
   const handleAdd = async (e) => {
@@ -124,9 +132,24 @@ function ManageCategories() {
           <button type="submit">Añadir</button>
         </form>
 
+        <div className="admin-cat-search-row">
+          <input
+            type="text"
+            className="admin-cat-search-input"
+            placeholder="Buscar categoría por nombre"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+
         <div className="cat-list">
           {categories.length === 0 ? (
             <p className="no-cats">No hay categorías.</p>
+          ) : filteredCategories.length === 0 ? (
+            <p className="no-cats">No hay categorías que coincidan con la búsqueda.</p>
           ) : (
             paginatedCategories.map((cat) => (
               <div key={cat.id} className="cat-card">

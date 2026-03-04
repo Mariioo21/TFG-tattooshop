@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
 import { getUserFromToken } from "../services/authService";
 import "../styles/ProductList.css";
@@ -15,6 +15,7 @@ function ProductList() {
   const [showFilters, setShowFilters] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState("name-asc");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,10 +26,7 @@ function ProductList() {
   const categoryQuery = new URLSearchParams(location.search).get("category") || "";
 
   const categories = useMemo(() => {
-    const names = products
-      .map((product) => product.category?.name)
-      .filter(Boolean);
-
+    const names = products.map((product) => product.category?.name).filter(Boolean);
     return [...new Set(names)].sort((a, b) => a.localeCompare(b));
   }, [products]);
 
@@ -56,30 +54,48 @@ function ProductList() {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
-        (p) => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)
+        (product) =>
+          product.name.toLowerCase().includes(q) ||
+          product.description.toLowerCase().includes(q)
       );
     }
 
     if (categoryQuery) {
-      result = result.filter((p) => p.category?.name === categoryQuery);
+      result = result.filter((product) => product.category?.name === categoryQuery);
     }
 
-    if (priceMin) result = result.filter((p) => p.price >= Number(priceMin));
-    if (priceMax) result = result.filter((p) => p.price <= Number(priceMax));
+    if (priceMin) result = result.filter((product) => product.price >= Number(priceMin));
+    if (priceMax) result = result.filter((product) => product.price <= Number(priceMax));
+
+    switch (sortBy) {
+      case "price-asc":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "name-desc":
+        result.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case "name-asc":
+      default:
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
 
     setFiltered(result);
     setCurrentPage(1);
-  }, [products, searchQuery, categoryQuery, priceMin, priceMax]);
+  }, [products, searchQuery, categoryQuery, priceMin, priceMax, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
   const safePage = Math.min(currentPage, totalPages);
   const startIndex = (safePage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const paginatedProducts = filtered.slice(startIndex, endIndex);
+  const paginatedProducts = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   const resetFilters = () => {
     setPriceMin("");
     setPriceMax("");
+    setSortBy("name-asc");
     setCurrentPage(1);
     navigate("/catalog");
   };
@@ -94,10 +110,6 @@ function ProductList() {
 
     navigate(`/catalog?category=${encodeURIComponent(categoryName)}`);
   };
-
-  const goToPreviousPage = () => setCurrentPage((page) => Math.max(1, page - 1));
-  const goToNextPage = () => setCurrentPage((page) => Math.min(totalPages, page + 1));
-  const goToPage = (page) => setCurrentPage(page);
 
   if (loading) return <p className="pl-loading">Cargando productos...</p>;
 
@@ -184,7 +196,7 @@ function ProductList() {
                 </label>
               </div>
 
-              {(categoryQuery || searchQuery || priceMin || priceMax) && (
+              {(categoryQuery || searchQuery || priceMin || priceMax || sortBy !== "name-asc") && (
                 <button className="pl-reset-button" onClick={resetFilters}>
                   Limpiar filtros
                 </button>
@@ -195,23 +207,37 @@ function ProductList() {
 
         <div className="pl-main">
           <div className="pl-actions">
-            <div className="pl-view-toggle">
-              <button
-                type="button"
-                className={`pl-view-button ${viewMode === "grid" ? "is-active" : ""}`}
-                onClick={() => setViewMode("grid")}
-                aria-label="Vista cuadrícula"
+            <div className="pl-actions-left">
+              <div className="pl-view-toggle">
+                <button
+                  type="button"
+                  className={`pl-view-button ${viewMode === "grid" ? "is-active" : ""}`}
+                  onClick={() => setViewMode("grid")}
+                  aria-label="Vista cuadrícula"
+                >
+                  <LayoutGrid size={18} strokeWidth={2.2} />
+                </button>
+                <button
+                  type="button"
+                  className={`pl-view-button ${viewMode === "list" ? "is-active" : ""}`}
+                  onClick={() => setViewMode("list")}
+                  aria-label="Vista lista"
+                >
+                  <List size={18} strokeWidth={2.2} />
+                </button>
+              </div>
+
+              <select
+                className="pl-sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Ordenar productos"
               >
-                <LayoutGrid size={18} strokeWidth={2.2} />
-              </button>
-              <button
-                type="button"
-                className={`pl-view-button ${viewMode === "list" ? "is-active" : ""}`}
-                onClick={() => setViewMode("list")}
-                aria-label="Vista lista"
-              >
-                <List size={18} strokeWidth={2.2} />
-              </button>
+                <option value="name-asc">Nombre A-Z</option>
+                <option value="name-desc">Nombre Z-A</option>
+                <option value="price-asc">Precio menor a mayor</option>
+                <option value="price-desc">Precio mayor a menor</option>
+              </select>
             </div>
 
             <button
@@ -264,7 +290,7 @@ function ProductList() {
                   <button
                     type="button"
                     className="pl-page-arrow"
-                    onClick={goToPreviousPage}
+                    onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                     disabled={safePage === 1}
                     aria-label="Página anterior"
                   >
@@ -277,7 +303,7 @@ function ProductList() {
                         key={page}
                         type="button"
                         className={`pl-page-button ${safePage === page ? "is-active" : ""}`}
-                        onClick={() => goToPage(page)}
+                        onClick={() => setCurrentPage(page)}
                       >
                         {page}
                       </button>
@@ -287,7 +313,7 @@ function ProductList() {
                   <button
                     type="button"
                     className="pl-page-arrow"
-                    onClick={goToNextPage}
+                    onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
                     disabled={safePage === totalPages}
                     aria-label="Página siguiente"
                   >

@@ -27,6 +27,32 @@
   color: #7b7394;
 }
 
+.admin-search-row {
+  margin-bottom: 18px;
+}
+
+.admin-search-input {
+  width: 100%;
+  min-height: 54px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(123, 115, 148, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.admin-search-input::placeholder {
+  color: rgba(219, 216, 227, 0.72);
+}
+
+.admin-search-input:focus {
+  outline: none;
+  border-color: #5c5470;
+  box-shadow: 0 0 0 4px rgba(92, 84, 112, 0.18);
+}
+
 .admin-table-box {
   overflow-x: auto;
   border-radius: 20px;

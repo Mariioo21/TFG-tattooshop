@@ -225,6 +225,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+}
+
+.pl-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .pl-view-toggle {
@@ -252,6 +260,22 @@
   padding: 12px 18px;
   background: rgba(255, 255, 255, 0.86);
   color: #2a2438;
+}
+
+.pl-sort-select {
+  min-height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.86);
+  color: #352f44;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pl-sort-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(92, 84, 112, 0.14);
 }
 
 .pl-results.is-grid {
@@ -437,6 +461,16 @@
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
+  }
+
+  .pl-actions-left {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pl-sort-select {
+    width: 100%;
   }
 
   .pl-results.is-list .pl-card {

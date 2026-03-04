@@ -11,6 +11,7 @@ function ManageUsers() {
   const [error, setError] = useState(null);
   const [userToDelete, setUserToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
   const toast = useToast();
 
   const ITEMS_PER_PAGE = 10;
@@ -38,14 +39,26 @@ function ManageUsers() {
     fetchUsers();
   }, []);
 
+  const filteredUsers = useMemo(() => {
+    const query = searchText.trim().toLowerCase();
+    if (!query) return users;
+
+    return users.filter(
+      (user) =>
+        user.username?.toLowerCase().includes(query) ||
+        user.email?.toLowerCase().includes(query) ||
+        user.role?.toLowerCase().includes(query)
+    );
+  }, [users, searchText]);
+
   const paginatedUsers = useMemo(() => {
-    const totalPages = Math.max(1, Math.ceil(users.length / ITEMS_PER_PAGE));
+    const totalPages = Math.max(1, Math.ceil(filteredUsers.length / ITEMS_PER_PAGE));
     const safePage = Math.min(currentPage, totalPages);
     const start = (safePage - 1) * ITEMS_PER_PAGE;
-    return users.slice(start, start + ITEMS_PER_PAGE);
-  }, [users, currentPage]);
+    return filteredUsers.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredUsers, currentPage]);
 
-  const totalPages = Math.max(1, Math.ceil(users.length / ITEMS_PER_PAGE));
+  const totalPages = Math.max(1, Math.ceil(filteredUsers.length / ITEMS_PER_PAGE));
   const safePage = Math.min(currentPage, totalPages);
 
   const handleDelete = async () => {
@@ -79,8 +92,25 @@ function ManageUsers() {
 
         {error && <p className="error-msg">{error}</p>}
 
+        <div className="admin-search-row">
+          <input
+            type="text"
+            className="admin-search-input"
+            placeholder="Buscar por usuario, correo o rol"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+              setCurrentPage(1);
+            }}
+          />
+        </div>
+
         {users.length === 0 ? (
           <p style={{ textAlign: "center", color: "#bbb" }}>No hay usuarios registrados.</p>
+        ) : filteredUsers.length === 0 ? (
+          <p style={{ textAlign: "center", color: "#bbb" }}>
+            No hay usuarios que coincidan con la búsqueda.
+          </p>
         ) : (
           <>
             <div className="admin-table-box">
