@@ -14,6 +14,7 @@ import DeleteProduct from "./components/seller/DeleteProduct";
 import ManageUsers from "./components/admin/ManageUsers";
 import ManageProducts from "./components/admin/ManageProducts";
 import ManageCategories from "./components/admin/ManageCategories";
+import AdminDashboard from "./components/admin/AdminDashboard";
 
 import Account from "./components/user/Account";
 import Cart from "./components/user/Cart";
@@ -56,6 +57,7 @@ function AppContent() {
         <Route path="/delete-product" element={<DeleteProduct />} />
 
         {/* Admin */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/manage-users" element={<ManageUsers />} />
         <Route path="/manage-products" element={<ManageProducts />} />
         <Route path="/manage-categories" element={<ManageCategories />} />

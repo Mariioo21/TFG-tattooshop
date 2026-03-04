@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Users } from "lucide-react";
+import ConfirmModal from "../common/ConfirmModal";
 import "../../styles/ManageUsers.css";
 import { getToken } from "../../services/authService";
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const fetchUsers = async () => {
     try {
       const token = getToken();
       if (!token) {
-        setError("No tienes permiso para ver esta pagina.");
+        setError("No tienes permiso para ver esta página.");
         return;
       }
 
@@ -31,15 +33,16 @@ function ManageUsers() {
     fetchUsers();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Seguro que deseas eliminar este usuario?")) return;
+  const handleDelete = async () => {
+    if (!userToDelete) return;
 
     try {
       const token = getToken();
-      await axios.delete(`http://localhost:8080/api/users/${id}`, {
+      await axios.delete(`http://localhost:8080/api/users/${userToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUsers(users.filter((u) => u.id !== id));
+      setUsers(users.filter((u) => u.id !== userToDelete.id));
+      setUserToDelete(null);
     } catch {
       alert("Error al eliminar usuario");
     }
@@ -77,7 +80,7 @@ function ManageUsers() {
                     <td>{u.email}</td>
                     <td>{u.role}</td>
                     <td>
-                      <button onClick={() => handleDelete(u.id)} className="delete-btn">
+                      <button onClick={() => setUserToDelete(u)} className="delete-btn">
                         Eliminar
                       </button>
                     </td>
@@ -88,6 +91,19 @@ function ManageUsers() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        open={Boolean(userToDelete)}
+        title="Eliminar usuario"
+        message={
+          userToDelete
+            ? `¿Seguro que quieres eliminar al usuario ${userToDelete.username}?`
+            : ""
+        }
+        confirmText="Eliminar"
+        onConfirm={handleDelete}
+        onCancel={() => setUserToDelete(null)}
+      />
     </div>
   );
 }

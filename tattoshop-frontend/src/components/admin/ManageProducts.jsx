@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Package } from "lucide-react";
+import ConfirmModal from "../common/ConfirmModal";
 import "../../styles/ManageProducts.css";
 import { getToken } from "../../services/authService";
 
 function ManageProducts() {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -33,16 +35,17 @@ function ManageProducts() {
     fetchProducts();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Eliminar este producto?")) return;
+  const handleDelete = async () => {
+    if (!productToDelete) return;
 
     try {
       const token = getToken();
-      await axios.delete(`http://localhost:8080/api/products/${id}`, {
+      await axios.delete(`http://localhost:8080/api/products/${productToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setProducts(products.filter((p) => p.id !== id));
+      setProducts(products.filter((p) => p.id !== productToDelete.id));
+      setProductToDelete(null);
     } catch {
       alert("Error al eliminar el producto.");
     }
@@ -98,7 +101,7 @@ function ManageProducts() {
                   </div>
                 </button>
 
-                <button onClick={() => handleDelete(product.id)} className="delete-btn">
+                <button onClick={() => setProductToDelete(product)} className="delete-btn">
                   Eliminar
                 </button>
               </div>
@@ -106,6 +109,19 @@ function ManageProducts() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        open={Boolean(productToDelete)}
+        title="Eliminar producto"
+        message={
+          productToDelete
+            ? `¿Seguro que quieres eliminar ${productToDelete.name}?`
+            : ""
+        }
+        confirmText="Eliminar"
+        onConfirm={handleDelete}
+        onCancel={() => setProductToDelete(null)}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import {
   FolderOpen,
+  LayoutDashboard,
   LayoutGrid,
   Package,
   PackageCheck,
@@ -30,6 +31,7 @@ function Header() {
   const token = getToken();
 
   const adminNavItems = [
+    { key: "dashboard", label: "Dashboard", path: "/admin-dashboard", icon: LayoutDashboard },
     { key: "catalog", label: "Catálogo", path: "/catalog", icon: LayoutGrid },
     { key: "users", label: "Usuarios", path: "/manage-users", icon: Users },
     { key: "products", label: "Productos", path: "/manage-products", icon: Package },
@@ -54,7 +56,7 @@ function Header() {
 
   const isAdminArea =
     user?.role === "ADMIN" &&
-    ["/manage-users", "/manage-products", "/manage-categories"].includes(
+    ["/admin-dashboard", "/manage-users", "/manage-products", "/manage-categories"].includes(
       location.pathname
     );
 
@@ -66,9 +68,7 @@ function Header() {
 
   const isUserArea =
     user?.role === "USER" &&
-    ["/cart", "/pendingOrders", "/orders", "/account"].includes(
-      location.pathname
-    );
+    ["/cart", "/pendingOrders", "/orders", "/account"].includes(location.pathname);
 
   useEffect(() => {
     const handleStorageChange = () => setUser(getUserFromToken());
@@ -285,6 +285,9 @@ function Header() {
 
                   {user.role === "ADMIN" && (
                     <>
+                      <button onClick={() => goTo("/admin-dashboard")} className="menu-item">
+                        Dashboard
+                      </button>
                       <button onClick={() => goTo("/manage-users")} className="menu-item">
                         Gestionar usuarios
                       </button>

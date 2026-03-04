@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FolderOpen } from "lucide-react";
+import ConfirmModal from "../common/ConfirmModal";
 import { getToken } from "../../services/authService";
 import "../../styles/ManageCategories.css";
 
@@ -9,6 +10,7 @@ function ManageCategories() {
   const [newCategory, setNewCategory] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   const fetchCategories = async () => {
     try {
@@ -43,6 +45,7 @@ function ManageCategories() {
       );
 
       setNewCategory("");
+      setError("");
       setSuccess("Categoría añadida correctamente.");
       fetchCategories();
       setTimeout(() => setSuccess(""), 3000);
@@ -51,19 +54,22 @@ function ManageCategories() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("¿Seguro que deseas eliminar esta categoría?")) return;
+  const handleDelete = async () => {
+    if (!categoryToDelete) return;
 
     try {
       const token = getToken();
-      await axios.delete(`http://localhost:8080/api/categories/${id}`, {
+      await axios.delete(`http://localhost:8080/api/categories/${categoryToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setSuccess("Categoría eliminada correctamente.");
+      setError("");
+      setCategoryToDelete(null);
       fetchCategories();
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
+      setCategoryToDelete(null);
       if (err.response?.status === 409) {
         setError("No se puede eliminar: tiene productos asociados.");
       } else {
@@ -105,7 +111,7 @@ function ManageCategories() {
                 </span>
                 <button
                   className="delete-btn small-btn category-delete-btn"
-                  onClick={() => handleDelete(cat.id)}
+                  onClick={() => setCategoryToDelete(cat)}
                 >
                   Eliminar
                 </button>
@@ -114,6 +120,19 @@ function ManageCategories() {
           )}
         </div>
       </div>
+
+      <ConfirmModal
+        open={Boolean(categoryToDelete)}
+        title="Eliminar categoría"
+        message={
+          categoryToDelete
+            ? `¿Seguro que quieres eliminar la categoría ${categoryToDelete.name}?`
+            : ""
+        }
+        confirmText="Eliminar"
+        onConfirm={handleDelete}
+        onCancel={() => setCategoryToDelete(null)}
+      />
     </div>
   );
 }
