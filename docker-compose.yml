@@ -1,5 +1,5 @@
 services:
-  # 🗄️ Servicio de base de datos MySQL
+  # Servicio de base de datos MySQL
   mysql:
     image: mysql:8.0
     container_name: mysql_tattoo
@@ -21,7 +21,7 @@ services:
     networks:
       - tattoo-net
 
-  # 🚀 Backend Spring Boot
+  # Backend Spring Boot
   backend:
     build: ./tattoshop-backend/tattoshop-backend
     container_name: tattoo_backend
@@ -42,7 +42,7 @@ services:
     networks:
       - tattoo-net
 
-  # 🎨 Frontend React (CRA)
+  # Frontend React (CRA)
   frontend:
     build: ./tattoshop-frontend
     container_name: tattoo_frontend
@@ -50,15 +50,15 @@ services:
     depends_on:
       - backend
     ports:
-      - "3000:80"          # 3000 en tu máquina -> 80 Nginx dentro
+      - "3000:80"
     networks:
       - tattoo-net
 
-# 🌐 Red interna para los contenedores
+# Red interna para los contenedores
 networks:
   tattoo-net:
     driver: bridge
 
-# 💾 Volumen persistente para MySQL
+# Volumen persistente para MySQL
 volumes:
   mysql_data:

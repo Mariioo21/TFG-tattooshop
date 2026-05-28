@@ -31,7 +31,7 @@ public class ProductController {
     @Autowired
     private UserService userService;
 
-    // ✅ Público
+    // Publico
     @GetMapping
     public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
@@ -50,7 +50,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // ✅ Público
+    // Publico
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         return productService.findById(id)
@@ -58,7 +58,7 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 🔒 Solo vendedores o admins
+    // Solo vendedores o administradores
     @PreAuthorize("hasRole('SELLER')")
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product, Authentication authentication) {
@@ -78,7 +78,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.save(product));
     }
 
-    // 🔒 Solo vendedores o admins
+    // Solo vendedores o administradores
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
@@ -92,7 +92,7 @@ public class ProductController {
             if (product.getCategory() != null && product.getCategory().getName() != null) {
                 String catName = product.getCategory().getName().trim();
                 Category category = categoryService.findByName(catName)
-                        .orElseGet(() -> categoryService.save(new Category(catName))); // ✅ crea si no existe
+                        .orElseGet(() -> categoryService.save(new Category(catName))); // Crea la categoria si no existe
                 existingProduct.setCategory(category);
             }
 
@@ -101,8 +101,7 @@ public class ProductController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-
-    // 🔒 Solo vendedores o admins
+    // Solo vendedores o administradores
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
@@ -113,7 +112,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    // ✅ Público
+    // Publico
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(
             @RequestParam(required = false) String name,
@@ -122,9 +121,9 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // ✅ Test
+    // Test
     @GetMapping("/test")
     public ResponseEntity<String> test() {
-        return ResponseEntity.ok("✅ Products endpoint funcionando correctamente");
+        return ResponseEntity.ok("Products endpoint funcionando correctamente");
     }
 }
