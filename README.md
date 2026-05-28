@@ -1,189 +1,123 @@
 # TattooShop
 
-Aplicacion web desarrollada como **TFG** para la **gestion y venta online de material de tatuajes**.  
-El proyecto incluye una arquitectura separada en **frontend** y **backend**, con autenticacion por roles, catalogo de productos, carrito, pedidos y paneles de gestion para administradores y vendedores.
+TattooShop es una aplicación web de comercio electrónico desarrollada como Trabajo Fin de Grado para la gestión y venta online de material de tatuaje. El proyecto se plantea como una plataforma especializada en este sector, con una arquitectura separada en frontend y backend, autenticación por roles y funcionalidades diferenciadas para clientes, vendedores y administradores.
 
----
+## Descripción del proyecto
 
-## Descripción general
+La aplicación permite centralizar en un mismo sistema la consulta del catálogo, la gestión de productos, el proceso de compra y el control general de la plataforma.
 
-TattooShop esta pensada como una plataforma de comercio electrónico orientada a la venta de productos de tatuaje, como tintas, agujas, cartuchos, guantes, stencils y otros accesorios.
+El sistema está orientado a tres perfiles principales:
 
-La aplicacion permite:
+- Cliente: consulta productos, gestiona el carrito, realiza pedidos y revisa su estado.
+- Vendedor: publica y administra sus propios productos.
+- Administrador: supervisa el sistema, gestiona usuarios, productos y categorías, y consulta métricas generales.
 
-- navegar por un catalogo de productos
-- registrarse e iniciar sesion
-- comprar productos y gestionar pedidos
-- administrar categorias, usuarios y productos como Administrador
-- permitir a vendedores gestionar sus propios productos (Añadir, Editar, Eliminar, etc)
+Desde el punto de vista funcional, TattooShop cubre los principales flujos de una tienda online especializada:
 
----
+- registro e inicio de sesión
+- autenticación y autorización mediante JWT
+- catálogo de productos con búsqueda y filtros
+- detalle de producto
+- carrito de compra
+- creación y consulta de pedidos
+- gestión de productos por parte del vendedor
+- gestión de usuarios, productos y categorías por parte del administrador
+- panel de administración con métricas generales
 
-## Tecnologias utilizadas
+## Objetivo
 
-### Backend
-
-| Tecnologia | Uso |
-|------------|-----|
-| **Java 17** | Lenguaje principal |
-| **Spring Boot 3.3.5** | Framework backend |
-| **Spring Security** | Seguridad y control de acceso |
-| **JWT** | Autenticacion y autorizacion |
-| **Spring Data JPA / Hibernate** | Persistencia y ORM |
-| **MySQL 8** | Base de datos principal |
-| **Maven** | Gestion de dependencias |
-
-### Frontend
-
-| Tecnologia | Uso |
-|------------|-----|
-| **React 18** | Interfaz de usuario |
-| **React Router DOM** | Navegación entre vistas |
-| **Axios** | Comunicación con la API |
-| **Lucide React** | Iconografía |
-| **CSS** | Maquetación y estilos personalizados |
-
-### Infraestructura
-
-| Tecnologia | Uso |
-|------------|-----|
-| **Docker** | Contenerización |
-| **Docker Compose** | Orquestación de servicios |
-| **Nginx** | Servido del frontend en contenedor |
-
----
-
-## Estructura del proyecto
-
-```text
-TFG-tattooshop/
-├── docker-compose.yml
-├── iniciar.bat
-├── detener.bat
-├── README.md
-├── tattoshop-frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── styles/
-└── tattoshop-backend/
-    └── tattoshop-backend/
-        ├── src/main/java/
-        └── src/main/resources/
-```
-
----
+El objetivo del proyecto es desarrollar una aplicación web full-stack basada en una arquitectura cliente-servidor que permita gestionar y comercializar productos de tatuaje mediante una interfaz clara y diferenciada según el rol del usuario autenticado.
 
 ## Arquitectura
 
-El proyecto sigue una arquitectura cliente-servidor:
+TattooShop sigue una arquitectura cliente-servidor compuesta por tres bloques principales:
 
-- **Frontend React**:
-  - gestiona la interfaz
-  - controla la navegación
-  - consume la API REST
-  - adapta la interfaz segun el rol autenticado
+- Frontend en React, encargado de la interfaz y de la navegación de la aplicación.
+- Backend en Spring Boot, responsable de la lógica de negocio, la seguridad y la exposición de la API REST.
+- Base de datos MySQL, donde se almacenan usuarios, productos, categorías, carritos y pedidos.
 
-- **Backend Spring Boot**:
-  - expone endpoints REST
-  - valida usuarios y permisos
-  - genera y valida tokens JWT
-  - gestiona entidades como usuarios, productos, categorias, carrito y pedidos
+La comunicación entre frontend y backend se realiza mediante peticiones HTTP. La autenticación se basa en tokens JWT, lo que permite restringir el acceso a determinadas operaciones según el rol del usuario.
 
-- **Base de datos MySQL**:
-  - almacena usuarios, productos, categorias, carritos y pedidos
+## Tecnologías utilizadas
 
----
+### Backend
 
-## Roles del sistema
+- Java
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- Hibernate
+- JWT
+- Maven
 
-La aplicacion trabaja con tres roles principales:
+### Frontend
 
-### ADMIN
+- React
+- React Router DOM
+- Axios
+- Lucide React
+- CSS
 
-Puede acceder a:
+### Persistencia e infraestructura
 
-- gestión de usuarios
-- gestión de productos
-- gestión de categorias
-- catálogo general
+- MySQL
+- Docker
+- Docker Compose
+- Nginx
 
-### SELLER
+## Estructura del repositorio
 
-Puede acceder a:
+```text
+TFG-tattooshop/
+|-- docker-compose.yml
+|-- iniciar.bat
+|-- detener.bat
+|-- README.md
+|-- tattoshop-frontend/
+|   |-- public/
+|   |-- src/
+|   |   |-- components/
+|   |   |-- pages/
+|   |   |-- services/
+|   |   `-- styles/
+`-- tattoshop-backend/
+    `-- tattoshop-backend/
+        |-- src/main/java/
+        |-- src/main/resources/
+        `-- pom.xml
+```
 
-- mis productos
-- añadir producto
-- editar producto
-- eliminar producto
-- catálogo general
+## Funcionalidades por rol
 
-### USER
+### Cliente
 
-Puede acceder a:
-
-- catálogo
-- detalle de producto
-- carrito
-- resumen de compra
-- envíos pendientes
-- historial de pedidos
-- mi cuenta
-
----
-
-## Funcionalidades principales
-
-### Autenticación
-
-- inicio de sesión
-- registro de nuevos usuarios
-- autenticacion mediante JWT
-- interfaz adaptada segun el rol autenticado
-
-### Catálogo y compra
-
-- listado de productos
-- vista en grid y lista
-- filtro por categorias
-- filtro por precio mínimo y máximo
-- búsqueda de productos
-- detalle individual de producto
-- selección de cantidad
-- añadir al carrito
-
-### Carrito y pedidos
-
-- ver carrito actual
-- actualizar cantidad
-- eliminar productos del carrito
-- vaciar carrito
-- finalizar compra
-- ver resumen del pedido
-- consultar envíos pendientes
+- registrarse e iniciar sesión
+- consultar el catálogo
+- buscar, filtrar y ordenar productos
+- acceder al detalle de cada producto
+- añadir productos al carrito
+- modificar cantidades y eliminar productos del carrito
+- finalizar compras
+- consultar pedidos pendientes
 - consultar historial de pedidos
+- revisar la información de su cuenta
 
-### Gestión de administrador
+### Vendedor
 
-- gestionar usuarios
-- gestionar productos
-- gestionar categorias
-
-### Gestión de vendedor
-
-- ver sus propios productos
-- añadir productos nuevos
+- consultar sus productos publicados
+- añadir nuevos productos
 - editar productos existentes
 - eliminar productos
-- buscador en editar y eliminar producto para localizar articulos rapidamente
 
----
+### Administrador
+
+- acceder al panel principal de administración
+- consultar métricas generales del sistema
+- gestionar usuarios
+- gestionar productos
+- gestionar categorías
 
 ## Rutas principales del frontend
-
-Estas son las rutas principales definidas actualmente en la aplicacion:
 
 ### Públicas
 
@@ -192,23 +126,11 @@ Estas son las rutas principales definidas actualmente en la aplicacion:
 
 ### Compartidas
 
+- `/`
 - `/catalog`
 - `/product/:id`
 
-### Seller
-
-- `/my-products`
-- `/add-product`
-- `/edit-product`
-- `/delete-product`
-
-### Admin
-
-- `/manage-users`
-- `/manage-products`
-- `/manage-categories`
-
-### User
+### Cliente
 
 - `/account`
 - `/cart`
@@ -216,253 +138,180 @@ Estas son las rutas principales definidas actualmente en la aplicacion:
 - `/orders`
 - `/pendingOrders`
 
----
+### Vendedor
 
-## Mejoras visuales realizadas
+- `/my-products`
+- `/add-product`
+- `/edit-product`
+- `/delete-product`
 
-Durante el desarrollo se ha realizado una revisión completa de la interfaz con una linea visual unificada basada en la paleta, de más ocuro a más claro:
+### Administrador
 
-- `#2A2438`
-- `#352F44`
-- `#5C5470`
-- `#DBD8E3`
+- `/admin-dashboard`
+- `/manage-users`
+- `/manage-products`
+- `/manage-categories`
 
-Entre las mejoras aplicadas destacan:
+## Backend y organización interna
 
-- rediseño completo de login y registro
-- animación entre login y registro
-- iconos con la librería de iconos de `lucide-react`
-- rediseño del header segun el rol
-- rediseño del catálogo y del detalle de producto
-- rediseño de paneles de administrador
-- rediseño de paneles de vendedor
-- rediseño de carrito, cuenta y pedidos
-- mejora del branding con favicon y logotipos personalizados
+El backend está organizado en capas, separando responsabilidades entre controladores, servicios, repositorios, entidades y configuración de seguridad. Entre las áreas principales del sistema se encuentran:
 
----
+- autenticación de usuarios
+- gestión de productos
+- gestión de categorías
+- carrito de compra
+- pedidos
+- panel de administración
 
-## Instalación y ejecución
+Las entidades principales del dominio son:
 
-### Requisitos previos
+- `User`
+- `Product`
+- `Category`
+- `Cart`
+- `CartItem`
+- `Order`
+- `OrderItem`
 
-- **Docker Desktop** instalado
-- **Git**
-- opcionalmente **Node.js** si se quiere ejecutar el frontend fuera de Docker
-- opcionalmente **Java 17** y **Maven** si se quiere ejecutar el backend fuera de Docker
+## Usuarios de prueba
 
----
+Al inicializar la aplicación con una base de datos vacía, el backend crea usuarios de prueba para los tres roles principales:
 
-## Ejecución con Docker
+| Rol | Usuario | Contraseña |
+| --- | --- | --- |
+| Administrador | `Admin` | `Admin` |
+| Vendedor | `Seller` | `Seller` |
+| Cliente | `User` | `User` |
 
-Desde la raíz del proyecto:
+## Requisitos previos
+
+Para ejecutar el proyecto en local se recomienda disponer de:
+
+- Docker Desktop
+- un navegador web actualizado
+
+Si se quiere trabajar fuera de Docker, también será necesario disponer de:
+
+- Node.js y npm
+- Java
+- Maven o Maven Wrapper
+
+## Ejecución recomendada con Docker
+
+La forma más sencilla y coherente de ejecutar el proyecto es mediante Docker Compose.
+
+Desde la raíz del repositorio:
 
 ```bash
 docker compose up -d --build
 ```
 
-O usando el script incluido:
+O bien mediante el script incluido:
 
 ```bash
-.\iniciar
+.\iniciar.bat
 ```
 
-Para detener los contenedores:
+Para detener los servicios:
 
 ```bash
 docker compose down
 ```
 
-O usando el script incluido:
+O bien:
 
 ```bash
-.\detener
+.\detener.bat
 ```
 
-### Servicios levantados
+## Servicios disponibles
 
-- **Frontend**: `http://localhost:3000`
-- **Backend**: `http://localhost:8080`
-- **MySQL**: `localhost:3307`
+Una vez levantado el entorno, la aplicación queda accesible en:
 
----
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:8080`
+- MySQL: `localhost:3307`
 
-## Ejecución manual en desarrollo
+## Configuración de base de datos en Docker
 
-### Frontend
+La configuración definida en `docker-compose.yml` expone la base de datos con los siguientes valores:
 
-Ruta:
+- host: `localhost`
+- puerto: `3307`
+- base de datos: `tattoo_shop`
+- usuario: `tattooshop`
+- contraseña: `tattooshop`
 
-```bash
-cd tattoshop-frontend
-```
-
-Instalar dependencias:
-
-```bash
-npm install
-```
-
-Iniciar en desarrollo:
-
-```bash
-npm start
-```
-
-### Backend
-
-Ruta:
-
-```bash
-cd tattoshop-backend/tattoshop-backend
-```
-
-Ejecutar con Maven Wrapper en Windows:
-
-```bash
-.\mvnw.cmd spring-boot:run
-```
-
----
-
-## Configuración de base de datos
-
-En Docker, la base de datos se levanta con:
-
-- **Host**: `localhost`
-- **Puerto**: `3307`
-- **Base de datos**: `tattoo_shop`
-- **Usuario**: `tattooshop`
-- **Contraseña**: `tattooshop`
-
-Los datos se almacenan en el volumen:
+El volumen persistente utilizado por MySQL es:
 
 ```bash
 mysql_data
 ```
 
-Para reiniciar la base de datos desde cero:
+Si se desea reiniciar completamente la base de datos:
 
 ```bash
 docker compose down -v
 ```
 
----
+## Ejecución manual en desarrollo
 
-## Usuarios iniciales
-
-Al levantar el proyecto por primera vez, se crean usuarios iniciales:
-
-| Rol | Usuario | Contraseña |
-|-----|---------|------------|
-| **ADMIN** | `Admin` | `Admin` |
-| **SELLER** | `Seller` | `Seller` |
-| **USER** | `User` | `User` |
-
----
-
-## Dependencias relevantes
-
-### Frontend
-
-- `react`
-- `react-router-dom`
-- `axios`
-- `lucide-react`
-
-### Backend
-
-- `spring-boot-starter-web`
-- `spring-boot-starter-data-jpa`
-- `spring-boot-starter-security`
-- `spring-boot-starter-validation`
-- `jjwt`
-- `mysql-connector-j`
-
----
-
-## Comandos utiles
-
-### Docker
-
-```bash
-docker ps
-docker logs -f tattoo_backend
-docker logs -f tattoo_frontend
-docker logs -f mysql_tattoo
-docker compose down -v
-```
+El repositorio incluye estructura para ejecutar frontend y backend por separado, pero la configuración actual está pensada principalmente para su uso con Docker Compose. Por eso, la vía recomendada para revisar el proyecto o ponerlo en marcha es la ejecución con contenedores.
 
 ### Frontend
 
 ```bash
+cd tattoshop-frontend
 npm install
 npm start
-npm run build
 ```
 
 ### Backend
 
 ```bash
+cd tattoshop-backend/tattoshop-backend
 .\mvnw.cmd spring-boot:run
-.\mvnw.cmd test
 ```
 
----
+Si se ejecuta el backend fuera de Docker, puede ser necesario adaptar la configuración de conexión a base de datos del archivo `application.yml` al entorno local disponible.
 
-## Dashboard de administrador
+## Pruebas y validación
 
-Se ha incorporado una nueva vista de administracion accesible desde:
+De acuerdo con el planteamiento del TFG, la validación del sistema se ha centrado principalmente en pruebas funcionales y de integración ejecutadas sobre el entorno completo de la aplicación.
 
-```bash
-/admin-dashboard
-```
+Entre los flujos validados se encuentran:
 
-Este panel funciona como pantalla principal para el rol **ADMIN** y muestra un resumen general del estado de la plataforma.
+- registro de usuarios
+- inicio de sesión
+- autenticación por roles
+- consulta del catálogo
+- búsqueda, filtrado y ordenación de productos
+- gestión del carrito
+- realización de pedidos
+- consulta de pedidos pendientes e historial
+- gestión de productos por parte del vendedor
+- gestión de usuarios, productos y categorías por parte del administrador
 
-### Informacion mostrada
+En el estado actual del repositorio, el frontend genera correctamente el build de producción. La ejecución de tests automáticos en backend depende de disponer de una base de datos accesible con la configuración activa del proyecto.
 
-- usuarios totales
-- vendedores registrados
-- clientes registrados
-- productos totales
-- categorias totales
-- pedidos totales
-- pedidos pendientes
-- pedidos entregados
+## Estado del proyecto
 
-### Funcionalidades incluidas
+TattooShop constituye una base funcional y organizada para una plataforma e-commerce especializada en material de tatuaje. El proyecto cubre la autenticación, la diferenciación por roles, la gestión del catálogo, el carrito, los pedidos y la administración del sistema.
 
-- tarjetas con metricas generales de la tienda
-- panel de resumen del catalogo, usuarios y pedidos
-- accesos rapidos a:
-  - gestion de usuarios
-  - gestion de productos
-  - gestion de categorias
-  - catalogo general
-- integracion visual con la misma paleta y estilo del resto del proyecto
+Como posibles líneas de mejora futuras, la memoria del TFG plantea:
 
-### Comportamiento
-
-- cuando un usuario con rol **ADMIN** inicia sesion, la aplicacion redirige automaticamente al dashboard en lugar de al catalogo
-- si el administrador entra por la ruta raiz `/`, tambien se redirige al dashboard
-
-### Backend asociado
-
-Para alimentar esta vista se ha añadido un endpoint especifico:
-
-```bash
-GET /api/admin/dashboard
-```
-
-Este endpoint devuelve las metricas agregadas necesarias para construir el panel de administracion.
-
----
+- integración con una pasarela de pago real
+- mejora del sistema de envíos y trazabilidad
+- ampliación de funcionalidades del panel de administración
+- refuerzo de pruebas automatizadas
+- despliegue más cercano a un entorno real de producción
 
 ## Autor
 
-**Mario Espasandín Hernández**  
-Grado en Ingeniería de Computadores - Universidad Rey Juan Carlos
+Mario Espasandín Hernández  
+Grado en Ingeniería de Computadores  
+Universidad Rey Juan Carlos
 
-- Personal: [espasandinhernandez@gmail.com](mailto:espasandinhernandez@gmail.com)
-- Universitario: [m.espasandin.2021@alumnos.urjc.es](mailto:m.espasandin.2021@alumnos.urjc.es)
+- Correo personal: [espasandinhernandez@gmail.com](mailto:espasandinhernandez@gmail.com)
+- Correo universitario: [m.espasandin.2021@alumnos.urjc.es](mailto:m.espasandin.2021@alumnos.urjc.es)
 - GitHub: [github.com/Mariioo21](https://github.com/Mariioo21)
