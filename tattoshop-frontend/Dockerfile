@@ -16,6 +16,7 @@ WORKDIR /usr/share/nginx/html
 
 # 3) Copiar el build estático generado por CRA
 COPY --from=build /app/build ./
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # 4) Servir por el puerto 80 dentro del contenedor
 EXPOSE 80
