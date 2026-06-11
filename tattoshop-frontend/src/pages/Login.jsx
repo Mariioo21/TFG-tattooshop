@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-import { login } from "../services/authService";
+import { login, logout } from "../services/authService";
 import "../styles/Auth.css";
 
 function Login() {
@@ -10,6 +10,11 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    logout();
+    sessionStorage.removeItem("welcomeShown");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
