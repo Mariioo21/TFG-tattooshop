@@ -1,15 +1,15 @@
 @echo off
 setlocal ENABLEDELAYEDEXPANSION
 
-REM Ir a la carpeta donde está esta el archivo .bat (raiz)
+REM Ir a la raiz
 cd /d "%~dp0"
 
-echo =====================================================
-echo  Iniciando Tattooshop (backend + frontend + MySQL)
-echo =====================================================
+echo ======================
+echo  Iniciando Tattooshop
+echo ======================
 echo.
 
-REM Levantar todos los servicios
+REM Levantamos todos los servicios con docker
 docker compose up --build -d
 
 IF ERRORLEVEL 1 (
@@ -23,13 +23,13 @@ IF ERRORLEVEL 1 (
 echo Contenedores levantados
 echo.
 
-REM Abrir el navegador en el frontend
-start "" "http://localhost:3000"
+REM Abrir en el navegador directamente el login 
+start "" "http://localhost:3000/login"
 
 echo.
 echo =========================================
 echo Tattooshop esta arrancando:
-echo    - Frontend: http://localhost:3000
+echo    - Frontend: http://localhost:3000/login
 echo    - Backend:  http://localhost:8080
 echo =========================================
 echo.
